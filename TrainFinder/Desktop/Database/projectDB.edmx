@@ -1,0 +1,559 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ProjectDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="device">
+          <Key>
+            <PropertyRef Name="DID" />
+          </Key>
+          <Property Name="DID" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TID" Type="smallint" Nullable="false" />
+          <Property Name="Description" Type="nchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="location">
+          <Key>
+            <PropertyRef Name="DID" />
+            <PropertyRef Name="Datetime" />
+          </Key>
+          <Property Name="DID" Type="tinyint" Nullable="false" />
+          <Property Name="Datetime" Type="datetime" Nullable="false" />
+          <Property Name="Locationdata" Type="xml" />
+        </EntityType>
+        <EntityType Name="log">
+          <Key>
+            <PropertyRef Name="TID" />
+            <PropertyRef Name="Datetime" />
+          </Key>
+          <Property Name="TID" Type="smallint" Nullable="false" />
+          <Property Name="Datetime" Type="datetime" Nullable="false" />
+          <Property Name="Stime" Type="time" Precision="7" />
+          <Property Name="Etime" Type="time" Precision="7" />
+          <Property Name="Maxspeed" Type="float" />
+          <Property Name="Avgspeed" Type="float" />
+          <Property Name="Delay" Type="time" Precision="7" />
+        </EntityType>
+        <EntityType Name="route">
+          <Key>
+            <PropertyRef Name="RID" />
+          </Key>
+          <Property Name="RID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Sstation" Type="smallint" />
+          <Property Name="Estation" Type="smallint" />
+          <Property Name="Distance" Type="float" />
+          <Property Name="Name" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="station">
+          <Key>
+            <PropertyRef Name="SID" />
+          </Key>
+          <Property Name="SID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="20" Nullable="false" />
+          <Property Name="Distance" Type="float" Nullable="false" />
+          <Property Name="Llongitude" Type="float" Nullable="false" />
+          <Property Name="Llatitude" Type="float" Nullable="false" />
+          <Property Name="Address" Type="nchar" MaxLength="100" />
+          <Property Name="Telephone" Type="nchar" MaxLength="15" />
+          <Property Name="RID" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="stopat">
+          <Key>
+            <PropertyRef Name="TID" />
+            <PropertyRef Name="SID" />
+            <PropertyRef Name="Direction" />
+          </Key>
+          <Property Name="TID" Type="smallint" Nullable="false" />
+          <Property Name="SID" Type="smallint" Nullable="false" />
+          <Property Name="Direction" Type="bit" Nullable="false" />
+          <Property Name="Atime" Type="time" Precision="7" Nullable="false" />
+          <Property Name="Dtime" Type="time" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="train">
+          <Key>
+            <PropertyRef Name="TID" />
+          </Key>
+          <Property Name="TID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="50" />
+          <Property Name="Sstation" Type="smallint" Nullable="false" />
+          <Property Name="Estation" Type="smallint" Nullable="false" />
+          <Property Name="Description" Type="nchar" MaxLength="150" />
+          <Property Name="RID" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="UID" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="30" />
+          <Property Name="Uname" Type="nchar" MaxLength="20" />
+          <Property Name="Password" Type="nchar" MaxLength="20" />
+        </EntityType>
+        <Association Name="FK_device_ToTable">
+          <End Role="train" Type="Self.train" Multiplicity="1" />
+          <End Role="device" Type="Self.device" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="train">
+              <PropertyRef Name="TID" />
+            </Principal>
+            <Dependent Role="device">
+              <PropertyRef Name="TID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_location_ToTable">
+          <End Role="device" Type="Self.device" Multiplicity="1" />
+          <End Role="location" Type="Self.location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="device">
+              <PropertyRef Name="DID" />
+            </Principal>
+            <Dependent Role="location">
+              <PropertyRef Name="DID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_log_ToTable">
+          <End Role="train" Type="Self.train" Multiplicity="1" />
+          <End Role="log" Type="Self.log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="train">
+              <PropertyRef Name="TID" />
+            </Principal>
+            <Dependent Role="log">
+              <PropertyRef Name="TID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_station">
+          <End Role="station" Type="Self.station" Multiplicity="1" />
+          <End Role="stopat" Type="Self.stopat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="station">
+              <PropertyRef Name="SID" />
+            </Principal>
+            <Dependent Role="stopat">
+              <PropertyRef Name="SID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_station_ToTable">
+          <End Role="route" Type="Self.route" Multiplicity="1" />
+          <End Role="station" Type="Self.station" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="route">
+              <PropertyRef Name="RID" />
+            </Principal>
+            <Dependent Role="station">
+              <PropertyRef Name="RID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_train">
+          <End Role="train" Type="Self.train" Multiplicity="1" />
+          <End Role="stopat" Type="Self.stopat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="train">
+              <PropertyRef Name="TID" />
+            </Principal>
+            <Dependent Role="stopat">
+              <PropertyRef Name="TID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_train_ToTable">
+          <End Role="route" Type="Self.route" Multiplicity="1" />
+          <End Role="train" Type="Self.train" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="route">
+              <PropertyRef Name="RID" />
+            </Principal>
+            <Dependent Role="train">
+              <PropertyRef Name="RID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ProjectDBModelStoreContainer">
+          <EntitySet Name="device" EntityType="Self.device" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="location" EntityType="Self.location" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="log" EntityType="Self.log" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="route" EntityType="Self.route" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="station" EntityType="Self.station" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="stopat" EntityType="Self.stopat" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="train" EntityType="Self.train" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="user" EntityType="Self.user" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_device_ToTable" Association="Self.FK_device_ToTable">
+            <End Role="train" EntitySet="train" />
+            <End Role="device" EntitySet="device" />
+          </AssociationSet>
+          <AssociationSet Name="FK_location_ToTable" Association="Self.FK_location_ToTable">
+            <End Role="device" EntitySet="device" />
+            <End Role="location" EntitySet="location" />
+          </AssociationSet>
+          <AssociationSet Name="FK_log_ToTable" Association="Self.FK_log_ToTable">
+            <End Role="train" EntitySet="train" />
+            <End Role="log" EntitySet="log" />
+          </AssociationSet>
+          <AssociationSet Name="FK_station" Association="Self.FK_station">
+            <End Role="station" EntitySet="station" />
+            <End Role="stopat" EntitySet="stopat" />
+          </AssociationSet>
+          <AssociationSet Name="FK_station_ToTable" Association="Self.FK_station_ToTable">
+            <End Role="route" EntitySet="route" />
+            <End Role="station" EntitySet="station" />
+          </AssociationSet>
+          <AssociationSet Name="FK_train" Association="Self.FK_train">
+            <End Role="train" EntitySet="train" />
+            <End Role="stopat" EntitySet="stopat" />
+          </AssociationSet>
+          <AssociationSet Name="FK_train_ToTable" Association="Self.FK_train_ToTable">
+            <End Role="route" EntitySet="route" />
+            <End Role="train" EntitySet="train" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ProjectDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="device">
+          <Key>
+            <PropertyRef Name="DID" />
+          </Key>
+          <Property Name="DID" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TID" Type="Int16" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="train" Relationship="Self.FK_device_ToTable" FromRole="device" ToRole="train" />
+          <NavigationProperty Name="locations" Relationship="Self.FK_location_ToTable" FromRole="device" ToRole="location" />
+        </EntityType>
+        <EntityType Name="location">
+          <Key>
+            <PropertyRef Name="DID" />
+            <PropertyRef Name="Datetime" />
+          </Key>
+          <Property Name="DID" Type="Byte" Nullable="false" />
+          <Property Name="Datetime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Locationdata" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="device" Relationship="Self.FK_location_ToTable" FromRole="location" ToRole="device" />
+        </EntityType>
+        <EntityType Name="log">
+          <Key>
+            <PropertyRef Name="TID" />
+            <PropertyRef Name="Datetime" />
+          </Key>
+          <Property Name="TID" Type="Int16" Nullable="false" />
+          <Property Name="Datetime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Stime" Type="Time" Precision="7" />
+          <Property Name="Etime" Type="Time" Precision="7" />
+          <Property Name="Maxspeed" Type="Double" />
+          <Property Name="Avgspeed" Type="Double" />
+          <Property Name="Delay" Type="Time" Precision="7" />
+          <NavigationProperty Name="train" Relationship="Self.FK_log_ToTable" FromRole="log" ToRole="train" />
+        </EntityType>
+        <EntityType Name="route">
+          <Key>
+            <PropertyRef Name="RID" />
+          </Key>
+          <Property Name="RID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Sstation" Type="Int16" />
+          <Property Name="Estation" Type="Int16" />
+          <Property Name="Distance" Type="Double" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="stations" Relationship="Self.FK_station_ToTable" FromRole="route" ToRole="station" />
+          <NavigationProperty Name="trains" Relationship="Self.FK_train_ToTable" FromRole="route" ToRole="train" />
+        </EntityType>
+        <EntityType Name="station">
+          <Key>
+            <PropertyRef Name="SID" />
+          </Key>
+          <Property Name="SID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Distance" Type="Double" Nullable="false" />
+          <Property Name="Llongitude" Type="Double" Nullable="false" />
+          <Property Name="Llatitude" Type="Double" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="Telephone" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+          <Property Name="RID" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="route" Relationship="Self.FK_station_ToTable" FromRole="station" ToRole="route" />
+          <NavigationProperty Name="stopats" Relationship="Self.FK_station" FromRole="station" ToRole="stopat" />
+        </EntityType>
+        <EntityType Name="stopat">
+          <Key>
+            <PropertyRef Name="TID" />
+            <PropertyRef Name="SID" />
+            <PropertyRef Name="Direction" />
+          </Key>
+          <Property Name="TID" Type="Int16" Nullable="false" />
+          <Property Name="SID" Type="Int16" Nullable="false" />
+          <Property Name="Direction" Type="Boolean" Nullable="false" />
+          <Property Name="Atime" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="Dtime" Type="Time" Nullable="false" Precision="7" />
+          <NavigationProperty Name="station" Relationship="Self.FK_station" FromRole="stopat" ToRole="station" />
+          <NavigationProperty Name="train" Relationship="Self.FK_train" FromRole="stopat" ToRole="train" />
+        </EntityType>
+        <EntityType Name="train">
+          <Key>
+            <PropertyRef Name="TID" />
+          </Key>
+          <Property Name="TID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Sstation" Type="Int16" Nullable="false" />
+          <Property Name="Estation" Type="Int16" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="150" FixedLength="true" Unicode="true" />
+          <Property Name="RID" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="devices" Relationship="Self.FK_device_ToTable" FromRole="train" ToRole="device" />
+          <NavigationProperty Name="logs" Relationship="Self.FK_log_ToTable" FromRole="train" ToRole="log" />
+          <NavigationProperty Name="route" Relationship="Self.FK_train_ToTable" FromRole="train" ToRole="route" />
+          <NavigationProperty Name="stopats" Relationship="Self.FK_train" FromRole="train" ToRole="stopat" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="UID" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="30" FixedLength="true" Unicode="true" />
+          <Property Name="Uname" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_device_ToTable">
+          <End Role="train" Type="Self.train" Multiplicity="1" />
+          <End Role="device" Type="Self.device" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="train">
+              <PropertyRef Name="TID" />
+            </Principal>
+            <Dependent Role="device">
+              <PropertyRef Name="TID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_location_ToTable">
+          <End Role="device" Type="Self.device" Multiplicity="1" />
+          <End Role="location" Type="Self.location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="device">
+              <PropertyRef Name="DID" />
+            </Principal>
+            <Dependent Role="location">
+              <PropertyRef Name="DID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_log_ToTable">
+          <End Role="train" Type="Self.train" Multiplicity="1" />
+          <End Role="log" Type="Self.log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="train">
+              <PropertyRef Name="TID" />
+            </Principal>
+            <Dependent Role="log">
+              <PropertyRef Name="TID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_station_ToTable">
+          <End Role="route" Type="Self.route" Multiplicity="1" />
+          <End Role="station" Type="Self.station" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="route">
+              <PropertyRef Name="RID" />
+            </Principal>
+            <Dependent Role="station">
+              <PropertyRef Name="RID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_train_ToTable">
+          <End Role="route" Type="Self.route" Multiplicity="1" />
+          <End Role="train" Type="Self.train" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="route">
+              <PropertyRef Name="RID" />
+            </Principal>
+            <Dependent Role="train">
+              <PropertyRef Name="RID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_station">
+          <End Role="station" Type="Self.station" Multiplicity="1" />
+          <End Role="stopat" Type="Self.stopat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="station">
+              <PropertyRef Name="SID" />
+            </Principal>
+            <Dependent Role="stopat">
+              <PropertyRef Name="SID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_train">
+          <End Role="train" Type="Self.train" Multiplicity="1" />
+          <End Role="stopat" Type="Self.stopat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="train">
+              <PropertyRef Name="TID" />
+            </Principal>
+            <Dependent Role="stopat">
+              <PropertyRef Name="TID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ProjectDBEntities2" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="devices" EntityType="Self.device" />
+          <EntitySet Name="locations" EntityType="Self.location" />
+          <EntitySet Name="logs" EntityType="Self.log" />
+          <EntitySet Name="routes" EntityType="Self.route" />
+          <EntitySet Name="stations" EntityType="Self.station" />
+          <EntitySet Name="stopats" EntityType="Self.stopat" />
+          <EntitySet Name="trains" EntityType="Self.train" />
+          <EntitySet Name="users" EntityType="Self.user" />
+          <AssociationSet Name="FK_device_ToTable" Association="Self.FK_device_ToTable">
+            <End Role="train" EntitySet="trains" />
+            <End Role="device" EntitySet="devices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_location_ToTable" Association="Self.FK_location_ToTable">
+            <End Role="device" EntitySet="devices" />
+            <End Role="location" EntitySet="locations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_log_ToTable" Association="Self.FK_log_ToTable">
+            <End Role="train" EntitySet="trains" />
+            <End Role="log" EntitySet="logs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_station_ToTable" Association="Self.FK_station_ToTable">
+            <End Role="route" EntitySet="routes" />
+            <End Role="station" EntitySet="stations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_train_ToTable" Association="Self.FK_train_ToTable">
+            <End Role="route" EntitySet="routes" />
+            <End Role="train" EntitySet="trains" />
+          </AssociationSet>
+          <AssociationSet Name="FK_station" Association="Self.FK_station">
+            <End Role="station" EntitySet="stations" />
+            <End Role="stopat" EntitySet="stopats" />
+          </AssociationSet>
+          <AssociationSet Name="FK_train" Association="Self.FK_train">
+            <End Role="train" EntitySet="trains" />
+            <End Role="stopat" EntitySet="stopats" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ProjectDBModelStoreContainer" CdmEntityContainer="ProjectDBEntities2">
+          <EntitySetMapping Name="devices">
+            <EntityTypeMapping TypeName="ProjectDBModel.device">
+              <MappingFragment StoreEntitySet="device">
+                <ScalarProperty Name="DID" ColumnName="DID" />
+                <ScalarProperty Name="TID" ColumnName="TID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="locations">
+            <EntityTypeMapping TypeName="ProjectDBModel.location">
+              <MappingFragment StoreEntitySet="location">
+                <ScalarProperty Name="DID" ColumnName="DID" />
+                <ScalarProperty Name="Datetime" ColumnName="Datetime" />
+                <ScalarProperty Name="Locationdata" ColumnName="Locationdata" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="logs">
+            <EntityTypeMapping TypeName="ProjectDBModel.log">
+              <MappingFragment StoreEntitySet="log">
+                <ScalarProperty Name="TID" ColumnName="TID" />
+                <ScalarProperty Name="Datetime" ColumnName="Datetime" />
+                <ScalarProperty Name="Stime" ColumnName="Stime" />
+                <ScalarProperty Name="Etime" ColumnName="Etime" />
+                <ScalarProperty Name="Maxspeed" ColumnName="Maxspeed" />
+                <ScalarProperty Name="Avgspeed" ColumnName="Avgspeed" />
+                <ScalarProperty Name="Delay" ColumnName="Delay" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="routes">
+            <EntityTypeMapping TypeName="ProjectDBModel.route">
+              <MappingFragment StoreEntitySet="route">
+                <ScalarProperty Name="RID" ColumnName="RID" />
+                <ScalarProperty Name="Sstation" ColumnName="Sstation" />
+                <ScalarProperty Name="Estation" ColumnName="Estation" />
+                <ScalarProperty Name="Distance" ColumnName="Distance" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stations">
+            <EntityTypeMapping TypeName="ProjectDBModel.station">
+              <MappingFragment StoreEntitySet="station">
+                <ScalarProperty Name="SID" ColumnName="SID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Distance" ColumnName="Distance" />
+                <ScalarProperty Name="Llongitude" ColumnName="Llongitude" />
+                <ScalarProperty Name="Llatitude" ColumnName="Llatitude" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Telephone" ColumnName="Telephone" />
+                <ScalarProperty Name="RID" ColumnName="RID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stopats">
+            <EntityTypeMapping TypeName="ProjectDBModel.stopat">
+              <MappingFragment StoreEntitySet="stopat">
+                <ScalarProperty Name="TID" ColumnName="TID" />
+                <ScalarProperty Name="SID" ColumnName="SID" />
+                <ScalarProperty Name="Direction" ColumnName="Direction" />
+                <ScalarProperty Name="Atime" ColumnName="Atime" />
+                <ScalarProperty Name="Dtime" ColumnName="Dtime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="trains">
+            <EntityTypeMapping TypeName="ProjectDBModel.train">
+              <MappingFragment StoreEntitySet="train">
+                <ScalarProperty Name="TID" ColumnName="TID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Sstation" ColumnName="Sstation" />
+                <ScalarProperty Name="Estation" ColumnName="Estation" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="RID" ColumnName="RID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="users">
+            <EntityTypeMapping TypeName="ProjectDBModel.user">
+              <MappingFragment StoreEntitySet="user">
+                <ScalarProperty Name="UID" ColumnName="UID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Uname" ColumnName="Uname" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

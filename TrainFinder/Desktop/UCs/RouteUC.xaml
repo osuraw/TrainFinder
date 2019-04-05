@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="Desktop.Route"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Desktop"
+             mc:Ignorable="d"
+             FontSize="24"
+             d:DesignHeight="765" d:DesignWidth="1385">
+
+    <Grid Background="Azure">
+        <GroupBox Margin="20,20,0,0" Header="Search" Width="515" Height="120" BorderThickness="3" BorderBrush="Black"
+                  HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Grid Margin="15">
+                <Label Content="Route"  HorizontalAlignment="Left" Margin="10,10,0,0"
+                       VerticalAlignment="Top" Height="39" Width="88" />
+                <ComboBox Name="CmbRoutes" SelectedIndex="0"
+                          Margin="119,7,10.4,2.6">
+                    Select Route
+                </ComboBox>
+            </Grid>
+        </GroupBox>
+        <GroupBox Margin="20,0,0,19.8" Header="Route Details" Width="515" Height="600" BorderThickness="3"
+                  BorderBrush="Black" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            <Grid Margin="15">
+
+                <Label Content="Route Name" HorizontalAlignment="Left" Margin="-1,0,0,0" VerticalAlignment="Top" />
+                <Label Content="Start Station" HorizontalAlignment="Left" Margin="0,83,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" />
+                <Label Content="End Station" HorizontalAlignment="Left" Margin="0,176,0,0" VerticalAlignment="Top" />
+                <Label Content="Distance" HorizontalAlignment="Left" Margin="-1,268,0,0" VerticalAlignment="Top" />
+                <Label Content="Description" HorizontalAlignment="Left" Margin="0,379,0,0" VerticalAlignment="Top" />
+
+                <TextBox Name="txtName" HorizontalAlignment="Left" Height="40" Margin="219,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250"
+                         Text="{Binding Route.Name, UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}" ToolTip="" 
+                />
+                <TextBox Name="txtdistance" HorizontalAlignment="Left" Height="40" Margin="219,287,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="250" 
+                         Text="{Binding Route.Distance , UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}"
+                         />
+                <TextBox Name="txtdescription" HorizontalAlignment="Left" Height="72" Margin="221,379,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" 
+                         Text="{Binding Route.Description , UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}"
+                         />
+                <ComboBox Name="CmbSStation" HorizontalAlignment="Left" Margin="221,83,0,0" VerticalAlignment="Top" Height="40"  Width="250" />
+                <ComboBox Name="CmbEStation" HorizontalAlignment="Left" Margin="222,179,0,0" VerticalAlignment="Top" Height="40" Width="250" />
+
+                <Button Name="BtnAdd" Click="BtnAdd_Click" Command="{Binding UpdateCommand}" Content="Add New" HorizontalAlignment="Left" Margin="10,0,0,10" Width="88" Height="30" VerticalAlignment="Bottom" />
+                <Button Name="BtnUpdate" Command="{Binding UpdateCommand}" Content="Update"  HorizontalAlignment="Left" Margin="113,0,0,10" Width="120" Height="30" VerticalAlignment="Bottom" />
+                <Button Name="BtnDelete" Command="{Binding UpdateCommand}" Content="Delete" HorizontalAlignment="Left" Margin="253,0,0,10" Width="115" Height="30" VerticalAlignment="Bottom" />
+                <Button Name="BtnClear" Content="Clear" Margin="0,0,10,10" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" />
+                
+            </Grid>
+        </GroupBox>
+        <GroupBox Margin="0,0,19.8,19.8" Header="Trains" Width="815" Height="360" BorderThickness="3"
+                  BorderBrush="Black" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Grid >
+                <DataGrid  Margin="10,10,10,50" Grid.ColumnSpan="2"/>
+                <Button Content="Print" Margin="0,0,10.4,9.8" HorizontalAlignment="Right" Width="81" Height="30" VerticalAlignment="Bottom" Grid.Column="1" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Margin="0,20,19.8,0" Header="Station" Width="815" Height="360" BorderThickness="3" BorderBrush="Black" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <Grid >
+                <DataGrid Margin="10,10,10,50" />
+                <Button Content="Print" Margin="0,0,10,10" HorizontalAlignment="Right" Width="81" Height="30" VerticalAlignment="Bottom" />
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

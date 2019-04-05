@@ -1,0 +1,10 @@
+﻿CREATE TABLE [dbo].[train]
+(
+	[TID] SMALLINT NOT NULL PRIMARY KEY IDENTITY, 
+    [Name] NCHAR(50) NULL, 
+    [Sstation] SMALLINT NOT NULL, 
+    [Estation] SMALLINT NOT NULL, 
+    [Description] NCHAR(150) NULL, 
+    [RID] SMALLINT NOT NULL, 
+    CONSTRAINT [FK_train_ToTable] FOREIGN KEY (RID) REFERENCES [route]([RID])
+)

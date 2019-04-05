@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="maincss.css">
+    <script src="main.js"></script> -->
+    <style>
+        body {
+
+            margin: 0px;
+        }
+
+        .head {
+            display: grid;
+            grid-template-columns: 50px auto;
+            grid-template-areas: "img title";
+            background: green;
+        }
+
+        #img {
+            grid-area: img;
+            width: 50px;
+            height: 50px;
+        }
+
+        #title {
+            grid-area: title;
+            margin: 0px;
+            text-align: center;
+        }
+
+        .body {
+            width: auto;
+            height: auto;
+            display: grid;
+            grid-template-columns: auto;
+            grid-template-areas: "form";
+            /*give names to areas */
+            background: yellowgreen;
+        }
+
+        .form {
+            padding: 25px;
+            grid-area: form;
+            /* display: grid;
+            grid-template-columns: auto auto;
+            grid-template-rows: auto auto auto auto auto; */
+        }
+
+        .side {
+            grid-area: side;
+            visibility: collapse;
+        }
+
+        .lab {
+            margin: 10px;
+            float: left;
+            text-align: center;
+            clear: both;
+        }
+
+        .inp {
+            width: 150px;
+            float: right;
+            grid-column: 2;
+        }
+
+        .footter {
+            display: grid;
+            height: 20px;
+            background: blue;
+        }
+
+        #submit {
+            grid-column: 1/span 1;
+            margin: 35px;
+            padding: 5px
+        }
+
+        @media only screen and (min-width: 400px) {
+            .body {
+                width: auto;
+                height: auto;
+                display: grid;
+                grid-template-columns: auto auto;
+                grid-template-areas: "side form";
+                /*give names to areas */
+                background-color: blueviolet;
+            }
+
+            .side {
+                visibility: visible;
+                grid-template-rows: auto auto auto;
+                grid-template-areas: "s1 s2 s3";
+            }
+
+            li
+             {
+                
+             }
+            .form {
+                padding: 25px;
+                grid-column-gap: 25px;
+                display: grid;
+                grid-template-columns: auto;
+                float: left;
+                clear: both;
+                width: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="head">
+        <h1 id="title">Train Finder</h1>
+        <input type="image" id="img" onclick="" src="untitled.png" name="menu"></input>
+    </div>
+    <div class="body">
+        <div class="side">
+            <ul >
+                <li> <input type="button" class="sidemenu" value="Search"></input></li>
+                <li> <input type="button" class="sidemenu" value="Stations"></input></li>
+                <li> <input type="button" class="sidemenu" value="about"></input></li>
+            </ul>
+        </div>
+        <div class="form">
+            <form action="">
+                <label class="lab">Start Station</label>
+                <input type="text" name="SStation" class="inp" id="">
+                <label class="lab">End Station</label>
+                <input type="text" name="EStation" class="inp" id="">
+                <label class="lab">Time</label>
+                <input type="time" name="Time" class="inp" id="">
+                <label class="lab">Date</label>
+                <input type="date" name="Date" class="inp" id="">
+                <input class="inp" id="submit" type="submit" value="Search">
+            </form>
+        </div>
+    </div>
+    <div class="footter">
+    </div>
+
+</body>
+
+</html>
