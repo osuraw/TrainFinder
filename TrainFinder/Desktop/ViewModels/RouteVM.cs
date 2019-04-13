@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using Desktop.command;
-using Desktop.Database;
+using Desktop.Model;
 
 namespace Desktop.ViewModels
 {
@@ -55,7 +55,7 @@ namespace Desktop.ViewModels
 
         public static bool AddRoute()
         {
-            webconnect.Webconnect.CreateWeb("/api/Route", _route);
+            webconnect.Webconnect.ParssData("/api/Route", _route);
             return true;
         }
 

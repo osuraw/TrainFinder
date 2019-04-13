@@ -83,49 +83,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="command\RouteCommand.cs" />
-    <Compile Include="DB.cs" />
-    <Compile Include="logininfor.cs" />
+    <Compile Include="Model\device.cs" />
+    <Compile Include="Model\location.cs" />
+    <Compile Include="Model\log.cs" />
+    <Compile Include="Model\route.cs" />
+    <Compile Include="Model\station.cs" />
+    <Compile Include="Model\stopat.cs" />
+    <Compile Include="Model\train.cs" />
+    <Compile Include="Model\user.cs" />
     <Compile Include="Main.xaml.cs">
       <DependentUpon>Main.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Database\device.cs">
-      <DependentUpon>projectDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\location.cs">
-      <DependentUpon>projectDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\log.cs">
-      <DependentUpon>projectDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\projectDB.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>projectDB.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\projectDB.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>projectDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\projectDB.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>projectDB.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Database\route.cs">
-      <DependentUpon>projectDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\station.cs">
-      <DependentUpon>projectDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\stopat.cs">
-      <DependentUpon>projectDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\train.cs">
-      <DependentUpon>projectDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\user.cs">
-      <DependentUpon>projectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="UCs\PinLocationUC.xaml.cs">
       <DependentUpon>PinLocationUC.xaml</DependentUpon>
@@ -142,7 +109,6 @@
     <Compile Include="UCs\TrainUC.xaml.cs">
       <DependentUpon>TrainUC.xaml</DependentUpon>
     </Compile>
-    <Compile Include="User.cs" />
     <Compile Include="User.xaml.cs">
       <DependentUpon>User.xaml</DependentUpon>
     </Compile>
@@ -215,13 +181,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EntityDeploy Include="Database\projectDB.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>projectDB.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="Database\projectDB.edmx.diagram">
-      <DependentUpon>projectDB.edmx</DependentUpon>
-    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -246,18 +205,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Database\projectDB.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>projectDB.edmx</DependentUpon>
-      <LastGenOutput>projectDB.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Database\projectDB.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>projectDB.edmx</DependentUpon>
-      <LastGenOutput>projectDB.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

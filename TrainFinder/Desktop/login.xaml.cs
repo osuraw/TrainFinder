@@ -1,24 +1,24 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+using Desktop.Model;
 
 namespace Desktop
 {
-    /// <summary>
-    ///     Interaction logic for Login.xaml
-    /// </summary>
+
     public partial class Login : Window
     {
-        private User user;
-
+        private user _user;
         public Login()
         {
             InitializeComponent();
+            _user = new user();
+            this.DataContext = _user;
         }
-
-
         private void Btn_login_OnClick(object sender, RoutedEventArgs e)
         {
-            var flag = new User().Login(txt_user.Text, txt_password.Text);
-            if (flag)
+            _user.Password = txt_password.Password;
+            var httpResponseMessage = webconnect.Webconnect.ParssData("/api/User/Login", _user);
+            if (Boolean.Parse(httpResponseMessage.Content.ReadAsStringAsync().Result))
             {
                 new Main().Show();
                 Close();

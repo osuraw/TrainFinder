@@ -12,11 +12,11 @@ namespace pro_web_a.Controllers
 {
     public class RouteController : ApiController
     {
-        private ProjectDBContext _context;
+        private projectDB _context;
 
         public RouteController()
         {
-            _context=new ProjectDBContext();
+            _context=new projectDB();
         }
 
         [HttpPost]

@@ -7,16 +7,17 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Desktop.Database
+namespace Desktop.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class user
+    public partial class location
     {
-        public byte UID { get; set; }
-        public string Name { get; set; }
-        public string Uname { get; set; }
-        public string Password { get; set; }
+        public byte DID { get; set; }
+        public System.DateTime Datetime { get; set; }
+        public string Locationdata { get; set; }
+    
+        public virtual device device { get; set; }
     }
 }

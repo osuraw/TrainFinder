@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System.Data.Entity;
+using System.Windows;
+using Desktop.Model;
+using Desktop.webconnect;
 
 namespace Desktop
 {
@@ -7,17 +10,18 @@ namespace Desktop
     /// </summary>
     public partial class Window1 : Window
     {
+        private user _user;
         public Window1()
         {
             InitializeComponent();
+            _user = new user();
+            this.DataContext = _user;
         }
 
         private void Btn_update_OnClick(object sender, RoutedEventArgs e)
         {
-            var obj = new User(1, txt_name.Text, txt_uname.Text, ptxt_password.Password, ptxt_cpassword.Password);
-            var flag = obj.Update();
-            MessageBox.Show(flag ? "Successfully updated" : "Update failed", "Information", MessageBoxButton.OK,
-                MessageBoxImage.Information);
+            //bool flag = Webconnect.ParssData("/User/Update",_user);
+            //MessageBox.Show(flag ? "Successfully updated" : "Update failed", "Information", MessageBoxButton.OK,MessageBoxImage.Information);
         }
 
         private void Btn_back_OnClick(object sender, RoutedEventArgs e)

@@ -7,17 +7,21 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Desktop.Database
+namespace Desktop.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class location
+    public partial class log
     {
-        public byte DID { get; set; }
+        public short TID { get; set; }
         public System.DateTime Datetime { get; set; }
-        public string Locationdata { get; set; }
+        public Nullable<System.TimeSpan> Stime { get; set; }
+        public Nullable<System.TimeSpan> Etime { get; set; }
+        public Nullable<double> Maxspeed { get; set; }
+        public Nullable<double> Avgspeed { get; set; }
+        public Nullable<System.TimeSpan> Delay { get; set; }
     
-        public virtual device device { get; set; }
+        public virtual train train { get; set; }
     }
 }

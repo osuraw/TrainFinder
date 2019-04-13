@@ -12,7 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using Desktop.ViewModels;
 
-namespace Desktop.Database
+namespace Desktop.Model
 {
     using System;
     using System.Collections.Generic;

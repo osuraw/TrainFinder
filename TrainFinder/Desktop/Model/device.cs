@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Desktop.Database
+namespace Desktop.Model
 {
     using System;
     using System.Collections.Generic;
