@@ -18,11 +18,11 @@ namespace Desktop.webconnect
                 _client=client;
             }
         }
-        public static HttpResponseMessage ParssData(string rout,object data)
+        public static HttpResponseMessage PostData(string rout,object data)
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:11835/");
+                client.BaseAddress = new Uri("http://localhost:11835/Api/");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 return client.PostAsJsonAsync(rout, data).Result;

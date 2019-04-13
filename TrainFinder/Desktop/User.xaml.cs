@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Net;
 using System.Windows;
 using Desktop.Model;
 using Desktop.webconnect;
@@ -14,14 +15,24 @@ namespace Desktop
         public Window1()
         {
             InitializeComponent();
-            _user = new user();
+            _user = new user(){Name = "ddd"};
             this.DataContext = _user;
         }
 
         private void Btn_update_OnClick(object sender, RoutedEventArgs e)
         {
-            //bool flag = Webconnect.ParssData("/User/Update",_user);
-            //MessageBox.Show(flag ? "Successfully updated" : "Update failed", "Information", MessageBoxButton.OK,MessageBoxImage.Information);
+            var flag = Webconnect.PostData("user/create", _user);
+            if (flag.StatusCode==HttpStatusCode.Created)
+            {
+                MessageBox.Show("Successfully updated", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else if(flag.StatusCode==HttpStatusCode.Conflict)
+            {
+                MessageBox.Show("Conflicting User Name Please Use Different User Name", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                txt_uname.Text = "";
+                
+            }
+
         }
 
         private void Btn_back_OnClick(object sender, RoutedEventArgs e)

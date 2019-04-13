@@ -55,7 +55,7 @@ namespace Desktop.ViewModels
 
         public static bool AddRoute()
         {
-            webconnect.Webconnect.ParssData("/api/Route", _route);
+            webconnect.Webconnect.PostData("/api/Route", _route);
             return true;
         }
 

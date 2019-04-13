@@ -9,14 +9,12 @@
         Background="BlueViolet">
     <Canvas Name="st_pln" FlowDirection="LeftToRight" ToolTip="message">
 
-        <TextBox Name="txt_name" HorizontalAlignment="Left" Height="23" ToolTip="User name" TextWrapping="Wrap"
+        <TextBox Name="txt_name" Text="{Binding Name}" HorizontalAlignment="Left" Height="23" ToolTip="User name" TextWrapping="Wrap"
                  VerticalAlignment="Top" Width="120" Canvas.Left="414" Canvas.Top="72" />
-        <TextBox Name="txt_uname" HorizontalAlignment="Left" Height="23" ToolTip="User name" TextWrapping="Wrap"
+        <TextBox Name="txt_uname" Text="{Binding Uname}" HorizontalAlignment="Left" Height="23" ToolTip="User name" TextWrapping="Wrap"
                  VerticalAlignment="Top" Width="120" Canvas.Left="414" Canvas.Top="120" />
-        <PasswordBox Name="ptxt_password" Canvas.Left="415" Canvas.Top="250" ToolTip="Password" Height="23"
-                     VerticalAlignment="Top" Width="120" />
-        <PasswordBox Name="ptxt_cpassword" Canvas.Left="415" Canvas.Top="165" ToolTip="Confirm Password" Height="23"
-                     VerticalAlignment="Top" Width="120" />
+        <PasswordBox Name="ptxt_password" Canvas.Left="415" Canvas.Top="250" ToolTip="Password" Height="23" VerticalAlignment="Top" Width="120" />
+        <PasswordBox Name="ptxt_cpassword" Canvas.Left="415" Canvas.Top="165" ToolTip="Confirm Password" Height="23" VerticalAlignment="Top" Width="120" />
 
         <Button Name="btn_update" Click="Btn_update_OnClick" Content="Update" Canvas.Left="460" Canvas.Top="361"
                 Width="75" />

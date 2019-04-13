@@ -17,9 +17,11 @@ namespace Desktop
         private void Btn_login_OnClick(object sender, RoutedEventArgs e)
         {
             _user.Password = txt_password.Password;
-            var httpResponseMessage = webconnect.Webconnect.ParssData("/api/User/Login", _user);
-            if (Boolean.Parse(httpResponseMessage.Content.ReadAsStringAsync().Result))
+            var httpResponseMessage = webconnect.Webconnect.PostData("User/Login", _user);
+            if (int.TryParse(httpResponseMessage.Content.ReadAsStringAsync().Result,out int id))
             {
+                logininfor.UserId = id;
+                logininfor.LogTime=DateTime.Now;
                 new Main().Show();
                 Close();
             }
