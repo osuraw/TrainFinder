@@ -1,0 +1,1 @@
+﻿DBCC CHECKIDENT ('route', RESEED, 0);

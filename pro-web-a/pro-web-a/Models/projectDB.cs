@@ -10,6 +10,7 @@ namespace pro_web_a.Models
         public projectDB()
             : base("name=projectDBContext")
         {
+            this.Configuration.LazyLoadingEnabled = false;
         }
 
         public virtual DbSet<device> devices { get; set; }

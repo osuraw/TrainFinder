@@ -125,7 +125,10 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\RouteController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\StationsController.cs" />
+    <Compile Include="Controllers\TrainsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="DTOs\Route.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

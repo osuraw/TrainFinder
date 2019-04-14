@@ -9,57 +9,69 @@
              d:DesignHeight="765" d:DesignWidth="1385">
 
     <Grid Background="Azure">
-        <GroupBox Margin="20,20,0,0" Header="Search" Width="515" Height="120" BorderThickness="3" BorderBrush="Black"
+        <GroupBox Margin="20,20,0,0" Header="Search" Width="515" Height="166" BorderThickness="3" BorderBrush="Black"
                   HorizontalAlignment="Left" VerticalAlignment="Top">
             <Grid Margin="15">
-                <Label Content="Route"  HorizontalAlignment="Left" Margin="10,10,0,0"
+                <Label Content="Route"  HorizontalAlignment="Left" Margin="11,27,0,0"
                        VerticalAlignment="Top" Height="39" Width="88" />
-                <ComboBox Name="CmbRoutes" SelectedIndex="0"
-                          Margin="119,7,10.4,2.6">
-                    Select Route
-                </ComboBox>
+                <ComboBox Name="CmbRoutes" SelectionChanged="CmbRoutes_SelectionChanged"  ItemsSource="{Binding RoutesName , Mode=TwoWay}" SelectedIndex="0" Margin="120,24,10.4,31.2"></ComboBox>
             </Grid>
         </GroupBox>
-        <GroupBox Margin="20,0,0,19.8" Header="Route Details" Width="515" Height="600" BorderThickness="3"
+        <GroupBox Margin="10,0,0,9.8" Header="Route Details" Width="515" Height="517" BorderThickness="3"
                   BorderBrush="Black" HorizontalAlignment="Left" VerticalAlignment="Bottom">
             <Grid Margin="15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="27*"/>
+                    <ColumnDefinition Width="32*"/>
+                </Grid.ColumnDefinitions>
 
-                <Label Content="Route Name" HorizontalAlignment="Left" Margin="-1,0,0,0" VerticalAlignment="Top" />
-                <Label Content="Start Station" HorizontalAlignment="Left" Margin="0,83,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" />
-                <Label Content="End Station" HorizontalAlignment="Left" Margin="0,176,0,0" VerticalAlignment="Top" />
-                <Label Content="Distance" HorizontalAlignment="Left" Margin="-1,268,0,0" VerticalAlignment="Top" />
-                <Label Content="Description" HorizontalAlignment="Left" Margin="0,379,0,0" VerticalAlignment="Top" />
+                <Label Content="Route Name" HorizontalAlignment="Left" Margin="2,10,0,0" VerticalAlignment="Top" Height="42" Width="142" />
+                <!--<Label Content="Start Station" HorizontalAlignment="Left" Margin="0,83,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" />
+                <Label Content="End Station" HorizontalAlignment="Left" Margin="0,176,0,0" VerticalAlignment="Top" />-->
+                <Label Content="Distance" HorizontalAlignment="Left" Margin="1,90,0,0" VerticalAlignment="Top" Height="42" Width="101" />
+                <Label Content="Description" HorizontalAlignment="Left" Margin="2,154,0,0" VerticalAlignment="Top" Height="42" Width="131" />
 
-                <TextBox Name="txtName" HorizontalAlignment="Left" Height="40" Margin="219,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250"
-                         Text="{Binding Route.Name, UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}" ToolTip="" 
+                <TextBox Name="txtName" HorizontalAlignment="Left" Height="40" Margin="164,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="298"
+                         Text="{Binding Route.Name, UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}" ToolTip="" Grid.ColumnSpan="2" 
                 />
-                <TextBox Name="txtdistance" HorizontalAlignment="Left" Height="40" Margin="219,287,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="250" 
-                         Text="{Binding Route.Distance , UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}"
+                <TextBox Name="txtdistance" HorizontalAlignment="Left" Height="40" Margin="164,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="298" 
+                         Text="{Binding Route.Distance , UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}" Grid.ColumnSpan="2"
                          />
-                <TextBox Name="txtdescription" HorizontalAlignment="Left" Height="72" Margin="221,379,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" 
-                         Text="{Binding Route.Description , UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}"
+                <TextBox Name="txtdescription" HorizontalAlignment="Left" Height="154" Margin="164,154,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="298" 
+                         Text="{Binding Route.Description , UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}" Grid.ColumnSpan="2"
                          />
-                <ComboBox Name="CmbSStation" HorizontalAlignment="Left" Margin="221,83,0,0" VerticalAlignment="Top" Height="40"  Width="250" />
-                <ComboBox Name="CmbEStation" HorizontalAlignment="Left" Margin="222,179,0,0" VerticalAlignment="Top" Height="40" Width="250" />
+                <!--<ComboBox Name="CmbSStation" HorizontalAlignment="Left" Margin="221,83,0,0" VerticalAlignment="Top" Height="40"  Width="250" />
+                <ComboBox Name="CmbEStation" HorizontalAlignment="Left" Margin="222,179,0,0" VerticalAlignment="Top" Height="40" Width="250" />-->
 
-                <Button Name="BtnAdd" Click="BtnAdd_Click" Command="{Binding UpdateCommand}" Content="Add New" HorizontalAlignment="Left" Margin="10,0,0,10" Width="88" Height="30" VerticalAlignment="Bottom" />
-                <Button Name="BtnUpdate" Command="{Binding UpdateCommand}" Content="Update"  HorizontalAlignment="Left" Margin="113,0,0,10" Width="120" Height="30" VerticalAlignment="Bottom" />
-                <Button Name="BtnDelete" Command="{Binding UpdateCommand}" Content="Delete" HorizontalAlignment="Left" Margin="253,0,0,10" Width="115" Height="30" VerticalAlignment="Bottom" />
-                <Button Name="BtnClear" Content="Clear" Margin="0,0,10,10" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" />
-                
+                <Grid Margin="0,313,0,0.4" Grid.ColumnSpan="2" >
+                    <Grid.RowDefinitions >
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="37*"></ColumnDefinition>
+                        <ColumnDefinition Width="200*"/>
+                        <ColumnDefinition Width="236*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Row="0" Grid.Column="0" Name="BtnAdd" Click="BtnAdd_Click" Command="{Binding UpdateCommand}" Content="Add New" HorizontalAlignment="Left" Margin="10,0,0,10.2" Width="217" Height="47" VerticalAlignment="Bottom" Grid.ColumnSpan="2" />
+                    <Button Grid.Row="1" Grid.Column="0" Name="BtnUpdate" Command="{Binding UpdateCommand}" Content="Update" HorizontalAlignment="Left" Margin="10,0,0,10.4" Width="217" Height="47" VerticalAlignment="Bottom" Grid.ColumnSpan="2" />
+                    <Button Grid.Row="0" Grid.Column="2" Name="BtnDelete" Command="{Binding UpdateCommand}" Content="Delete" HorizontalAlignment="Left" Margin="10.2,0,0,10.2" Width="216" Height="47" VerticalAlignment="Bottom" Click="BtnDelete_Click"  />
+                    <Button Grid.Row="1" Grid.Column="2" Name="BtnClear" Click="BtnClear_OnClick" Content="Clear" Margin="0,0,9.8,10.4" Height="47" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="216"  />
+                </Grid>
             </Grid>
         </GroupBox>
         <GroupBox Margin="0,0,19.8,19.8" Header="Trains" Width="815" Height="360" BorderThickness="3"
                   BorderBrush="Black" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Grid >
-                <DataGrid  Margin="10,10,10,50" Grid.ColumnSpan="2"/>
-                <Button Content="Print" Margin="0,0,10.4,9.8" HorizontalAlignment="Right" Width="81" Height="30" VerticalAlignment="Bottom" Grid.Column="1" />
+                <DataGrid Name="Dgv_Train"  Margin="10,10,10,55" Grid.ColumnSpan="2" IsReadOnly="True"/>
+                <Button Content="Print" Margin="0,0,10.4,8.6" HorizontalAlignment="Right" Width="250" Height="40" VerticalAlignment="Bottom" Grid.Column="1" />
             </Grid>
         </GroupBox>
         <GroupBox Margin="0,20,19.8,0" Header="Station" Width="815" Height="360" BorderThickness="3" BorderBrush="Black" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Grid >
-                <DataGrid Margin="10,10,10,50" />
-                <Button Content="Print" Margin="0,0,10,10" HorizontalAlignment="Right" Width="81" Height="30" VerticalAlignment="Bottom" />
+                <DataGrid Name="Dgv_Station" Margin="10,10,10,55" IsReadOnly="True" />
+                <Button Content="Print" Margin="0,0,10.4,8.6" HorizontalAlignment="Right" Width="250" Height="40" VerticalAlignment="Bottom" />
             </Grid>
         </GroupBox>
     </Grid>
