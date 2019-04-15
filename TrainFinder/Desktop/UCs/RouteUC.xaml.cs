@@ -1,11 +1,6 @@
-﻿using System;
-using System.Data.Entity.Migrations;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using Desktop.Model;
 //using Desktop.entity;
 using Desktop.ViewModels;
 
@@ -19,47 +14,46 @@ namespace Desktop
     {
         private byte index;
         private RouteVM _routeVm;
+
         public Route()
         {
             InitializeComponent();
-            _routeVm=new RouteVM();
+            _routeVm = new RouteVM();
             this.DataContext = _routeVm;
-              Debug.WriteLine(_routeVm.RoutesList.Count);
+            Debug.WriteLine(_routeVm.RoutesList.Count);
         }
 
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(_routeVm.AddRoute()? "New Route Added Successfully": "Adding Failed", "Information", MessageBoxButton.OK,MessageBoxImage.Information);
-            BtnClear_OnClick(this,e);
-            
+            MessageBox.Show(_routeVm.AddRoute() ? "New Route Added Successfully" : "Adding Failed", "Information",MessageBoxButton.OK, MessageBoxImage.Information);
+            BtnClear_OnClick(this, e);
         }
+
         private void CmbRoutes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Dgv_Station.ItemsSource = "";
             Dgv_Train.ItemsSource = "";
-            if (CmbRoutes.SelectedIndex!=0)
+            if (CmbRoutes.SelectedIndex > 0)
             {
-                index = (byte)CmbRoutes.SelectedIndex;
+                index = (byte) CmbRoutes.SelectedIndex;
                 index--;
                 _routeVm.LoadTableContent(index);
-                //txtName.Text = _routeVm.RoutesList[index].Name;
-                //txtdistance.Text = _routeVm.RoutesList[index].Distance.ToString();
-                //txtdescription.Text = _routeVm.RoutesList[index].Distance.ToString();
-                Dgv_Station.ItemsSource= _routeVm.Stations.ToArray();
-                Dgv_Train.ItemsSource= _routeVm.Trains.ToArray();
+                Dgv_Station.ItemsSource = _routeVm.Stations.ToArray();
+                Dgv_Train.ItemsSource = _routeVm.Trains.ToArray();
+                //check user-ability
                 BtnAdd.IsEnabled = false;
-
             }
-
+            else
+            {
+                _routeVm.Reset();
+            }
         }
 
         private void BtnClear_OnClick(object sender, RoutedEventArgs e)
         {
             Dgv_Station.ItemsSource = "";
             Dgv_Train.ItemsSource = "";
-            txtName.Text = "";
-            txtdescription.Text = "";
-            txtdistance.Text = "";
+            _routeVm.Reset();
             CmbRoutes.SelectedIndex = 0;
             BtnAdd.IsEnabled = true;
         }
@@ -68,15 +62,28 @@ namespace Desktop
         {
             if (CmbRoutes.SelectedIndex != 0)
             {
-                _routeVm.DeleteRoute(_routeVm.RoutesList[index].RID);
-                txtName.Text = _routeVm.RoutesList[index].Name;
-                txtdistance.Text = _routeVm.RoutesList[index].Distance.ToString();
-                txtdescription.Text = _routeVm.RoutesList[index].Distance.ToString();
-                Dgv_Station.ItemsSource = _routeVm.Stations.ToArray();
-                Dgv_Train.ItemsSource = _routeVm.Trains.ToArray();
+                _routeVm.DeleteRoute(index);
+                CmbRoutes.SelectedIndex = 0;
                 BtnAdd.IsEnabled = false;
-
             }
+            else
+            {
+                MessageBox.Show("No route Selected", "Information", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+        }
+
+        private void BtnUpdate_OnClick(object sender, RoutedEventArgs e)
+        {
+            
+            if (CmbRoutes.SelectedIndex != 0)
+            {
+                MessageBox.Show(_routeVm.Update(index) ? "Route Update Successfully" : "Update Failed", "Information",MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("No route Selected", "Information", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            CmbRoutes.SelectedIndex = 0;
         }
     }
 }

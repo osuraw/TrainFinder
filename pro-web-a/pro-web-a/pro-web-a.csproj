@@ -132,6 +132,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904150522496_InitialMigration.cs" />
+    <Compile Include="Migrations\201904150522496_InitialMigration.Designer.cs">
+      <DependentUpon>201904150522496_InitialMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904150524540_AddDescriptionColumnToRoute.cs" />
+    <Compile Include="Migrations\201904150524540_AddDescriptionColumnToRoute.Designer.cs">
+      <DependentUpon>201904150524540_AddDescriptionColumnToRoute.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\device.cs" />
     <Compile Include="Models\location.cs" />
     <Compile Include="Models\log.cs" />
@@ -159,6 +168,14 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201904150522496_InitialMigration.resx">
+      <DependentUpon>201904150522496_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904150524540_AddDescriptionColumnToRoute.resx">
+      <DependentUpon>201904150524540_AddDescriptionColumnToRoute.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Net;
 using System.Windows.Input;
@@ -9,13 +10,12 @@ using Newtonsoft.Json;
 
 namespace Desktop.ViewModels
 {
-    public class RouteVM
+    public class RouteVM:INotifyPropertyChanged
     {
         #region Propety_constrtors
 
-
         private List<route> _routes;
-        private List<string> _routesName;
+        private ObservableCollection<string> _routesName;
         private List<station> _stations;
         private List<train> _trains;
         private  route _route;
@@ -33,7 +33,8 @@ namespace Desktop.ViewModels
             get => _routes;
             set => _routes = value;
         }
-        public List<string> RoutesName
+
+        public ObservableCollection<string> RoutesName
         {
             get => _routesName;
             set => _routesName = value;
@@ -60,43 +61,33 @@ namespace Desktop.ViewModels
 
         #endregion
 
-        #region Icommand
-
-        public ICommand UpdateCommand
-        {
-            get;
-            private set;
-        }
-
-
-        public bool CanUpdate
-        {
-            get => Route.IsValid;
-            set => _canUpdate = value;
-        }
-
-        #endregion
-
         #region Methods
 
         #region internel
 
-        public void LoadTableContent(int id)
+        public void LoadTableContent(int index)
         {
-            Route = RoutesList[id];
+            Route = RoutesList[index];
+            OnPropertyChanged("Route");
             GetStation(_route.RID);
             GetTrain(_route.RID);
         }
 
+        public void Reset()
+        {
+            Route = new route();
+            OnPropertyChanged("Route");
+        }
 
         #endregion
-        
+
         #region To server
 
-        public  bool AddRoute()
+        public bool AddRoute()
         {
+            _route.RID = 0;
             var response = Webconnect.PostData("Route/CreateRoute", _route);
-            if (response.StatusCode==HttpStatusCode.Created)
+            if (response.StatusCode == HttpStatusCode.Created)
             {
                 RoutesName.Add(_route.Name);
                 RoutesList.Add(_route);
@@ -106,12 +97,28 @@ namespace Desktop.ViewModels
             return false;
         }
 
-        public  void GetRouteList()
+        public bool Update(int index)
+        {
+            var id = RoutesList[index].RID;
+            var response = Webconnect.PostData("Route/CreateRoute", _route);
+            if (response.StatusCode == HttpStatusCode.Created)
+            {
+                RoutesList[index++] = _route;
+                RoutesName[index] = _route.Name;
+                OnPropertyChanged("Route");
+                return true;
+            }
+
+            return false;
+        }
+
+        public void GetRouteList()
         {
             var tempData = Webconnect.GetData("Route/GetRouteList");
+            //null fields in table make exceptions
             var results = JsonConvert.DeserializeObject<IEnumerable<route>>(tempData);
             _routes = new List<route>();
-            _routesName=new List<string>();
+            _routesName = new ObservableCollection<string>();
             _routesName.Add("Select Route");
             foreach (var result in results)
             {
@@ -121,15 +128,16 @@ namespace Desktop.ViewModels
                     Name = result.Name,
                     Distance = result.Distance,
                     Sstation = result.Sstation,
-                    Estation = result.Estation
+                    Estation = result.Estation,
+                    Description = result.Description
                 };
                 RoutesList.Add(temp);
                 RoutesName.Add(result.Name);
             }
-                
+
         }
 
-        public void GetStation(int id=0)
+        public void GetStation(int id = 0)
         {
             var tempData = Webconnect.GetData("Stations/GetStationInRoute/" + id);
             var results = JsonConvert.DeserializeObject<IEnumerable<station>>(tempData);
@@ -148,7 +156,6 @@ namespace Desktop.ViewModels
                 Stations.Add(temp);
             }
         }
-
 
         private void GetTrain(int id)
         {
@@ -169,13 +176,15 @@ namespace Desktop.ViewModels
             }
         }
 
+        //not use due to foreign key delete exception
         public bool DeleteRoute(int id)
         {
-            var response = Webconnect.DeleteData("Route/CreateRoute/"+id);
+            var response = Webconnect.DeleteData("Route/DeleteRoute/" + RoutesList[id].RID);
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 RoutesName.Remove(_route.Name);
                 RoutesList.Remove(_route);
+                Reset();
                 return true;
             }
 
@@ -185,5 +194,36 @@ namespace Desktop.ViewModels
         #endregion
 
         #endregion
+
+        #region Icommand
+
+        public ICommand UpdateCommand
+        {
+            get;
+            private set;
+        }
+
+
+        public bool CanUpdate
+        {
+            get => Route.IsValid;
+            set => _canUpdate = value;
+        }
+
+        #endregion
+        
+        #region Inotify
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string property)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
+            }
+        }
+
+        #endregion
+        
     }
 }

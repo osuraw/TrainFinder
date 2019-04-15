@@ -13,7 +13,7 @@ namespace Desktop.Model
         private RouteVM _routeVm;
 
         #region Entity
-
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         public route()
         {
         }
@@ -27,6 +27,7 @@ namespace Desktop.Model
         public int Sstation { get; set; }
         public int Estation { get; set; }
         public float Distance { get; set; }
+        public string Description { get; set; } 
         public string Name { get; set; }
          #endregion
 
@@ -111,8 +112,6 @@ namespace Desktop.Model
         #endregion
 
         #region methods Returns
-
-        
 
         #endregion
 

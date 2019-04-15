@@ -37,6 +37,7 @@ namespace pro_web_a.Controllers
                     routetemp.Name=route.Name;
                     routetemp.Sstation= route.Sstation;
                     routetemp.Estation= route.Estation;
+                    routetemp.Description= route.Description;
                 }
 
                 _context.SaveChanges();
@@ -79,6 +80,7 @@ namespace pro_web_a.Controllers
 
                 _context.routes.Remove(route);
                 _context.SaveChanges();
+                //_context.Database.ExecuteSqlCommandAsync("UPDATE Person SET additionalData = JSON_MODIFY(additionalData, 'append  $.phoneNumbers', @phoneNumber) WHERE Id = '@personId', personIdParam,phoneNumberParam");
 
                 return HttpStatusCode.OK;
             }

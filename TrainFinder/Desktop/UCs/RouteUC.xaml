@@ -14,7 +14,7 @@
             <Grid Margin="15">
                 <Label Content="Route"  HorizontalAlignment="Left" Margin="11,27,0,0"
                        VerticalAlignment="Top" Height="39" Width="88" />
-                <ComboBox Name="CmbRoutes" SelectionChanged="CmbRoutes_SelectionChanged"  ItemsSource="{Binding RoutesName , Mode=TwoWay}" SelectedIndex="0" Margin="120,24,10.4,31.2"></ComboBox>
+                <ComboBox Name="CmbRoutes" SelectionChanged="CmbRoutes_SelectionChanged" IsEditable="False" ItemsSource="{Binding RoutesName ,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay }" SelectedIndex="0" Margin="120,24,10.4,31.2"></ComboBox>
             </Grid>
         </GroupBox>
         <GroupBox Margin="10,0,0,9.8" Header="Route Details" Width="515" Height="517" BorderThickness="3"
@@ -32,7 +32,7 @@
                 <Label Content="Description" HorizontalAlignment="Left" Margin="2,154,0,0" VerticalAlignment="Top" Height="42" Width="131" />
 
                 <TextBox Name="txtName" HorizontalAlignment="Left" Height="40" Margin="164,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="298"
-                         Text="{Binding Route.Name, UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}" ToolTip="" Grid.ColumnSpan="2" 
+                         Text="{Binding Route.Name, UpdateSourceTrigger=PropertyChanged ,Mode=TwoWay,ValidatesOnDataErrors=True}" ToolTip="" Grid.ColumnSpan="2" 
                 />
                 <TextBox Name="txtdistance" HorizontalAlignment="Left" Height="40" Margin="164,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="298" 
                          Text="{Binding Route.Distance , UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}" Grid.ColumnSpan="2"
@@ -49,14 +49,13 @@
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="37*"></ColumnDefinition>
-                        <ColumnDefinition Width="200*"/>
-                        <ColumnDefinition Width="236*"></ColumnDefinition>
+                        <ColumnDefinition ></ColumnDefinition>
+                        <ColumnDefinition ></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Row="0" Grid.Column="0" Name="BtnAdd" Click="BtnAdd_Click" Command="{Binding UpdateCommand}" Content="Add New" HorizontalAlignment="Left" Margin="10,0,0,10.2" Width="217" Height="47" VerticalAlignment="Bottom" Grid.ColumnSpan="2" />
-                    <Button Grid.Row="1" Grid.Column="0" Name="BtnUpdate" Command="{Binding UpdateCommand}" Content="Update" HorizontalAlignment="Left" Margin="10,0,0,10.4" Width="217" Height="47" VerticalAlignment="Bottom" Grid.ColumnSpan="2" />
-                    <Button Grid.Row="0" Grid.Column="2" Name="BtnDelete" Command="{Binding UpdateCommand}" Content="Delete" HorizontalAlignment="Left" Margin="10.2,0,0,10.2" Width="216" Height="47" VerticalAlignment="Bottom" Click="BtnDelete_Click"  />
+                    <Button Grid.Row="0" Grid.Column="0" Name="BtnAdd" Click="BtnAdd_Click" Command="{Binding UpdateCommand}" Content="Add New" HorizontalAlignment="Left" Margin="10,0,0,10.2" Width="453" Height="47" VerticalAlignment="Bottom" Grid.ColumnSpan="2" />
+                    <Button Grid.Row="1" Grid.Column="0" Name="BtnUpdate" Click="BtnUpdate_OnClick" Command="{Binding UpdateCommand}" Content="Update" HorizontalAlignment="Left" Margin="10,0,0,10.4" Width="217" Height="47" VerticalAlignment="Bottom" Grid.ColumnSpan="2" />
+                    <!--<Button Grid.Row="0" Grid.Column="2" Name="BtnDelete" Click="BtnDelete_Click" Command="{Binding UpdateCommand}" Content="Delete" HorizontalAlignment="Left" Margin="10.2,0,0,10.2" Width="216" Height="47" VerticalAlignment="Bottom"   />-->
                     <Button Grid.Row="1" Grid.Column="2" Name="BtnClear" Click="BtnClear_OnClick" Content="Clear" Margin="0,0,9.8,10.4" Height="47" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="216"  />
                 </Grid>
             </Grid>
