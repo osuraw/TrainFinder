@@ -28,11 +28,6 @@ namespace pro_web_a.Models
                 .Property(e => e.Description)
                 .IsFixedLength();
 
-            modelBuilder.Entity<device>()
-                .HasMany(e => e.locations)
-                .WithRequired(e => e.device)
-                .WillCascadeOnDelete(false);
-
             modelBuilder.Entity<route>()
                 .HasMany(e => e.stations)
                 .WithRequired(e => e.route)

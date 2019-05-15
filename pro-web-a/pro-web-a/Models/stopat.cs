@@ -23,9 +23,9 @@ namespace pro_web_a.Models
         [Column(Order = 2)]
         public bool Direction { get; set; }
 
-        public TimeSpan Atime { get; set; }
+        public float Atime { get; set; }
 
-        public TimeSpan Dtime { get; set; }
+        public float Dtime { get; set; }
 
         public virtual station station { get; set; }
 

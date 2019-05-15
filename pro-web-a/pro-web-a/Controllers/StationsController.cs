@@ -2,6 +2,7 @@
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using pro_web_a.Models;
@@ -36,8 +37,8 @@ namespace pro_web_a.Controllers
         [ResponseType(typeof(station))]
         public IHttpActionResult GetStationInRoute(short id=0)
         {
-            var station = _context.stations.Where(s => s.RID.Equals(id));
-            if (!station.Any())
+            var station = _context.stations.Where(s => s.RID.Equals(id)).ToList();
+            if (station.Count==0)
             {
                 return NotFound();
             }
@@ -77,22 +78,24 @@ namespace pro_web_a.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return StatusCode(HttpStatusCode.Created);
         }
 
         // POST: api/Stations
         [ResponseType(typeof(station))]
-        public IHttpActionResult Poststation(station station)
+        public HttpResponseMessage AddStation(station station)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
 
             _context.stations.Add(station);
             _context.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = station.SID }, station);
+            var res = new HttpResponseMessage(HttpStatusCode.Created);
+            res.Content = new StringContent(station.SID.ToString());
+            return res;
         }
 
         // DELETE: api/Stations/5

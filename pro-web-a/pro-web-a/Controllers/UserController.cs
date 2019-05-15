@@ -14,18 +14,20 @@ namespace pro_web_a.Controllers
     public class UserController : ApiController
     {
         private projectDB _context;
+
         public UserController()
         {
-            _context=new projectDB();
+            _context = new projectDB();
         }
 
         [HttpPost]
-        public int Login(user  user)
+        public IHttpActionResult Login(user user)
         {
             var result = _context.users.SingleOrDefault(c => (c.Uname == user.Uname) && (c.Password == user.Password));
-            return result?.UID ?? 0;
+            if (result != null)
+                return Ok(result.UID);
+            return NotFound();
         }
-
 
 
         /// <summary>
@@ -37,34 +39,29 @@ namespace pro_web_a.Controllers
         [Route("api/User/Create")]
         public HttpResponseMessage Create(user user)
         {
-            if (ModelState.IsValid)
-            {
+            if (!ModelState.IsValid)
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
 
-                if (user.UID==0)
+            if (user.UID == 0)
+            {
+                try
                 {
-                    try
-                    {
-                        _context.users.Add(user);
-                        _context.SaveChanges();
-                        return new HttpResponseMessage(HttpStatusCode.Created);
-                    }
-                    catch (DbUpdateException e)
-                    {
-                        return new HttpResponseMessage(HttpStatusCode.Conflict);
-                    }
-                }
-                else
-                {
-                    var _user = _context.users.Single(u => u.UID == user.UID);
-                    _user.Uname = user.Uname;
-                    _user.Password = user.Password;
+                    _context.users.Add(user);
                     _context.SaveChanges();
                     return new HttpResponseMessage(HttpStatusCode.Created);
+                }
+                catch (DbUpdateException e)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.Conflict);
                 }
             }
             else
             {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+                var _user = _context.users.Single(u => u.UID == user.UID);
+                _user.Uname = user.Uname;
+                _user.Password = user.Password;
+                _context.SaveChanges();
+                return new HttpResponseMessage(HttpStatusCode.Created);
             }
         }
     }

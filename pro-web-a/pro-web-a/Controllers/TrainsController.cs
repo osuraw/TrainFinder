@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using pro_web_a.Models;
@@ -14,17 +10,17 @@ namespace pro_web_a.Controllers
 {
     public class TrainsController : ApiController
     {
-        private projectDB _context = new projectDB();
+        private readonly projectDB _context = new projectDB();
 
         // GET: api/Train
-        public IQueryable<train> Gettrains()
+        public IQueryable<train> GetTrains()
         {
             return _context.trains;
         }
 
         // GET: api/Train/5
         [ResponseType(typeof(train))]
-        public IHttpActionResult Gettrain(short id)
+        public IHttpActionResult GetTrain(short id)
         {
             train train = _context.trains.Find(id);
             if (train == null)
@@ -50,8 +46,9 @@ namespace pro_web_a.Controllers
         }
 
         // PUT: api/Train/5
+        [HttpPut]
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutTrain(short id, train train)
+        public IHttpActionResult UpdateTrain(short id, train train)
         {
             if (!ModelState.IsValid)
             {
@@ -71,7 +68,7 @@ namespace pro_web_a.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!trainExists(id))
+                if (!TrainExists(id))
                 {
                     return NotFound();
                 }
@@ -86,22 +83,20 @@ namespace pro_web_a.Controllers
 
         // POST: api/Train
         [ResponseType(typeof(train))]
-        public IHttpActionResult Posttrain(train train)
+        public IHttpActionResult AddTrain(train train)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
             _context.trains.Add(train);
             _context.SaveChanges();
-
             return CreatedAtRoute("DefaultApi", new { id = train.TID }, train);
         }
 
         // DELETE: api/Train/5
         [ResponseType(typeof(train))]
-        public IHttpActionResult Deletetrain(short id)
+        public IHttpActionResult DeleteTrain(short id)
         {
             train train = _context.trains.Find(id);
             if (train == null)
@@ -124,7 +119,7 @@ namespace pro_web_a.Controllers
             base.Dispose(disposing);
         }
 
-        private bool trainExists(short id)
+        private bool TrainExists(short id)
         {
             return _context.trains.Count(e => e.TID == id) > 0;
         }

@@ -46,6 +46,9 @@
     <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="AutoMapper, Version=8.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.8.1.0\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -56,6 +59,10 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Swashbuckle.Core.5.6.0\lib\net40\Swashbuckle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -70,9 +77,6 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
@@ -96,6 +100,9 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
     </Reference>
@@ -118,14 +125,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\DefaultController.cs" />
+    <Compile Include="Controllers\LocationsController.cs" />
     <Compile Include="Controllers\RouteController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\StationsController.cs" />
+    <Compile Include="Controllers\TimeTablesController.cs" />
+    <Compile Include="DTOs\TrainDataDto.cs" />
     <Compile Include="Controllers\TrainsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DTOs\Route.cs" />
@@ -139,6 +152,30 @@
     <Compile Include="Migrations\201904150524540_AddDescriptionColumnToRoute.cs" />
     <Compile Include="Migrations\201904150524540_AddDescriptionColumnToRoute.Designer.cs">
       <DependentUpon>201904150524540_AddDescriptionColumnToRoute.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904171527057_deleteAtime_DtimeFromStopat.cs" />
+    <Compile Include="Migrations\201904171527057_deleteAtime_DtimeFromStopat.Designer.cs">
+      <DependentUpon>201904171527057_deleteAtime_DtimeFromStopat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904171528514_ChangeAtime_DtimeInStopatTableToFloat.cs" />
+    <Compile Include="Migrations\201904171528514_ChangeAtime_DtimeInStopatTableToFloat.Designer.cs">
+      <DependentUpon>201904171528514_ChangeAtime_DtimeInStopatTableToFloat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904230546464_PridAddedToRoute.cs" />
+    <Compile Include="Migrations\201904230546464_PridAddedToRoute.Designer.cs">
+      <DependentUpon>201904230546464_PridAddedToRoute.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904241536385_adad.cs" />
+    <Compile Include="Migrations\201904241536385_adad.Designer.cs">
+      <DependentUpon>201904241536385_adad.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904280512590_updatetrain.cs" />
+    <Compile Include="Migrations\201904280512590_updatetrain.Designer.cs">
+      <DependentUpon>201904280512590_updatetrain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905092136100_test.cs" />
+    <Compile Include="Migrations\201905092136100_test.Designer.cs">
+      <DependentUpon>201905092136100_test.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\device.cs" />
@@ -156,6 +193,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Locations\Create.cshtml" />
+    <Content Include="Views\Locations\Delete.cshtml" />
+    <Content Include="Views\Locations\Details.cshtml" />
+    <Content Include="Views\Locations\Edit.cshtml" />
+    <Content Include="Views\Locations\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -175,6 +219,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904150524540_AddDescriptionColumnToRoute.resx">
       <DependentUpon>201904150524540_AddDescriptionColumnToRoute.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904171527057_deleteAtime_DtimeFromStopat.resx">
+      <DependentUpon>201904171527057_deleteAtime_DtimeFromStopat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904171528514_ChangeAtime_DtimeInStopatTableToFloat.resx">
+      <DependentUpon>201904171528514_ChangeAtime_DtimeInStopatTableToFloat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904230546464_PridAddedToRoute.resx">
+      <DependentUpon>201904230546464_PridAddedToRoute.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904241536385_adad.resx">
+      <DependentUpon>201904241536385_adad.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904280512590_updatetrain.resx">
+      <DependentUpon>201904280512590_updatetrain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905092136100_test.resx">
+      <DependentUpon>201905092136100_test.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

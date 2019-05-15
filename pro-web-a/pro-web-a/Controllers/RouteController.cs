@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Data.Entity;
-using System.Web.Http.Description;
 using Newtonsoft.Json;
 using pro_web_a.Models;
 
@@ -20,6 +18,11 @@ namespace pro_web_a.Controllers
             _context=new projectDB();
         }
 
+        /// <summary>
+        /// Add New Route(post)
+        /// </summary>
+        /// <param name="route"></param>
+        /// <returns></returns> 
         [HttpPost]
         public HttpResponseMessage CreateRoute(route route)
         {
@@ -41,7 +44,10 @@ namespace pro_web_a.Controllers
                 }
 
                 _context.SaveChanges();
-                return new HttpResponseMessage(HttpStatusCode.Created); 
+
+                var res = new HttpResponseMessage(HttpStatusCode.Created);
+                res.Content = new StringContent(route.RID.ToString());
+                return res;
             }
             else 
             {
@@ -51,18 +57,19 @@ namespace pro_web_a.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<route> GetRoute()
+        public IHttpActionResult GetRoute()
         {
 
             try
             {
                 var re = _context.routes.ToList();
-                return re;
+                var data = JsonConvert.SerializeObject(re);
+                return Ok(re);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
+                return InternalServerError();
             }
         }
 

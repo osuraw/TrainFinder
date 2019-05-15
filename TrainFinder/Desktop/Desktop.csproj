@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\PropertyChanged2.Fody.2.6.0\build\PropertyChanged2.Fody.props" Condition="Exists('..\packages\PropertyChanged2.Fody.2.6.0\build\PropertyChanged2.Fody.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -39,6 +40,9 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\pic\AWT-Train.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net40\EntityFramework.dll</HintPath>
@@ -46,11 +50,21 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Maps.MapControl.WPF">
       <HintPath>C:\Program Files (x86)\Bing Maps WPF Control\V1\Libraries\Microsoft.Maps.MapControl.WPF.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Windows.Shell, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Windows.Shell.3.0.1.0\lib\net40\Microsoft.Windows.Shell.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework.Aero2" />
+    <Reference Include="PropertyChanged2, Version=2.6.0.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyChanged2.Fody.2.6.0\lib\net40\PropertyChanged2.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -65,6 +79,9 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -82,43 +99,95 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="command\RouteCommand.cs" />
+    <Compile Include="Animations\PageAnimation.cs" />
+    <Compile Include="Animations\PageAnimations.cs" />
+    <Compile Include="Animations\StoryBoardHelpers.cs" />
+    <Compile Include="AttachedProperty\BaseAttachedProprerty.cs" />
+    <Compile Include="AttachedProperty\ButtonAttachProperty.cs" />
+    <Compile Include="AttachedProperty\PasswordAttachedProperty.cs" />
+    <Compile Include="Animations\BasePage.cs" />
+    <Compile Include="BaseClasses\BaseViewModel2.cs" />
+    <Compile Include="BaseClasses\RelayCommand.cs" />
+    <Compile Include="BaseClasses\ValuseConverters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="BaseClasses\ValuseConverters\ApplicationPageValueConverter.cs" />
+    <Compile Include="BaseClasses\ValuseConverters\BaseValueConverter.cs" />
+    <Compile Include="CustomAttributes\NumberOnlyValidation.cs" />
+    <Compile Include="CustomAttributes\StingOnlyValidation.cs" />
+    <Compile Include="BaseClasses\BaseViewModelMain.cs" />
+    <Compile Include="BaseClasses\CommandBase.cs" />
+    <Compile Include="Helpers\ExpressionHelper.cs" />
+    <Compile Include="Model\Pinlocation.cs" />
     <Compile Include="Model\device.cs" />
-    <Compile Include="Model\location.cs" />
-    <Compile Include="Model\log.cs" />
-    <Compile Include="Model\route.cs" />
-    <Compile Include="Model\station.cs" />
+    <Compile Include="Model\Route.cs" />
+    <Compile Include="Model\Station.cs" />
     <Compile Include="Model\stopat.cs" />
-    <Compile Include="Model\train.cs" />
+    <Compile Include="Model\Train.cs" />
     <Compile Include="Model\user.cs" />
-    <Compile Include="Main.xaml.cs">
+    <Compile Include="BaseClasses\WindowResizer.cs" />
+    <Compile Include="Helpers\SecureStringHelper.cs" />
+    <Compile Include="ViewModels\IHavePassword.cs" />
+    <Compile Include="ViewModels\LoginPageVm.cs" />
+    <Compile Include="ViewModels\UserVM.cs" />
+    <Compile Include="ViewModels\LoginWindowVm.cs" />
+    <Compile Include="View\LoginPage.xaml.cs">
+      <DependentUpon>LoginPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Main.xaml.cs">
       <DependentUpon>Main.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UCs\PinLocationUC.xaml.cs">
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="ViewModels\PinLocationVm.cs" />
+    <Compile Include="ViewModels\StationVM.cs" />
+    <Compile Include="ViewModels\TimeTableVm.cs" />
+    <Compile Include="ViewModels\TrainVM.cs" />
+    <Compile Include="View\PinLocationUC.xaml.cs">
       <DependentUpon>PinLocationUC.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UCs\RouteUC.xaml.cs">
+    <Compile Include="View\RouteUC.xaml.cs">
       <DependentUpon>RouteUC.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UCs\StationUC.xaml.cs">
+    <Compile Include="View\StationUC.xaml.cs">
       <DependentUpon>StationUC.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UCs\TimeTableUC.xaml.cs">
+    <Compile Include="View\TimeTableUC.xaml.cs">
       <DependentUpon>TimeTableUC.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UCs\TrainUC.xaml.cs">
+    <Compile Include="View\TrainUC.xaml.cs">
       <DependentUpon>TrainUC.xaml</DependentUpon>
     </Compile>
-    <Compile Include="User.xaml.cs">
+    <Compile Include="View\User.xaml.cs">
       <DependentUpon>User.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UCs\UCMaps.xaml.cs">
+    <Compile Include="View\UCMaps.xaml.cs">
       <DependentUpon>UCMaps.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Validations.cs" />
     <Compile Include="ViewModels\RouteVM.cs" />
-    <Compile Include="webconnect\Webconnect.cs" />
-    <Page Include="login.xaml">
+    <Compile Include="BaseClasses\WebConnect.cs" />
+    <Page Include="Style\ErrorTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Style\Color.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Style\Button.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Style\Fonts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Style\Text.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Style\Window.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\loginWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -126,39 +195,43 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="login.xaml.cs">
-      <DependentUpon>login.xaml</DependentUpon>
+    <Compile Include="View\loginWindow.xaml.cs">
+      <DependentUpon>loginWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Main.xaml">
+    <Page Include="View\LoginPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UCs\PinLocationUC.xaml">
+    <Page Include="View\Main.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UCs\RouteUC.xaml">
+    <Page Include="View\PinLocationUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UCs\StationUC.xaml">
+    <Page Include="View\RouteUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UCs\TimeTableUC.xaml">
+    <Page Include="View\StationUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UCs\TrainUC.xaml">
+    <Page Include="View\TimeTableUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="User.xaml">
+    <Page Include="View\TrainUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UCs\UCMaps.xaml">
+    <Page Include="View\User.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UCMaps.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -188,6 +261,25 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Resources\Fonts\fontawesome-webfont.ttf" />
+    <Resource Include="Resources\Fonts\Lato-Black.ttf" />
+    <Resource Include="Resources\Fonts\Lato-BlackItalic.ttf" />
+    <Resource Include="Resources\Fonts\Lato-Bold.ttf" />
+    <Resource Include="Resources\Fonts\Lato-BoldItalic.ttf" />
+    <Resource Include="Resources\Fonts\Lato-Hairline.ttf" />
+    <Resource Include="Resources\Fonts\Lato-HairlineItalic.ttf" />
+    <Resource Include="Resources\Fonts\Lato-Heavy.ttf" />
+    <Resource Include="Resources\Fonts\Lato-HeavyItalic.ttf" />
+    <Resource Include="Resources\Fonts\Lato-Italic.ttf" />
+    <Resource Include="Resources\Fonts\Lato-Light.ttf" />
+    <Resource Include="Resources\Fonts\Lato-LightItalic.ttf" />
+    <Resource Include="Resources\Fonts\Lato-Medium.ttf" />
+    <Resource Include="Resources\Fonts\Lato-MediumItalic.ttf" />
+    <Resource Include="Resources\Fonts\Lato-Regular.ttf" />
+    <Resource Include="Resources\Fonts\Lato-Semibold.ttf" />
+    <Resource Include="Resources\Fonts\Lato-SemiboldItalic.ttf" />
+    <Resource Include="Resources\Fonts\Lato-Thin.ttf" />
+    <Resource Include="Resources\Fonts\Lato-ThinItalic.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -195,16 +287,25 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="pic\untitled.png" />
+    <Resource Include="Resources\pic\untitled.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="pic\mainw.png" />
+    <Resource Include="Resources\pic\mainw.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UCs\partial\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\pic\AWT-Train.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Fody.3.3.5\build\Fody.targets" Condition="Exists('..\packages\Fody.3.3.5\build\Fody.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Fody.3.3.5\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.3.5\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\PropertyChanged2.Fody.2.6.0\build\PropertyChanged2.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PropertyChanged2.Fody.2.6.0\build\PropertyChanged2.Fody.props'))" />
+  </Target>
 </Project>

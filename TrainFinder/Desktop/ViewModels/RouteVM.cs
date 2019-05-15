@@ -1,96 +1,100 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Windows.Input;
-using Desktop.command;
 using Desktop.Model;
-using Desktop.webconnect;
-using Newtonsoft.Json;
 
 namespace Desktop.ViewModels
 {
-    public class RouteVM:INotifyPropertyChanged
+    public class RouteVM : BaseViewModelMain
     {
-        #region Propety_constrtors
+        #region Propety
 
-        private List<route> _routes;
-        private ObservableCollection<string> _routesName;
-        private List<station> _stations;
-        private List<train> _trains;
-        private  route _route;
-        private bool _canUpdate;
-        private RouteCommand _command;
+        public ObservableCollection<Route> RoutesList { get; set; }
+        public ObservableCollection<Station> Stations { get; set; }
+        public ObservableCollection<Train> Trains { get; set; }
+
+        //***********************************************************************
         
-        public route Route
+        public short RouteId
         {
-            get => _route;
-            private set => _route = value;
+            get { return GetValue(() => RouteId);}
+            set { SetValue(()=>RouteId,value);}
         }
 
-        public List<route> RoutesList
+        [Required(ErrorMessage = "Name Must Not Empty")]
+        [StingOnlyValidation]
+        public string Name
         {
-            get => _routes;
-            set => _routes = value;
+            get { return GetValue(() => Name); }
+            set { SetValue(() => Name, value); }
+        }
+        
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Distance Must Not Empty")]
+        [NumberOnlyValidation]
+        public string Distance
+        {
+            get { return GetValue(() => Distance); }
+            set { SetValue(() => Distance, value); }
+
         }
 
-        public ObservableCollection<string> RoutesName
-        {
-            get => _routesName;
-            set => _routesName = value;
-        }
+        public string Description { get; set; }
 
-        public List<station> Stations
-        {
-            get => _stations;
-            set => _stations = value;
-        }
+        //**********************************************************************
 
-        public List<train> Trains
-        {
-            get => _trains;
-            set => _trains = value;
-        }
+        public byte RouteSelectIndex { get; set; } = 0;
+        public bool Validation { get; set; } = true;
+        public static int Errors { get; set; }
+        #endregion
+
+        #region Icommand
+
+        public ICommand AddCommand { get; private set; }
+        public ICommand UpdateCommand { get; private set; }
+        public ICommand ResetCommand { get; private set; }
+        public bool CanUpdate { get; set; }
+
+        #endregion
+        
+        #region Methods
 
         public RouteVM()
         {
-            Route = new route(this);
-            UpdateCommand = new RouteCommand(this);
-            GetRouteList();
+            RoutesList = Route.GetRouteList();
+            AddCommand = new CommandBase(AddRoute,CheckValid);
+            UpdateCommand = new CommandBase(Update, CheckValid);
+            ResetCommand = new CommandBase(action:Reset,canExecute:AlwaysTrue);
         }
-
-        #endregion
-
-        #region Methods
-
-        #region internel
 
         public void LoadTableContent(int index)
         {
-            Route = RoutesList[index];
-            OnPropertyChanged("Route");
-            GetStation(_route.RID);
-            GetTrain(_route.RID);
-        }
-
-        public void Reset()
-        {
-            Route = new route();
+            UpdateViewsProperties(index);
+            Stations = Station.GetStationByRouteId(RouteId);
+            Stations.RemoveAt(0);
+            Trains = Train.GetTrainByRouteId(RouteId);
+            Trains.RemoveAt(0);
             OnPropertyChanged("Route");
         }
-
-        #endregion
-
-        #region To server
 
         public bool AddRoute()
         {
-            _route.RID = 0;
-            var response = Webconnect.PostData("Route/CreateRoute", _route);
+            var route = GetViewData();
+            if (route == null)
+            {
+                Validation = false;
+                return false;
+            }
+
+            route.RID = 0;
+            var response = WebConnect.PostData("Route/CreateRoute", route);
             if (response.StatusCode == HttpStatusCode.Created)
             {
-                RoutesName.Add(_route.Name);
-                RoutesList.Add(_route);
+                var ree = response.Content.ReadAsStringAsync();
+                route.RID = Int16.Parse(ree.Result);
+                RoutesList.Add(route);
+                UpdateViewsProperties(0);
                 return true;
             }
 
@@ -99,131 +103,71 @@ namespace Desktop.ViewModels
 
         public bool Update(int index)
         {
-            var id = RoutesList[index].RID;
-            var response = Webconnect.PostData("Route/CreateRoute", _route);
-            if (response.StatusCode == HttpStatusCode.Created)
+            var route = GetViewData();
+            if(route.RID!=0)
             {
-                RoutesList[index++] = _route;
-                RoutesName[index] = _route.Name;
-                OnPropertyChanged("Route");
-                return true;
+                var response = WebConnect.PostData("Route/CreateRoute", route);
+                if (response.StatusCode == HttpStatusCode.Created)
+                {
+                    RoutesList[index] = route;
+                    OnPropertyChanged("Route");
+                    return true;
+                }
             }
-
             return false;
         }
-
-        public void GetRouteList()
+        
+        private void UpdateViewsProperties(int index)
         {
-            var tempData = Webconnect.GetData("Route/GetRouteList");
-            //null fields in table make exceptions
-            var results = JsonConvert.DeserializeObject<IEnumerable<route>>(tempData);
-            _routes = new List<route>();
-            _routesName = new ObservableCollection<string>();
-            _routesName.Add("Select Route");
-            foreach (var result in results)
-            {
-                var temp = new route
-                {
-                    RID = result.RID,
-                    Name = result.Name,
-                    Distance = result.Distance,
-                    Sstation = result.Sstation,
-                    Estation = result.Estation,
-                    Description = result.Description
-                };
-                RoutesList.Add(temp);
-                RoutesName.Add(result.Name);
-            }
-
+            var data = RoutesList[index];
+            RouteId = data.RID;
+            Name = index != 0 ? data.Name : "";
+            Description = data.Description;
+            Distance = index != 0 ? data.Distance.ToString("##.##"): "";
         }
 
-        public void GetStation(int id = 0)
+        private    Route GetViewData()
         {
-            var tempData = Webconnect.GetData("Stations/GetStationInRoute/" + id);
-            var results = JsonConvert.DeserializeObject<IEnumerable<station>>(tempData);
-            _stations = new List<station>();
-            foreach (var result in results)
-            {
-                var temp = new station
+            if (CheckValid())
+                return new Route()
                 {
-                    SID = result.SID,
-                    Name = result.Name,
-                    Distance = result.Distance,
-                    Llongitude = result.Llongitude,
-                    Address = result.Address,
-                    Telephone = result.Telephone,
+                    RID = RouteId,
+                    Name = Name,
+                    Distance = float.Parse(Distance),
+                    Description = Description
                 };
-                Stations.Add(temp);
-            }
+            return null;
         }
 
-        private void GetTrain(int id)
+        protected override bool CheckValid()
         {
-            var tempData = Webconnect.GetData("Train/GetTrainInRoute/" + id);
-            var results = JsonConvert.DeserializeObject<IEnumerable<train>>(tempData);
-            _trains = new List<train>();
-            foreach (var result in results)
-            {
-                var temp = new train
-                {
-                    TID = result.TID,
-                    Name = result.Name,
-                    Sstation = result.Sstation,
-                    Estation = result.Estation,
-                    Description = result.Description
-                };
-                Trains.Add(temp);
-            }
-        }
-
-        //not use due to foreign key delete exception
-        public bool DeleteRoute(int id)
-        {
-            var response = Webconnect.DeleteData("Route/DeleteRoute/" + RoutesList[id].RID);
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                RoutesName.Remove(_route.Name);
-                RoutesList.Remove(_route);
-                Reset();
+            if (Errors == 0)
                 return true;
-            }
-
-            return false;
+            else
+                return false;
         }
-
-        #endregion
-
-        #endregion
-
-        #region Icommand
-
-        public ICommand UpdateCommand
-        {
-            get;
-            private set;
-        }
-
-
-        public bool CanUpdate
-        {
-            get => Route.IsValid;
-            set => _canUpdate = value;
-        }
-
-        #endregion
         
-        #region Inotify
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string property)
+        protected override void Reset()
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
-            }
+            UpdateViewsProperties(0);
+            RouteSelectIndex = 0;
         }
-
+       
         #endregion
-        
     }
 }
+
+//not use due to foreign key delete exception
+//public bool DeleteRoute(int id)
+//{
+//    var Route = GetViewData();
+//    var response = WebConnect.DeleteData("Route/DeleteRoute/" + RoutesList[id].RID);
+//    if (response.StatusCode == HttpStatusCode.OK)
+//    {
+//        RoutesList.Remove(Route);
+//        Reset();
+//        return true;
+//    }
+
+//    return false;
+//}

@@ -1,0 +1,51 @@
+﻿<Window x:Class="Desktop.Main"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Desktop"
+        mc:Ignorable="d"
+        Title="Main"
+        WindowState="Maximized"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="False"
+        Height="825" Width="1536"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center">
+
+    <Grid Margin="0,0,0,0" ShowGridLines="True" >
+        <Grid.RowDefinitions>
+            <RowDefinition Name="TopRow" Height="75" />
+            <RowDefinition Name="BottomRow" Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Name="LeftCol" Width="180" />
+            <ColumnDefinition Name="RightCol" Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Grid.Row="1" Background="AliceBlue">
+            <Button Width="180" FontSize="30" Click="BtnHome_OnClick" Name="BtnHome" Content="HOME"   />
+            <Button Width="180" FontSize="30" Click="BtnTrain_OnClick" Name="LblTrain" Content="TRAIN" />
+            <Button Width="180" FontSize="30" Click="BtnStation_OnClick" Name="BtnStation" Content="STATION"  />
+            <Button Width="180" FontSize="30" Click="BtnRoute_OnClick" Name="BtnRoute" Content="ROUTE"  />
+            <Button Width="180" FontSize="30" Click="BtnTimeTable_Click" Name="BtnTimeTable" Content="TIME TABLE" />
+            <Button Width="180" FontSize="30" Click="BtnPinLocations_Click" Name="BtnPinLocations" Content="PIN LOCATION"  />
+        </StackPanel>
+        <WrapPanel FlowDirection="LeftToRight" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" Background="Azure">
+            <Label Name="lbl_name" Content="Name:" FontSize="24" Margin="10,20" />
+            <Label Name="lbl_name2" Content="*******" FontSize="24" Margin="10,20" />
+            <Label Name="lbl_date1" Content="Date:" FontSize="24" Margin="10,20" />
+            <Label Name="lbl_date2" Content="*******" FontSize="24" Margin="10,20" />
+            <Label Name="lbl_time" Content="Time:" FontSize="24" Margin="10,20" />
+            <Label Name="lbl_logtime" Content="*******" FontSize="24" Margin="10,20" />
+            <Label Name="lbl_time2" Content="Log Time:" FontSize="24" Margin="10,20" />
+            <Label x:Name="lbl_logtime2" Content="*******" FontSize="24" Margin="10,20" />
+        </WrapPanel>
+        <ContentControl Name="UcGrid" Grid.Row="1" Grid.Column="1"   Visibility="Visible" >
+            <!--<Image Source="pic/mainw.png" Stretch="Fill"></Image>-->
+           
+        </ContentControl>
+    </Grid>
+
+</Window>

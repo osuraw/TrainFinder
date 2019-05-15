@@ -9,13 +9,6 @@ namespace pro_web_a.Models
     [Table("route")]
     public partial class route
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public route()
-        {
-            stations = new HashSet<station>();
-            trains = new HashSet<train>();
-        }
-
         [Key]
         public short RID { get; set; }
 
@@ -29,10 +22,10 @@ namespace pro_web_a.Models
         [MaxLength(500)]
         public string Description { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<station> stations { get; set; }
+        public int prid { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<train> trains { get; set; }
+        public  List<station> stations { get; set; }
+
+        public  List<train> trains { get; set; }
     }
 }

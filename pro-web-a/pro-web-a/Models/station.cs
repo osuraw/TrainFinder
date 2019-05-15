@@ -1,3 +1,5 @@
+using System.Web.Razor.Text;
+
 namespace pro_web_a.Models
 {
     using System;
@@ -9,12 +11,7 @@ namespace pro_web_a.Models
     [Table("station")]
     public partial class station
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public station()
-        {
-            stopats = new HashSet<stopat>();
-        }
-
+    
         [Key]
         public short SID { get; set; }
 
@@ -33,12 +30,11 @@ namespace pro_web_a.Models
 
         [StringLength(15)]
         public string Telephone { get; set; }
-
+        
         public short RID { get; set; }
 
-        public virtual route route { get; set; }
+        public  route route { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<stopat> stopats { get; set; }
+        public  List<stopat> stopats { get; set; }
     }
 }
