@@ -1,0 +1,19 @@
+.bucket {
+    margin: 5px;
+}
+
+.result {
+    margin: 5px 0px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+mat-toolbar-row {
+    justify-content: space-around;
+}
+
+.datetime {
+    height: 30px;
+    font-size: 15px;
+}

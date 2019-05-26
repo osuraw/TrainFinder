@@ -1,0 +1,40 @@
+.contaner
+{
+    display: flex;
+    flex-direction: column;
+    background: skyblue;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.sidenav
+{
+    flex: 1;
+}
+.sidebar
+{
+    width: 200px;
+    background:skyblue;
+}
+mat-icon
+{
+    margin-right: 10px;
+}
+button.mat-button{
+    width: 100%;   
+    text-align: left;
+}
+mat-sidenav>div>mat-list>.mat-list-item>.mat-list-item-content{   
+    padding: 0;   
+}
+.menutext
+{
+    display: flex;
+    height: 60px;
+    justify-content: center;
+    align-items: center;
+    font-weight: bolder;
+    font-size: 30px;
+}

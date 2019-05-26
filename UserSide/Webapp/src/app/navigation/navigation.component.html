@@ -1,0 +1,30 @@
+<div class="contaner">
+    <mat-toolbar color="primary">
+        <button mat-icon-button (click)="toggel.toggle()" fxHide.gt-xs>
+      <mat-icon>menu</mat-icon>
+    </button>
+        <h3>Train Finder</h3>
+    </mat-toolbar>
+    <mat-sidenav-container class="sidenav">
+        <mat-sidenav #toggel opened mode="side" class="sidebar" fxShow.gt-xs>
+            <div class="menutext">
+                <header class="header">Menu</header>
+            </div>
+            <mat-nav-list>
+                <mat-divider></mat-divider>
+                <a mat-list-item [routerLink]="['']" routerLinkActive="active">
+                    <mat-icon>train</mat-icon>Search
+                </a>
+                <a mat-list-item [routerLink]="['TimeTable']" routerLinkActive="active">
+                    <mat-icon>table_chart</mat-icon>Time Table
+                </a>
+                <a mat-list-item>
+                    <mat-icon>train</mat-icon>About
+                </a>
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>
