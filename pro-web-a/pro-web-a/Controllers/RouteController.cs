@@ -15,7 +15,7 @@ namespace pro_web_a.Controllers
 
         public RouteController()
         {
-            _context=new projectDB();
+            _context = new projectDB();
         }
 
         /// <summary>
@@ -28,8 +28,7 @@ namespace pro_web_a.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                if (route.RID==0)
+                if (route.RID == 0)
                 {
                     _context.routes.Add(route);
                 }
@@ -37,10 +36,10 @@ namespace pro_web_a.Controllers
                 {
                     var routetemp = _context.routes.Single(r => r.RID == route.RID);
                     routetemp.Distance = route.Distance;
-                    routetemp.Name=route.Name;
-                    routetemp.Sstation= route.Sstation;
-                    routetemp.Estation= route.Estation;
-                    routetemp.Description= route.Description;
+                    routetemp.Name = route.Name;
+                    routetemp.Sstation = route.Sstation;
+                    routetemp.Estation = route.Estation;
+                    routetemp.Description = route.Description;
                 }
 
                 _context.SaveChanges();
@@ -49,17 +48,34 @@ namespace pro_web_a.Controllers
                 res.Content = new StringContent(route.RID.ToString());
                 return res;
             }
-            else 
+            else
             {
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
+        }
 
+        [HttpPut]
+        public IHttpActionResult UpdateRoute(route route)
+        {
+            if (ModelState.IsValid)
+            {
+                var routetemp = _context.routes.Single(r => r.RID == route.RID);
+                routetemp.Distance = route.Distance;
+                routetemp.Name = route.Name;
+                routetemp.Sstation = route.Sstation;
+                routetemp.Estation = route.Estation;
+                routetemp.Description = route.Description;
+                _context.SaveChanges();
+
+                return Ok();
+            }
+
+            return BadRequest();
         }
 
         [HttpGet]
         public IHttpActionResult GetRoute()
         {
-
             try
             {
                 var re = _context.routes.ToList();
@@ -72,12 +88,13 @@ namespace pro_web_a.Controllers
                 return InternalServerError();
             }
         }
+        
 
         [Route("Api/Route/DeleteRoute/{id}")]
         [HttpDelete]
-        public HttpStatusCode DeleteRoute(short id=0)
+        public HttpStatusCode DeleteRoute(short id = 0)
         {
-            if (id!=0)
+            if (id != 0)
             {
                 route route = _context.routes.Find(id);
                 if (route == null)
@@ -94,6 +111,5 @@ namespace pro_web_a.Controllers
 
             return HttpStatusCode.BadRequest;
         }
-
     }
 }

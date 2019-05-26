@@ -44,7 +44,7 @@ namespace Desktop
                     DgvTrain.ItemsSource = _routeVm.Trains.ToArray();
                 }
                 //check user-ability
-                BtnAdd.IsEnabled = false;
+               
             }
             else
             {

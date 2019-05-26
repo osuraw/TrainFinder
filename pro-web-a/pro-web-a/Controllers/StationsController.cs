@@ -37,7 +37,7 @@ namespace pro_web_a.Controllers
         [ResponseType(typeof(station))]
         public IHttpActionResult GetStationInRoute(short id=0)
         {
-            var station = _context.stations.Where(s => s.RID.Equals(id)).ToList();
+            var station = _context.stations.Where(s => s.RID.Equals(id)).Select(s=>new {s.Name,s.SID}).ToList();
             if (station.Count==0)
             {
                 return NotFound();

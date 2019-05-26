@@ -3,19 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Desktop"
              x:Class="Desktop.RouteUC"
              mc:Ignorable="d"
-             FontSize="24"
              Background="Azure"
              d:DesignHeight="765" d:DesignWidth="1385">
+
 
 
 
     <Border Padding="10">
         <Grid >
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="500"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
@@ -30,7 +31,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
-                            <Label Content="Route" Height="45"/>
+                            <Label Content="Route" />
                         </StackPanel>
                         <StackPanel Grid.Column="1">
                             <ComboBox x:Name="CmbRoutes" SelectionChanged="CmbRoutes_SelectionChanged" IsEditable="False" ItemsSource="{Binding RoutesList, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedIndex="{Binding RouteSelectIndex}"/>
@@ -43,23 +44,19 @@
                             <ColumnDefinition Width="150" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
+
                         <StackPanel Grid.Column="0">
-                            <Label Height="45" Margin="0,5" Content="Route Name"/>
-                            <!--<Label Content="Start Station"/>
-                            <Label Content="End Station"/>-->
-                            <Label Height="45" Margin="0,5" Content="Distance(Km)"/>
-                            <Label Height="45" Margin="0,5" Content="Description"/>
+                            <Label  Content="Route Name" />
+                            <Label Content="Distance(Km)"/>
+                            <Label Content="Description"/>
                         </StackPanel>
+
                         <StackPanel Grid.Column="1">
                             <TextBlock Visibility="Collapsed" IsHitTestVisible="False" Text="{Binding RouteId}"></TextBlock>
-                            <TextBox  Margin="0,5" x:Name="TxtName"  Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True,NotifyOnValidationError=True}"
-                                     Validation.Error="Validation_Error" Validation.ErrorTemplate="{StaticResource TextBoxErrorTemplate}"/>
-
-                            <TextBox  Margin="0,5" x:Name="TxtDistance" Text="{Binding Distance, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}"
-                                     Validation.Error="Validation_Error" Validation.ErrorTemplate="{StaticResource TextBoxErrorTemplate}"/>
-                            <TextBox Height="150" Margin="0,5" x:Name="TxtDescription" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
-                            <!--<ComboBox Name="CmbSStation" />
-                            <ComboBox Name="CmbEStation"/>-->
+                            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" Validation.Error="Validation_Error"/>
+                            <TextBox Text="{Binding Distance, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" Validation.Error="Validation_Error"/>
+                            <TextBox Height="150"  Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+                           
                         </StackPanel>
                     </Grid>
                 </GroupBox>
@@ -73,10 +70,10 @@
                         <ColumnDefinition  Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Row="0" Grid.Column="0" x:Name="BtnAdd"  Command="{Binding AddCommand}" Content="Add New" Grid.ColumnSpan="2" />
-                    <Button Grid.Row="1" Grid.Column="0" x:Name="BtnUpdate"  Command="{Binding UpdateCommand}" Content="Update" />
-                    <!--<Button Grid.Row="0" Grid.Column="2" Name="BtnDelete" Click="BtnDelete_Click" Command="{Binding UpdateCommand}" Content="Delete" HorizontalAlignment="Left" Margin="10.2,0,0,10.2" Width="216" Height="47" VerticalAlignment="Bottom"   />-->
-                    <Button Grid.Row="1" Grid.Column="1" x:Name="BtnClear" Content="Clear" Command="{Binding ResetCommand}"/>
+                    <Button Grid.Row="0" Grid.Column="0"   Command="{Binding AddCommand}" Content="Add New" Grid.ColumnSpan="2" />
+                    <Button Grid.Row="1" Grid.Column="0"   Command="{Binding UpdateCommand}" Content="Update" />
+                    <Button Grid.Row="1" Grid.Column="1"  Content="Clear" Command="{Binding ResetCommand}"/>
+
                 </Grid>
             </Grid>
             <Grid Margin="10,0,0,0" Grid.Column="1">

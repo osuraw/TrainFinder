@@ -127,7 +127,6 @@
     <Compile Include="Helpers\SecureStringHelper.cs" />
     <Compile Include="ViewModels\IHavePassword.cs" />
     <Compile Include="ViewModels\LoginPageVm.cs" />
-    <Compile Include="ViewModels\UserVM.cs" />
     <Compile Include="ViewModels\LoginWindowVm.cs" />
     <Compile Include="View\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>

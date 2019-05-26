@@ -39,7 +39,6 @@ public class BasePage<VM> : Page
 
                 // Update the value
                 mViewModel = value;
-
                 // Set the data context for this page
                 this.DataContext = mViewModel;
             }

@@ -15,7 +15,7 @@ using pro_web_a.Models;
 
 namespace pro_web_a.Controllers
 {
-    struct savedata
+    internal struct SaveData
     {
         public string time;
         public string Location;
@@ -32,7 +32,7 @@ namespace pro_web_a.Controllers
         {
             char[] split = new[] {','};
             var datal=data.Split(split, StringSplitOptions.RemoveEmptyEntries).ToList();
-            savedata str;
+            SaveData str;
             var sb = new StringBuilder(datal[3]);
             sb.AppendFormat(" ");
             sb.Append(datal[4]);
@@ -54,86 +54,6 @@ namespace pro_web_a.Controllers
 
             db.SaveChanges();
             return Ok();
-        }
-
-       
-        [ResponseType(typeof(void))]
-        public IHttpActionResult Putlocation(byte id, location location)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != location.DID)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(location).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!locationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        
-        [ResponseType(typeof(location))]
-        public IHttpActionResult Postlocation(location location)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.locations.Add(location);
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateException)
-            {
-                if (locationExists(location.DID))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtRoute("DefaultApi", new { id = location.DID }, location);
-        }
-
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool locationExists(byte id)
-        {
-            return db.locations.Count(e => e.DID == id) > 0;
         }
     }
 }

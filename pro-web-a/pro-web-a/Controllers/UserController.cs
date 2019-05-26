@@ -23,9 +23,9 @@ namespace pro_web_a.Controllers
         [HttpPost]
         public IHttpActionResult Login(user user)
         {
-            var result = _context.users.SingleOrDefault(c => (c.Uname == user.Uname) && (c.Password == user.Password));
+            var result = _context.users.SingleOrDefault(c => (c.Uname.Equals(user.Uname)) && (c.Password.Equals(user.Password)));
             if (result != null)
-                return Ok(result.UID);
+                return Ok(new{result.Name,result.UID});
             return NotFound();
         }
 

@@ -2,22 +2,60 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Desktop">
 
-    <!--Login Window Header-->
-    <Style x:Key="TitleHeader" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BaseTextBlockStyle}">
-        <Setter Property="Foreground" Value="{StaticResource ForegroundMainBrush}" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="HorizontalAlignment" Value="Center" />
-        <Setter Property="Margin" Value="0,4" />
+    <Style x:Key="Base" TargetType="{x:Type Control}" BasedOn="{StaticResource BaseStyle}">
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="Padding" Value="3" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="FontSize" Value="{StaticResource TextSize}" />
+
+    </Style>
+    <!--Label-->
+    <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Base}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Label}">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          RecognizesAccessKey="True"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
     <!--TextBox-->
-    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource BaseStyle}">
+    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Base}">
         <Setter Property="Background" Value="{StaticResource TextBoxBackGroundBrush}" />
         <Setter Property="Foreground" Value="{StaticResource TextForGroundBrush}" />
-        <Setter Property="FontSize" Value="{StaticResource Large}" />
         <Setter Property="BorderThickness" Value="0,0,0,2" />
-        <Setter Property="Margin" Value="0,0,0,5" />
-        <Setter Property="Padding" Value="10,2" />
-        <Setter Property="Height" Value="40" />
+
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border BorderThickness="2" BorderBrush="OrangeRed">
+                        <Grid>
+                            <AdornedElementPlaceholder />
+                            <TextBlock Text="{Binding [0].ErrorContent}" Foreground="OrangeRed"
+                                       VerticalAlignment="Center" HorizontalAlignment="Right" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBoxBase}">
@@ -71,6 +109,13 @@
         </Setter>
 
     </Style>
+    <!--Login Window Header-->
+    <Style x:Key="TitleHeader" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BaseTextBlockStyle}">
+        <Setter Property="Foreground" Value="{StaticResource ForegroundMainBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0,4" />
+    </Style>
     <!--passwordBox-->
     <Style TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource BaseStyle}">
 
@@ -82,7 +127,7 @@
         <Setter Property="Padding" Value="10,2" />
         <Setter Property="Height" Value="40" />
 
-            <Setter Property="local:MonitorPasswordProperty.Value" Value="True" />
+        <Setter Property="local:MonitorPasswordProperty.Value" Value="True" />
 
         <Setter Property="Template">
             <Setter.Value>
@@ -90,12 +135,13 @@
 
                     <Grid>
 
-                        <Border x:Name="border" 
-                                BorderBrush="{TemplateBinding BorderBrush}" 
+                        <Border x:Name="border"
+                                BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 Background="{TemplateBinding Background}"
                                 SnapsToDevicePixels="True">
-                            <ScrollViewer x:Name="PART_ContentHost" Focusable="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="False"
+                                          HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" />
                         </Border>
 
                         <TextBlock IsHitTestVisible="False"
@@ -105,21 +151,19 @@
                                    Visibility="{TemplateBinding local:HasTextProperty.Value, Converter={local:BooleanToVisibilityConverter}}"
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                   Foreground="{StaticResource LogInScreenForeGroundBrush}">
-                                   
-                        </TextBlock>
+                                   Foreground="{StaticResource LogInScreenForeGroundBrush}" />
 
                     </Grid>
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            <Setter Property="Opacity" TargetName="border" Value="0.56" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="BorderBrush" TargetName="border" Value="#FF7EB4EA"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FF7EB4EA" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter Property="BorderBrush" TargetName="border" Value="#FF569DE5"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FF569DE5" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -127,15 +171,15 @@
         </Setter>
 
     </Style>
-
+    <!--spinner-->
     <Style x:Key="Spinning" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BaseTextBlockStyle}">
 
-        <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
-        <Setter Property="Text" Value="#"/>
-        <Setter Property="RenderTransformOrigin" Value=".5,.5"/>
-        <Setter Property="RenderTransform" >
+        <Setter Property="FontFamily" Value="{StaticResource FontAwesome}" />
+        <Setter Property="Text" Value="#" />
+        <Setter Property="RenderTransformOrigin" Value=".5,.5" />
+        <Setter Property="RenderTransform">
             <Setter.Value>
-                <RotateTransform/>
+                <RotateTransform />
             </Setter.Value>
         </Setter>
         <Style.Resources>
@@ -144,18 +188,18 @@
                     Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
                     From="0"
                     To="360"
-                    RepeatBehavior="Forever"/>
+                    RepeatBehavior="Forever" />
             </Storyboard>
         </Style.Resources>
         <Style.Triggers>
             <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self},Path=IsVisible}" Value="True">
                 <DataTrigger.EnterActions>
-                    <BeginStoryboard Name="SpinStoryBoard" Storyboard="{StaticResource Spin}"/>
+                    <BeginStoryboard Name="SpinStoryBoard" Storyboard="{StaticResource Spin}" />
                 </DataTrigger.EnterActions>
                 <DataTrigger.ExitActions>
                     <RemoveStoryboard BeginStoryboardName="SpinStoryBoard" />
                 </DataTrigger.ExitActions>
-                
+
             </DataTrigger>
         </Style.Triggers>
     </Style>

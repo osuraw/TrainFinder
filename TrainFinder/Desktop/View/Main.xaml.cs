@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows;
+using Desktop.Model;
+
 //using Desktop.View;
 
 namespace Desktop
@@ -13,6 +15,7 @@ namespace Desktop
         {
             var dd = new object();
             InitializeComponent();
+            var ssss = logininfor.UserId;
         }
 
         public void time(out object a)
