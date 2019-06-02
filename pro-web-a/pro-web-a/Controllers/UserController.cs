@@ -13,17 +13,17 @@ namespace pro_web_a.Controllers
 {
     public class UserController : ApiController
     {
-        private projectDB _context;
+        private ProjectDB _context;
 
         public UserController()
         {
-            _context = new projectDB();
+            _context = new ProjectDB();
         }
 
         [HttpPost]
         public IHttpActionResult Login(user user)
         {
-            var result = _context.users.SingleOrDefault(c => (c.Uname.Equals(user.Uname)) && (c.Password.Equals(user.Password)));
+            var result = _context.Users.SingleOrDefault(c => (c.Uname.Equals(user.Uname)) && (c.Password.Equals(user.Password)));
             if (result != null)
                 return Ok(new{result.Name,result.UID});
             return NotFound();
@@ -46,18 +46,18 @@ namespace pro_web_a.Controllers
             {
                 try
                 {
-                    _context.users.Add(user);
+                    _context.Users.Add(user);
                     _context.SaveChanges();
                     return new HttpResponseMessage(HttpStatusCode.Created);
                 }
-                catch (DbUpdateException e)
+                catch (DbUpdateException)
                 {
                     return new HttpResponseMessage(HttpStatusCode.Conflict);
                 }
             }
             else
             {
-                var _user = _context.users.Single(u => u.UID == user.UID);
+                var _user = _context.Users.Single(u => u.UID == user.UID);
                 _user.Uname = user.Uname;
                 _user.Password = user.Password;
                 _context.SaveChanges();

@@ -1,28 +1,33 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
+using pro_web_a.DTOs;
 using pro_web_a.Models;
 
 namespace pro_web_a.Controllers
 {
+    [RoutePrefix("api/Train")]
     public class TrainsController : ApiController
     {
-        private readonly projectDB _context = new projectDB();
+        private readonly ProjectDB _context = new ProjectDB();
+
+        #region Train
 
         // GET: api/Train
         public IQueryable<train> GetTrains()
         {
-            return _context.trains;
+            return _context.Trains;
         }
 
         // GET: api/Train/5
         [ResponseType(typeof(train))]
         public IHttpActionResult GetTrain(short id)
         {
-            train train = _context.trains.Find(id);
+            train train = _context.Trains.Find(id);
             if (train == null)
             {
                 return NotFound();
@@ -32,11 +37,11 @@ namespace pro_web_a.Controllers
         }
 
         [HttpGet]
-        [Route("api/Train/GetTrainInRoute/{id}")]
+        [Route("GetTrainInRoute/{id}")]
         [ResponseType(typeof(train))]
         public IHttpActionResult GetTrainInRoute(short id = 0)
         {
-            var station = _context.trains.Where(t => t.RID.Equals(id));
+            var station = _context.Trains.Where(t => t.RID.Equals(id));
             if (!station.Any())
             {
                 return NotFound();
@@ -89,22 +94,23 @@ namespace pro_web_a.Controllers
             {
                 return BadRequest(ModelState);
             }
-            _context.trains.Add(train);
+
+            _context.Trains.Add(train);
             _context.SaveChanges();
-            return CreatedAtRoute("DefaultApi", new { id = train.TID }, train);
+            return CreatedAtRoute("DefaultApi", new {id = train.TID}, train);
         }
 
         // DELETE: api/Train/5
         [ResponseType(typeof(train))]
         public IHttpActionResult DeleteTrain(short id)
         {
-            train train = _context.trains.Find(id);
+            train train = _context.Trains.Find(id);
             if (train == null)
             {
                 return NotFound();
             }
 
-            _context.trains.Remove(train);
+            _context.Trains.Remove(train);
             _context.SaveChanges();
 
             return Ok(train);
@@ -116,12 +122,75 @@ namespace pro_web_a.Controllers
             {
                 _context.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
         private bool TrainExists(short id)
         {
-            return _context.trains.Count(e => e.TID == id) > 0;
+            return _context.Trains.Count(e => e.TID == id) > 0;
         }
+
+        #endregion
+
+        #region TrainControl
+
+        [HttpPut]
+        [Route("AddTranToWatch")]
+        public IHttpActionResult AddTranToWatch(LogDto data)
+        {
+            var logRecord = _context.Log.SingleOrDefault(l => l.TrainId == data.TrainId);
+            var nextStation = Helpers.FindNextStation(data.TrainId, data.Direction,-1);
+            int locationLogId = -2;
+
+            //Add new record to LocationLog If only status is 1(active Train)  
+            if (data.Status == 1)
+            {
+                var location = new LocationLog()
+                {
+                    DeviceId = data.DeviceId
+                };
+                _context.Location.Add(location);
+                _context.SaveChanges();
+                locationLogId = location.LocationLogId;
+            }
+
+            //check whether there is existing record on log table if not add new one
+            if (logRecord != null)
+            {
+                logRecord.Status = data.Status;
+                logRecord.LogId = locationLogId;
+                logRecord.Direction = data.Direction;
+                logRecord.StartTime = DateTime.Now.TimeOfDay.ToString("g");
+                logRecord.NextStop = nextStation;
+            }
+            else
+            {
+                var log = new Log
+                {
+                    TrainId = data.TrainId,
+                    DeviceId = data.DeviceId,
+                    Status = data.Status,
+                    LogId = locationLogId,
+                    Direction = data.Direction,
+                    StartTime = DateTime.Now.TimeOfDay.ToString("g"),
+                    NextStop = nextStation
+            };
+                _context.Log.Add(log);
+            }
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        
+
+        [HttpGet]
+        [Route("GetActiveTrains")]
+        public IHttpActionResult GetActiveTrains()
+        {
+            var active = _context.Log.Where(l => l.Status != 0).Include(l=>l.Train).ToList();
+            return Ok(active);
+        }
+        #endregion
     }
 }

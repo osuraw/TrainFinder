@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Data.Entity;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using pro_web_a.Models;
@@ -16,7 +12,7 @@ namespace pro_web_a.Controllers
     [RoutePrefix("Api/TimeTables")]
     public class TimeTablesController : ApiController
     {
-        private readonly projectDB _dbContext = new projectDB();
+        private readonly ProjectDB _dbContext = new ProjectDB();
 
         [HttpGet]
         [Route("GetTimeTableByTypeId")]
@@ -31,8 +27,8 @@ namespace pro_web_a.Controllers
                 return BadRequest();
 
             var tempList = type == 1
-                ? _dbContext.stopats.Where(st => st.TID == id).GroupBy(st => st.SID)
-                : _dbContext.stopats.Where(st => st.TID == id).GroupBy(st => st.TID);
+                ? _dbContext.StopAts.Where(st => st.TID == id).GroupBy(st => st.SID)
+                : _dbContext.StopAts.Where(st => st.TID == id).GroupBy(st => st.TID);
             foreach (var group in tempList)
             {
                 foreach (stopat stopat in group)
@@ -71,7 +67,7 @@ namespace pro_web_a.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!stopatExists(sid) || !stopatExists(tid))
+                if (!StopAtExists(sid) || !StopAtExists(tid))
                 {
                     return NotFound();
                 }
@@ -95,7 +91,7 @@ namespace pro_web_a.Controllers
 
             foreach (stopat stopat1 in stopat)
             {
-                _dbContext.stopats.Add(stopat1);
+                _dbContext.StopAts.Add(stopat1);
             }
             try
             {
@@ -113,13 +109,13 @@ namespace pro_web_a.Controllers
         [ResponseType(typeof(stopat))]
         public IHttpActionResult Deletestopat(short id)
         {
-            stopat stopat = _dbContext.stopats.Find(id);
+            stopat stopat = _dbContext.StopAts.Find(id);
             if (stopat == null)
             {
                 return NotFound();
             }
 
-            _dbContext.stopats.Remove(stopat);
+            _dbContext.StopAts.Remove(stopat);
             _dbContext.SaveChanges();
 
             return Ok(stopat);
@@ -135,9 +131,9 @@ namespace pro_web_a.Controllers
             base.Dispose(disposing);
         }
 
-        private bool stopatExists(short id)
+        private bool StopAtExists(short id)
         {
-            return _dbContext.stopats.Count(e => e.TID == id) > 0;
+            return _dbContext.StopAts.Count(e => e.TID == id) > 0;
         }
     }
 }

@@ -11,11 +11,11 @@ namespace pro_web_a.Controllers
 {
     public class RouteController : ApiController
     {
-        private projectDB _context;
+        private ProjectDB _context;
 
         public RouteController()
         {
-            _context = new projectDB();
+            _context = new ProjectDB();
         }
 
         /// <summary>
@@ -30,11 +30,11 @@ namespace pro_web_a.Controllers
             {
                 if (route.RID == 0)
                 {
-                    _context.routes.Add(route);
+                    _context.Routes.Add(route);
                 }
                 else
                 {
-                    var routetemp = _context.routes.Single(r => r.RID == route.RID);
+                    var routetemp = _context.Routes.Single(r => r.RID == route.RID);
                     routetemp.Distance = route.Distance;
                     routetemp.Name = route.Name;
                     routetemp.Sstation = route.Sstation;
@@ -44,8 +44,10 @@ namespace pro_web_a.Controllers
 
                 _context.SaveChanges();
 
-                var res = new HttpResponseMessage(HttpStatusCode.Created);
-                res.Content = new StringContent(route.RID.ToString());
+                var res = new HttpResponseMessage(HttpStatusCode.Created)
+                {
+                    Content = new StringContent(route.RID.ToString())
+                };
                 return res;
             }
             else
@@ -59,7 +61,7 @@ namespace pro_web_a.Controllers
         {
             if (ModelState.IsValid)
             {
-                var routetemp = _context.routes.Single(r => r.RID == route.RID);
+                var routetemp = _context.Routes.Single(r => r.RID == route.RID);
                 routetemp.Distance = route.Distance;
                 routetemp.Name = route.Name;
                 routetemp.Sstation = route.Sstation;
@@ -78,7 +80,7 @@ namespace pro_web_a.Controllers
         {
             try
             {
-                var re = _context.routes.ToList();
+                var re = _context.Routes.ToList();
                 var data = JsonConvert.SerializeObject(re);
                 return Ok(re);
             }
@@ -96,13 +98,13 @@ namespace pro_web_a.Controllers
         {
             if (id != 0)
             {
-                route route = _context.routes.Find(id);
+                route route = _context.Routes.Find(id);
                 if (route == null)
                 {
                     return HttpStatusCode.Conflict;
                 }
 
-                _context.routes.Remove(route);
+                _context.Routes.Remove(route);
                 _context.SaveChanges();
                 //_context.Database.ExecuteSqlCommandAsync("UPDATE Person SET additionalData = JSON_MODIFY(additionalData, 'append  $.phoneNumbers', @phoneNumber) WHERE Id = '@personId', personIdParam,phoneNumberParam");
 

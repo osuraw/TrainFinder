@@ -5,22 +5,22 @@ namespace pro_web_a.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
 
-    public partial class projectDB : DbContext
+    public partial class ProjectDB : DbContext
     {
-        public projectDB()
+        public ProjectDB()
             : base("name=projectDBContext")
         {
             this.Configuration.LazyLoadingEnabled = false;
         }
 
-        public virtual DbSet<device> devices { get; set; }
-        public virtual DbSet<location> locations { get; set; }
-        public virtual DbSet<log> logs { get; set; }
-        public virtual DbSet<route> routes { get; set; }
-        public virtual DbSet<station> stations { get; set; }
-        public virtual DbSet<stopat> stopats { get; set; }
-        public virtual DbSet<train> trains { get; set; }
-        public virtual DbSet<user> users { get; set; }
+        public virtual DbSet<device> Devices { get; set; }
+        public virtual DbSet<route> Routes { get; set; }
+        public virtual DbSet<Station> Stations { get; set; }
+        public virtual DbSet<stopat> StopAts { get; set; }
+        public virtual DbSet<train> Trains { get; set; }
+        public virtual DbSet<user> Users { get; set; }
+        public DbSet<LocationLog> Location { get; set; }
+        public DbSet<Log> Log { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -38,19 +38,19 @@ namespace pro_web_a.Models
                 .WithRequired(e => e.route)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<station>()
+            modelBuilder.Entity<Station>()
                 .Property(e => e.Name)
                 .IsFixedLength();
 
-            modelBuilder.Entity<station>()
+            modelBuilder.Entity<Station>()
                 .Property(e => e.Address)
                 .IsFixedLength();
 
-            modelBuilder.Entity<station>()
+            modelBuilder.Entity<Station>()
                 .Property(e => e.Telephone)
                 .IsFixedLength();
 
-            modelBuilder.Entity<station>()
+            modelBuilder.Entity<Station>()
                 .HasMany(e => e.stopats)
                 .WithRequired(e => e.station)
                 .WillCascadeOnDelete(false);
@@ -65,11 +65,6 @@ namespace pro_web_a.Models
 
             modelBuilder.Entity<train>()
                 .HasMany(e => e.devices)
-                .WithRequired(e => e.train)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<train>()
-                .HasMany(e => e.logs)
                 .WithRequired(e => e.train)
                 .WillCascadeOnDelete(false);
 

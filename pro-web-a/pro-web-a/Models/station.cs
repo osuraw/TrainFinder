@@ -1,15 +1,11 @@
-using System.Web.Razor.Text;
-
 namespace pro_web_a.Models
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     [Table("station")]
-    public partial class station
+    public class Station
     {
     
         [Key]

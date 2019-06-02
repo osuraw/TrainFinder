@@ -1,33 +1,38 @@
 namespace pro_web_a.Models
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
-    [Table("log")]
-    public partial class log
+    public class Log
     {
         [Key]
-        [Column(Order = 0)]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public short TID { get; set; }
+        [ForeignKey("Train")]
+        public short TrainId { get; set; }
 
-        [Key]
-        [Column(Order = 1)]
-        public DateTime Datetime { get; set; }
+        public bool Direction { get; set; }
+        public byte DeviceId { get; set; }
+        
+        public string StartTime { get; set; }
+       
+        public string EndTime { get; set; }
 
-        public TimeSpan? Stime { get; set; }
+        public double MaxSpeed { get; set; }
 
-        public TimeSpan? Etime { get; set; }
-
-        public double? Maxspeed { get; set; }
-
-        public double? Avgspeed { get; set; }
+        public double Speed { get; set; }
 
         public TimeSpan? Delay { get; set; }
 
-        public virtual train train { get; set; }
+        public byte Status { get; set; }
+
+        public string LastLocation { get; set; }
+
+        public string LastReceive { get; set; }
+
+        public int NextStop { get; set; }
+
+        public int LogId { get; set; }
+
+        public train Train { get; set; }
     }
 }
