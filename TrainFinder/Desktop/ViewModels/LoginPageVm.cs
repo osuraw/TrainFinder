@@ -1,13 +1,9 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Security;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
-using Desktop.Model;
 using Desktop.ViewModels;
-using Fasetto.Word;
 
 namespace Desktop
 {
@@ -42,22 +38,23 @@ namespace Desktop
 
         public async Task Login(object parameter)
         {
-            await RunCommand(() => this.LoginIsRunning, async () =>
-            {
-                await Task.Delay(2000);
-                var Uname = UserName;
-                var password = (parameter as IHavePassword).SecureString.UnsSecure();
-                var response = WebConnect.PostData("user/login", new { Uname, password });
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    var data = response.Content.ReadAsStringAsync();
-                    var page = (parameter as LoginPage);
-                    var win = Application.Current.MainWindow;
-                    new Main().Show();
-                    win.Close();
+            //await RunCommand(() => this.LoginIsRunning, async () =>
+            //{
+            //await Task.Delay(2000);
+            var userName = UserName;
+            var password = (parameter as IHavePassword).SecureString.UnsSecure();
 
-                }
-            });
+            var response = WebConnect.PostData("user/login", new { Uname = userName, password });
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var data = response.Content.ReadAsStringAsync();
+                var page = (parameter as LoginPage);
+                var win = Application.Current.MainWindow;
+                new Main().Show();
+                win.Close();
+            }
+
+            //});
         }
     }
 }

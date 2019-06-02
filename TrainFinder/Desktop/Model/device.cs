@@ -1,8 +1,7 @@
-
 namespace Desktop.Model
 {
     
-    public partial class device
+    public class Device
     {
         public byte DID { get; set; }
         public short TID { get; set; }

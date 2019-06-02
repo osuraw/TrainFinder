@@ -13,8 +13,8 @@ namespace Desktop
         }
         private void Validation_Error(object sender, ValidationErrorEventArgs e)
         {
-            if (e.Action == ValidationErrorEventAction.Added) StationVM.Errors += 1;
-            if (e.Action == ValidationErrorEventAction.Removed) StationVM.Errors -= 1;
+            if (e.Action == ValidationErrorEventAction.Added) StationVm.Errors += 1;
+            if (e.Action == ValidationErrorEventAction.Removed) StationVm.Errors -= 1;
         }
     }
 }

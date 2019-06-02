@@ -3,22 +3,47 @@
                     xmlns:local="clr-namespace:Desktop">
 
 
-    <Color x:Key="BackGroundLight">red</Color>
-    <SolidColorBrush x:Key="BackGroundLightBrush" Color="{StaticResource BackGroundLight}" />
-    <Color x:Key="BackGroundVeryLight">Blue</Color>
+    <Color x:Key="BackGroundVeryLight">PowderBlue</Color>
     <SolidColorBrush x:Key="BackGroundVeryLightBrush" Color="{StaticResource BackGroundVeryLight}" />
+    <Color x:Key="BackGroundLight">DarkBlue</Color>
+    <SolidColorBrush x:Key="BackGroundLightBrush" Color="{StaticResource BackGroundLight}" />
     <Color x:Key="ForeGroundLight">SaddleBrown</Color>
     <SolidColorBrush x:Key="ForeGroundLightBrush" Color="{StaticResource ForeGroundLight}" />
     <Color x:Key="ForegroundMain">GreenYellow</Color>
     <SolidColorBrush x:Key="ForegroundMainBrush" Color="{StaticResource ForegroundMain}" />
 
+    <!--Template-->
+    <Color x:Key="TemplateHeadingBackGround">DodgerBlue</Color>
+    <SolidColorBrush x:Key="TemplateHeadingBackGroundBrush" Color="{StaticResource TemplateHeadingBackGround}" />
+    <Color x:Key="TemplateBackGround">PowderBlue</Color>
+    <SolidColorBrush x:Key="TemplateBackGroundBrush" Color="{StaticResource TemplateBackGround}" />
+    <Color x:Key="TemplateBackGround2">GreenYellow</Color>
+    <SolidColorBrush x:Key="TemplateBackGroundBrush2" Color="{StaticResource TemplateBackGround2}" />
+
     <!--Text Colors-->
-    
+
     <Color x:Key="TextForGround">Black</Color>
     <SolidColorBrush x:Key="TextForGroundBrush" Color="{StaticResource TextForGround}" />
     <Color x:Key="TextBoxBackGround">LightBlue</Color>
     <SolidColorBrush x:Key="TextBoxBackGroundBrush" Color="{StaticResource TextBoxBackGround}" />
     <Color x:Key="LogInScreenForeGround">MediumSeaGreen</Color>
     <SolidColorBrush x:Key="LogInScreenForeGroundBrush" Color="{StaticResource LogInScreenForeGround}" />
+
+    <!--Button-->
+    <Color x:Key="ButtonBackGround1">Azure</Color>
+    <SolidColorBrush x:Key="ButtonBackGround1Brush" Color="{StaticResource ButtonBackGround1}" />
+    <Color x:Key="ButtonBackGround2">DodgerBlue</Color>
+    <SolidColorBrush x:Key="ButtonBackGround2Brush" Color="{StaticResource ButtonBackGround2}" />
+    <Color x:Key="ButtonClickBackGround">Blue</Color>
+    <SolidColorBrush x:Key="ButtonClickBackGroundBrush" Color="{StaticResource ButtonClickBackGround}" />
+    <Color x:Key="ButtonForGround">Black</Color>
+    <SolidColorBrush x:Key="ButtonForGroundBrush" Color="{StaticResource ButtonForGround}" />
+
+    <Color x:Key="GroupBoxBorder">Black</Color>
+    <SolidColorBrush x:Key="GroupBoxBorderBrush" Color="{StaticResource GroupBoxBorder}" />
+
+    <Color x:Key="Error">OrangeRed</Color>
+    <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource Error}" />
+
 
 </ResourceDictionary>

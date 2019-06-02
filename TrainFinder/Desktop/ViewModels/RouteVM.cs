@@ -2,13 +2,16 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Windows;
 using System.Windows.Input;
 using Desktop.Model;
 
 namespace Desktop.ViewModels
 {
-    public class RouteVM : BaseViewModelMain
+    public class RouteVm : BaseViewModelMain
     {
+        private byte _routeSelectIndex = 0;
+
         #region Propety
 
         public ObservableCollection<Route> RoutesList { get; set; }
@@ -16,36 +19,36 @@ namespace Desktop.ViewModels
         public ObservableCollection<Train> Trains { get; set; }
 
         //***********************************************************************
-        
+
         public short RouteId
         {
-            get { return GetValue(() => RouteId);}
-            set { SetValue(()=>RouteId,value);}
+            get { return GetValue(() => RouteId); }
+            set { SetValue(() => RouteId, value); }
         }
 
         [Required(ErrorMessage = "Name Must Not Empty")]
         [StingOnlyValidation]
         public string Name
         {
-            get { return GetValue(() => Name); }
+            get
+            {
+                return GetValue(() => Name);
+            }
             set
             {
                 SetValue(() => Name, value);
-                enable = false;
-                if (Name.Length > 0)
-                    enable = true;
-               
-               
-
             }
         }
-        
+
         [Required(AllowEmptyStrings = false, ErrorMessage = "Distance Must Not Empty")]
         [NumberOnlyValidation]
         public string Distance
         {
             get { return GetValue(() => Distance); }
-            set { SetValue(() => Distance, value); }
+            set
+            {
+                SetValue(() => Distance, value);
+            }
 
         }
 
@@ -53,11 +56,18 @@ namespace Desktop.ViewModels
 
         //**********************************************************************
 
-        public byte RouteSelectIndex { get; set; } = 0;
-        public bool Validation { get; set; } = true;
+        public byte RouteSelectIndex
+        {
+            get => _routeSelectIndex;
+            set
+            {
+                _routeSelectIndex = value;
+                OnPropertyChanged(nameof(RouteSelectIndex));
+            }
+        }
+
         public static int Errors { get; set; }
 
-        public bool enable { get; set; } = false;
         #endregion
 
         #region Icommand
@@ -68,15 +78,15 @@ namespace Desktop.ViewModels
         public bool CanUpdate { get; set; }
 
         #endregion
-        
+
         #region Methods
 
-        public RouteVM()
+        public RouteVm()
         {
             RoutesList = Route.GetRouteList();
-            AddCommand = new CommandBase(AddRoute,CheckValid);
+            AddCommand = new CommandBase(AddRoute, CheckValid);
             UpdateCommand = new CommandBase(Update, CheckValid);
-            ResetCommand = new CommandBase(action:Reset,canExecute:AlwaysTrue);
+            ResetCommand = new CommandBase(action: Reset, canExecute: AlwaysTrue);
         }
 
         public void LoadTableContent(int index)
@@ -92,12 +102,6 @@ namespace Desktop.ViewModels
         public bool AddRoute()
         {
             var route = GetViewData();
-            if (route == null)
-            {
-                Validation = false;
-                return false;
-            }
-
             route.RID = 0;
             var response = WebConnect.PostData("Route/CreateRoute", route);
             if (response.StatusCode == HttpStatusCode.Created)
@@ -105,6 +109,7 @@ namespace Desktop.ViewModels
                 var ree = response.Content.ReadAsStringAsync();
                 route.RID = Int16.Parse(ree.Result);
                 RoutesList.Add(route);
+                MessageBox.Show("ssss", "sadasdad");
                 UpdateViewsProperties(0);
                 return true;
             }
@@ -112,32 +117,34 @@ namespace Desktop.ViewModels
             return false;
         }
 
-        public bool Update(int index)
+        public bool Update()
         {
             var route = GetViewData();
-            if(route.RID!=0)
+            if (route.RID != 0)
             {
                 var response = WebConnect.PostData("Route/CreateRoute", route);
                 if (response.StatusCode == HttpStatusCode.Created)
                 {
-                    RoutesList[index] = route;
+                    RoutesList[RouteSelectIndex] = route;
                     OnPropertyChanged("Route");
+                    UpdateViewsProperties(0);
                     return true;
                 }
             }
             return false;
         }
-        
+
         private void UpdateViewsProperties(int index)
         {
+            ClearValidation();
             var data = RoutesList[index];
             RouteId = data.RID;
             Name = index != 0 ? data.Name : "";
             Description = data.Description;
-            Distance = index != 0 ? data.Distance.ToString("##.##"): "";
+            Distance = index != 0 ? data.Distance.ToString("##.##") : "";
         }
 
-        private    Route GetViewData()
+        private Route GetViewData()
         {
             if (CheckValid())
                 return new Route()
@@ -150,23 +157,26 @@ namespace Desktop.ViewModels
             return null;
         }
 
-        protected override bool CheckValid()
+        protected bool CheckValid()
         {
-            if (Errors == 0)
+            if (Errors == 0 && !string.IsNullOrWhiteSpace(Name) && !string.IsNullOrWhiteSpace(Distance))
                 return true;
-            else
-                return false;
+            return false;
         }
-        
-        protected override void Reset()
+
+        protected void Reset()
         {
+            Stations.Clear();
+            Trains.Clear();
             UpdateViewsProperties(0);
             RouteSelectIndex = 0;
         }
-       
+
         #endregion
     }
 }
+
+//userbility Error internal selected route combobox
 
 //not use due to foreign key delete exception
 //public bool DeleteRoute(int id)
@@ -182,3 +192,5 @@ namespace Desktop.ViewModels
 
 //    return false;
 //}
+
+

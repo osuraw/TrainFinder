@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Desktop"
+        xmlns:viewModels="clr-namespace:Desktop.ViewModels"
         mc:Ignorable="d"
         Title="Main"
         WindowState="Maximized"
@@ -14,38 +15,71 @@
         Height="825" Width="1536"
         HorizontalAlignment="Center"
         VerticalAlignment="Center">
+    <Window.DataContext>
+        <viewModels:MainVm />
+    </Window.DataContext>
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModels:TrainVM}">
+            <local:TrainUC />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:StationVm}">
+            <local:StationUC />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:RouteVm}">
+            <local:RouteUC />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:TimeTableVm}">
+            <local:TimeTableUC />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:PinLocationVm}">
+            <local:PinLocationUC />
+        </DataTemplate>
+        <!--<DataTemplate DataType="{x:Type viewModels:UserVm}">
+            <local:StationUC/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:PinLocationVm}">
+            <local:PinLocationUC/>
+        </DataTemplate>-->
+    </Window.Resources>
 
-    <Grid Margin="0,0,0,0" ShowGridLines="True" >
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Name="TopRow" Height="75" />
             <RowDefinition Name="BottomRow" Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Name="LeftCol" Width="180" />
+            <ColumnDefinition Name="LeftCol" Width="200" />
             <ColumnDefinition Name="RightCol" Width="*" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0" Grid.Row="1" Background="AliceBlue">
-            <Button Width="180" FontSize="30" Click="BtnHome_OnClick" Name="BtnHome" Content="HOME"   />
-            <Button Width="180" FontSize="30" Click="BtnTrain_OnClick" Name="LblTrain" Content="TRAIN" />
-            <Button Width="180" FontSize="30" Click="BtnStation_OnClick" Name="BtnStation" Content="STATION"  />
-            <Button Width="180" FontSize="30" Click="BtnRoute_OnClick" Name="BtnRoute" Content="ROUTE"  />
-            <Button Width="180" FontSize="30" Click="BtnTimeTable_Click" Name="BtnTimeTable" Content="TIME TABLE" />
-            <Button Width="180" FontSize="30" Click="BtnPinLocations_Click" Name="BtnPinLocations" Content="PIN LOCATION"  />
+        <Grid Grid.Column="0" Grid.Row="1" Background="{StaticResource BackGroundVeryLightBrush}">
+            <StackPanel VerticalAlignment="Top">
+                <Button Command="{Binding NavigationCommand}" CommandParameter="Home" Content="HOME" />
+                <Button Command="{Binding NavigationCommand}" CommandParameter="Train" Content="TRAIN" />
+                <Button Command="{Binding NavigationCommand}" CommandParameter="Station" Content="STATION" />
+                <Button Command="{Binding NavigationCommand}" CommandParameter="Route" Content="ROUTE" />
+                <Button Command="{Binding NavigationCommand}" CommandParameter="TimeTable" Content="TIME TABLE" />
+                <Button Command="{Binding NavigationCommand}" CommandParameter="PinLocation" Content=" PIN  LOCATION" />
+                <Button Command="{Binding NavigationCommand}" CommandParameter="Control" Content="Control" />
+
+            </StackPanel>
+            <StackPanel VerticalAlignment="Bottom">
+                <Button Command="{Binding NavigationCommand}" CommandParameter="User" Content="Create User" />
+                <Button Command="{Binding NavigationCommand}" CommandParameter="Logout" Content="Logout" />
+            </StackPanel>
+        </Grid>
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0"
+                    Background="{StaticResource BackGroundLightBrush}"
+                    VerticalAlignment="Stretch">
+            <Label Content="Name:" />
+            <Label Content="*******" />
+            <Label Content="Date:" />
+            <Label Content="*******" />
+            <Label Content="Time:" />
+            <Label Content="*******" />
+            <Label Content="Log Time:" />
+            <Label Content="*******" />
         </StackPanel>
-        <WrapPanel FlowDirection="LeftToRight" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" Background="Azure">
-            <Label Name="lbl_name" Content="Name:" FontSize="24" Margin="10,20" />
-            <Label Name="lbl_name2" Content="*******" FontSize="24" Margin="10,20" />
-            <Label Name="lbl_date1" Content="Date:" FontSize="24" Margin="10,20" />
-            <Label Name="lbl_date2" Content="*******" FontSize="24" Margin="10,20" />
-            <Label Name="lbl_time" Content="Time:" FontSize="24" Margin="10,20" />
-            <Label Name="lbl_logtime" Content="*******" FontSize="24" Margin="10,20" />
-            <Label Name="lbl_time2" Content="Log Time:" FontSize="24" Margin="10,20" />
-            <Label x:Name="lbl_logtime2" Content="*******" FontSize="24" Margin="10,20" />
-        </WrapPanel>
-        <ContentControl Name="UcGrid" Grid.Row="1" Grid.Column="1"   Visibility="Visible" >
-            <!--<Image Source="pic/mainw.png" Stretch="Fill"></Image>-->
-           
-        </ContentControl>
+        <ContentControl Opacity="{Binding Opacity}" Grid.Row="1" Grid.Column="1" Content="{Binding ViewContent}" />
     </Grid>
 
 </Window>

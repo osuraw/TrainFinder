@@ -13,6 +13,7 @@ namespace Desktop
         {
             using (var client = new HttpClient())
             {
+                //client.BaseAddress = new Uri("https://trainfinder.azurewebsites.net/Api/");
                 client.BaseAddress = new Uri("http://localhost:11835/Api/");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

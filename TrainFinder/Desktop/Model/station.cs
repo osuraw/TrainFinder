@@ -8,8 +8,8 @@ namespace Desktop.Model
 {
     using System;
     using System.Collections.Generic;
-    
-    public partial class Station:INotifyPropertyChanged
+
+    public partial class Station : INotifyPropertyChanged
     {
         private Location _location;
 
@@ -47,9 +47,9 @@ namespace Desktop.Model
 
         public static ObservableCollection<Station> GetStationByRouteId(int id = 0)
         {
-            var tempData = WebConnect.GetData("Stations/GetStationInRoute/" + id);
+            var tempData = WebConnect.GetData("Stations/Getstation/" + id);
             var results = JsonConvert.DeserializeObject<IEnumerable<Station>>(tempData);
-            var stations = new ObservableCollection<Station> {new Station() {Name = "Select Station"}};
+            var stations = new ObservableCollection<Station> { new Station() { Name = "Select Station" } };
             foreach (var result in results)
             {
                 var temp = new Station
