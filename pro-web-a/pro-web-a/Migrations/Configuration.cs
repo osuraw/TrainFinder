@@ -1,18 +1,15 @@
 namespace pro_web_a.Migrations
 {
-    using System;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
-    using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<pro_web_a.Models.projectDB>
+    internal sealed class Configuration : DbMigrationsConfiguration<Models.ProjectDB>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(pro_web_a.Models.projectDB context)
+        protected override void Seed(Models.ProjectDB context)
         {
             //  This method will be called after migrating to the latest version.
 
