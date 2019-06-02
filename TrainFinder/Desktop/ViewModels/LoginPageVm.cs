@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Net;
 using System.Security;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
+using Desktop.Model;
 using Desktop.ViewModels;
 using Fasetto.Word;
 
 namespace Desktop
 {
-
     public class LoginPageVm : BaseViewModel2
     {
         #region PrivetFields
@@ -35,19 +36,28 @@ namespace Desktop
 
         public LoginPageVm()
         {
-            LoginCommand =new CommandBase(action: async (parameter)=>await Login(parameter),canExecute:()=>true);
+            LoginCommand = new CommandBase(action: async (parameter) => await Login(parameter), canExecute: () => true);
         }
+
 
         public async Task Login(object parameter)
         {
-            await RunCommand(() => this.LoginIsRunning, async ()=>
+            await RunCommand(() => this.LoginIsRunning, async () =>
             {
-             await Task.Delay(5000);
-            var username = UserName;
-            var password=(parameter as IHavePassword).SecureString.UnsSecure();
+                await Task.Delay(2000);
+                var Uname = UserName;
+                var password = (parameter as IHavePassword).SecureString.UnsSecure();
+                var response = WebConnect.PostData("user/login", new { Uname, password });
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var data = response.Content.ReadAsStringAsync();
+                    var page = (parameter as LoginPage);
+                    var win = Application.Current.MainWindow;
+                    new Main().Show();
+                    win.Close();
+
+                }
             });
         }
-
-       
     }
 }

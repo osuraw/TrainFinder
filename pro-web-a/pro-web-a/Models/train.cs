@@ -13,7 +13,6 @@ namespace pro_web_a.Models
         public train()
         {
             devices = new HashSet<device>();
-            logs = new HashSet<log>();
             stopats = new HashSet<stopat>();
         }
 
@@ -34,10 +33,7 @@ namespace pro_web_a.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<device> devices { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<log> logs { get; set; }
-
+        
         public virtual route route { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

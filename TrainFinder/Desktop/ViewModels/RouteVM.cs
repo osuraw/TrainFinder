@@ -28,7 +28,16 @@ namespace Desktop.ViewModels
         public string Name
         {
             get { return GetValue(() => Name); }
-            set { SetValue(() => Name, value); }
+            set
+            {
+                SetValue(() => Name, value);
+                enable = false;
+                if (Name.Length > 0)
+                    enable = true;
+               
+               
+
+            }
         }
         
         [Required(AllowEmptyStrings = false, ErrorMessage = "Distance Must Not Empty")]
@@ -47,6 +56,8 @@ namespace Desktop.ViewModels
         public byte RouteSelectIndex { get; set; } = 0;
         public bool Validation { get; set; } = true;
         public static int Errors { get; set; }
+
+        public bool enable { get; set; } = false;
         #endregion
 
         #region Icommand

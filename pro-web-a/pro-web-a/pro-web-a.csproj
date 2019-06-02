@@ -46,8 +46,8 @@
     <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper, Version=8.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.8.1.0\lib\net461\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=4.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.1.0\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
@@ -63,9 +63,16 @@
       <HintPath>..\packages\Swashbuckle.Core.5.6.0\lib\net40\Swashbuckle.Core.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Device" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web.Cors, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.7\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -77,6 +84,12 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Cors, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.7\lib\net45\System.Web.Http.Cors.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
@@ -94,12 +107,10 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
-    <Reference Include="System.EnterpriseServices" />
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
@@ -111,12 +122,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http.Formatting">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.4\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Http">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.4\lib\net45\System.Web.Http.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web.Http.WebHost">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.4\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
@@ -125,23 +130,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\MappingProfile.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\DefaultController.cs" />
+    <Compile Include="Controllers\Helpers.cs" />
     <Compile Include="Controllers\LocationsController.cs" />
     <Compile Include="Controllers\RouteController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\StationsController.cs" />
     <Compile Include="Controllers\TimeTablesController.cs" />
+    <Compile Include="DTOs\LoctionDto.cs" />
+    <Compile Include="DTOs\LogDto.cs" />
+    <Compile Include="DTOs\StopStationDto.cs" />
+    <Compile Include="DTOs\StopTrainDto.cs" />
     <Compile Include="DTOs\TrainDataDto.cs" />
     <Compile Include="Controllers\TrainsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="DTOs\Route.cs" />
+    <Compile Include="DTOs\RouteDto.cs" />
+    <Compile Include="DTOs\TrainDetailsDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -173,17 +183,65 @@
     <Compile Include="Migrations\201904280512590_updatetrain.Designer.cs">
       <DependentUpon>201904280512590_updatetrain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905092136100_test.cs" />
-    <Compile Include="Migrations\201905092136100_test.Designer.cs">
-      <DependentUpon>201905092136100_test.cs</DependentUpon>
+    <Compile Include="Migrations\201905261140338_droplogandlocation.cs" />
+    <Compile Include="Migrations\201905261140338_droplogandlocation.Designer.cs">
+      <DependentUpon>201905261140338_droplogandlocation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905261145417_AddLogAndLocationTable.cs" />
+    <Compile Include="Migrations\201905261145417_AddLogAndLocationTable.Designer.cs">
+      <DependentUpon>201905261145417_AddLogAndLocationTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905261156218_UpdateKeyLocationLogTable.cs" />
+    <Compile Include="Migrations\201905261156218_UpdateKeyLocationLogTable.Designer.cs">
+      <DependentUpon>201905261156218_UpdateKeyLocationLogTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905261158255_UpdateLogTable.cs" />
+    <Compile Include="Migrations\201905261158255_UpdateLogTable.Designer.cs">
+      <DependentUpon>201905261158255_UpdateLogTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905261329563_blank.cs" />
+    <Compile Include="Migrations\201905261329563_blank.Designer.cs">
+      <DependentUpon>201905261329563_blank.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905261400488_LogTableUpdate.cs" />
+    <Compile Include="Migrations\201905261400488_LogTableUpdate.Designer.cs">
+      <DependentUpon>201905261400488_LogTableUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905261451595_LocationLastrecivetimechang.cs" />
+    <Compile Include="Migrations\201905261451595_LocationLastrecivetimechang.Designer.cs">
+      <DependentUpon>201905261451595_LocationLastrecivetimechang.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905261733149_clean.cs" />
+    <Compile Include="Migrations\201905261733149_clean.Designer.cs">
+      <DependentUpon>201905261733149_clean.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905261735587_TrainNavigationProAddedLog.cs" />
+    <Compile Include="Migrations\201905261735587_TrainNavigationProAddedLog.Designer.cs">
+      <DependentUpon>201905261735587_TrainNavigationProAddedLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905261922143_LastlocationAddedToLog.cs" />
+    <Compile Include="Migrations\201905261922143_LastlocationAddedToLog.Designer.cs">
+      <DependentUpon>201905261922143_LastlocationAddedToLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906010704506_AdddirectionToLogTable.cs" />
+    <Compile Include="Migrations\201906010704506_AdddirectionToLogTable.Designer.cs">
+      <DependentUpon>201906010704506_AdddirectionToLogTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906010728147_AddLastReciveToLogTableAndRemoveLastReciveAndLastlocationFromLocationLog.cs" />
+    <Compile Include="Migrations\201906010728147_AddLastReciveToLogTableAndRemoveLastReciveAndLastlocationFromLocationLog.Designer.cs">
+      <DependentUpon>201906010728147_AddLastReciveToLogTableAndRemoveLastReciveAndLastlocationFromLocationLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906011206180_AddNextStopToLog.cs" />
+    <Compile Include="Migrations\201906011206180_AddNextStopToLog.Designer.cs">
+      <DependentUpon>201906011206180_AddNextStopToLog.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\device.cs" />
-    <Compile Include="Models\location.cs" />
-    <Compile Include="Models\log.cs" />
-    <Compile Include="Models\projectDB.cs" />
+    <Compile Include="Models\LocationLog.cs" />
+    <Compile Include="Models\Log.cs" />
+    <Compile Include="Models\ProjectDB.cs" />
     <Compile Include="Models\route.cs" />
-    <Compile Include="Models\station.cs" />
+    <Compile Include="Models\Station.cs" />
     <Compile Include="Models\stopat.cs" />
     <Compile Include="Models\train.cs" />
     <Compile Include="Models\user.cs" />
@@ -200,6 +258,7 @@
     <Content Include="Views\Locations\Details.cshtml" />
     <Content Include="Views\Locations\Edit.cshtml" />
     <Content Include="Views\Locations\Index.cshtml" />
+    <None Include="Properties\PublishProfiles\TrainFinder - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -235,8 +294,44 @@
     <EmbeddedResource Include="Migrations\201904280512590_updatetrain.resx">
       <DependentUpon>201904280512590_updatetrain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905092136100_test.resx">
-      <DependentUpon>201905092136100_test.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201905261140338_droplogandlocation.resx">
+      <DependentUpon>201905261140338_droplogandlocation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905261145417_AddLogAndLocationTable.resx">
+      <DependentUpon>201905261145417_AddLogAndLocationTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905261156218_UpdateKeyLocationLogTable.resx">
+      <DependentUpon>201905261156218_UpdateKeyLocationLogTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905261158255_UpdateLogTable.resx">
+      <DependentUpon>201905261158255_UpdateLogTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905261329563_blank.resx">
+      <DependentUpon>201905261329563_blank.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905261400488_LogTableUpdate.resx">
+      <DependentUpon>201905261400488_LogTableUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905261451595_LocationLastrecivetimechang.resx">
+      <DependentUpon>201905261451595_LocationLastrecivetimechang.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905261733149_clean.resx">
+      <DependentUpon>201905261733149_clean.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905261735587_TrainNavigationProAddedLog.resx">
+      <DependentUpon>201905261735587_TrainNavigationProAddedLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905261922143_LastlocationAddedToLog.resx">
+      <DependentUpon>201905261922143_LastlocationAddedToLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906010704506_AdddirectionToLogTable.resx">
+      <DependentUpon>201906010704506_AdddirectionToLogTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906010728147_AddLastReciveToLogTableAndRemoveLastReciveAndLastlocationFromLocationLog.resx">
+      <DependentUpon>201906010728147_AddLastReciveToLogTableAndRemoveLastReciveAndLastlocationFromLocationLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906011206180_AddNextStopToLog.resx">
+      <DependentUpon>201906011206180_AddNextStopToLog.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

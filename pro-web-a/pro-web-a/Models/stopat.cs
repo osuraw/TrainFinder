@@ -27,7 +27,7 @@ namespace pro_web_a.Models
 
         public float Dtime { get; set; }
 
-        public virtual station station { get; set; }
+        public virtual Station station { get; set; }
 
         public virtual train train { get; set; }
     }

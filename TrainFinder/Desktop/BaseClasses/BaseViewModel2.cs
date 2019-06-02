@@ -17,6 +17,7 @@ namespace Desktop
             PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
 
+
         #region Command Helpers
 
         //flag true if action is not run else false

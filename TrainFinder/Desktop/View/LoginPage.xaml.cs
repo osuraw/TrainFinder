@@ -1,4 +1,5 @@
 ﻿using System.Security;
+using System.Windows;
 using Desktop.ViewModels;
 using Fasetto.Word;
 
@@ -12,10 +13,7 @@ namespace Desktop
         public LoginPage()
         {
             InitializeComponent();
-            
         }
-
-
         public SecureString SecureString => LoginPassword.SecurePassword;
     }
 }

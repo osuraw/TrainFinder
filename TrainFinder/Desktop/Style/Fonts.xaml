@@ -27,6 +27,8 @@
 
     <system:Double x:Key="Large">30</system:Double>
     <system:Double x:Key="Medium">24</system:Double>
+    <system:Double x:Key="TextSize">22</system:Double>
     <system:Double x:Key="Small">20</system:Double>
+
 
 </ResourceDictionary>

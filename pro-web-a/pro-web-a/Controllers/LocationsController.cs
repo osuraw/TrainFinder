@@ -1,139 +1,109 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
-using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Spatial;
+using System.Device.Location;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Web.Http;
-using System.Web.Http.Description;
 using Newtonsoft.Json;
 using pro_web_a.Models;
 
 namespace pro_web_a.Controllers
 {
-    struct savedata
+    internal struct SaveData
     {
-        public string time;
+        public string LocationTime;
         public string Location;
     }
-    [RoutePrefix("api/location")]
+
+    [RoutePrefix("api/Location")]
     public class LocationsController : ApiController
     {
-        private projectDB db = new projectDB();
-        
+        private readonly ProjectDB _dbContext = new ProjectDB();
+
         [HttpGet]
         [Route("Setlocation/")]
         [Route("{id}/{data}")]
-        public IHttpActionResult Setlocation(byte id,string data)
+        public IHttpActionResult SetLocation(byte id, string data)
         {
             char[] split = new[] {','};
-            var datal=data.Split(split, StringSplitOptions.RemoveEmptyEntries).ToList();
-            savedata str;
-            var sb = new StringBuilder(datal[3]);
+            var datalist = data.Split(split, StringSplitOptions.RemoveEmptyEntries).ToList();
+            SaveData str2;
+            var sb = new StringBuilder(datalist[3]);
             sb.AppendFormat(" ");
-            sb.Append(datal[4]);
-            str.Location = sb.ToString();
+            sb.Append(datalist[4]);
+            str2.Location = sb.ToString();
             sb.Clear();
             sb.AppendFormat("{0}:{1}:{2}",
-                datal[2].Substring(8, 2),
-                datal[2].Substring(10, 2),
-                datal[2].Substring(12, 2));
-            str.time = sb.ToString();
-            var rrr = JsonConvert.SerializeObject(str);
-            var update = db.locations.FirstOrDefault(r =>r.DID==id&&EntityFunctions.TruncateTime(r.Datetime) == EntityFunctions.TruncateTime(DateTime.Now));
-            if (update != null)
+                datalist[2].Substring(8, 2),
+                datalist[2].Substring(10, 2),
+                datalist[2].Substring(12, 2));
+            str2.LocationTime = sb.ToString();
+            var locationPacket = JsonConvert.SerializeObject(str2);
+            var logRecord = _dbContext.Log.Single(l => l.DeviceId == id);
+            var trainId = logRecord.TrainId;
+            var direction = logRecord.Direction;
+            var speed = Convert.ToDouble(datalist[6]);
+            if (logRecord.LogId != -2)
             {
-                update.LastLocation = str.Location;
-                update.TimeSpan = TimeSpan.Parse(str.time);
-                update.Locationdata += rrr;
+                var update = _dbContext.Location.FirstOrDefault(l => l.DeviceId == id && l.LocationLogId == logRecord.LogId);
+                if(update!=null)
+                {
+                    logRecord.LastLocation= str2.Location;
+                    SaveData str1;
+                    str1.LocationTime = logRecord.LastReceive;
+                    str1.Location = logRecord.LastLocation;
+                    logRecord.Speed = speed;
+                    logRecord.MaxSpeed = logRecord.MaxSpeed < speed ? speed : logRecord.MaxSpeed;
+                    logRecord.LastReceive = str2.LocationTime;
+                    logRecord.LastLocation = str2.Location;
+                    update.LocationData += update.LocationData == null ? string.Empty : ",";
+                    update.LocationData += locationPacket;
+                    _dbContext.SaveChanges();
+                    var thread = new Thread(()=>UpdateLog(str1, str2,trainId, direction, speed));
+                    thread.Start();
+                }
             }
-
-            db.SaveChanges();
-            return Ok();
+            return Ok("OK");
         }
 
-       
-        [ResponseType(typeof(void))]
-        public IHttpActionResult Putlocation(byte id, location location)
+        private void UpdateLog(SaveData str1, SaveData str2,int trainId,bool direction,double speed)
         {
-            if (!ModelState.IsValid)
+            var location = str1.Location.Split(' ');
+            var point1 = new GeoCoordinate(Convert.ToDouble(location[0]), Convert.ToDouble(location[1]));
+            location = str2.Location.Split(' ');
+            var point2 = new GeoCoordinate(Convert.ToDouble(location[0]), Convert.ToDouble(location[1]));
+            var gap = point1.GetDistanceTo(point2);
+            var log = _dbContext.Log.Single(l=>l.TrainId==trainId);
+            var station = _dbContext.Stations.Single(s => s.SID == log.NextStop);
+            var stopAt = _dbContext.StopAts.SingleOrDefault(s => (s.TID == trainId) && (s.Direction == direction)&&(s.SID==station.SID));
+            if (gap > 70)
             {
-                return BadRequest(ModelState);
-            }
-
-            if (id != location.DID)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(location).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!locationExists(id))
+                var stationLocation =new GeoCoordinate(station.Llatitude,station.Llongitude);
+                var distance = point2.GetDistanceTo(stationLocation);
+                if (speed<30)
+                    speed = 30;
+                
+                var time = TimeSpan.FromSeconds(Math.Round(distance / (speed * 10 / 36), 2));
+                var estimateTime = DateTime.Now.TimeOfDay+time;
+                var delay = estimateTime - TimeSpan.FromSeconds(stopAt.Atime);
+                if (delay.Minutes>5)
                 {
-                    return NotFound();
+                    log.Delay = delay;
+                    log.Status = 3;
                 }
                 else
                 {
-                    throw;
+                    log.Status = 2;
                 }
             }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        
-        [ResponseType(typeof(location))]
-        public IHttpActionResult Postlocation(location location)
-        {
-            if (!ModelState.IsValid)
+            else
             {
-                return BadRequest(ModelState);
+                var val =point2.GetDistanceTo(new GeoCoordinate(station.Llatitude, station.Llongitude));
+                log.Status = val < 50 ? (byte) 4 : (byte) 5;
             }
-
-            db.locations.Add(location);
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateException)
-            {
-                if (locationExists(location.DID))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtRoute("DefaultApi", new { id = location.DID }, location);
-        }
-
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool locationExists(byte id)
-        {
-            return db.locations.Count(e => e.DID == id) > 0;
+            _dbContext.SaveChanges();
         }
     }
 }

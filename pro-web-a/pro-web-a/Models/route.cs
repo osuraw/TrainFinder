@@ -24,7 +24,7 @@ namespace pro_web_a.Models
 
         public int prid { get; set; }
 
-        public  List<station> stations { get; set; }
+        public  List<Station> stations { get; set; }
 
         public  List<train> trains { get; set; }
     }
