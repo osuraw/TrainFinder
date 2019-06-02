@@ -1,0 +1,10 @@
+.mat-form-field {
+    width: 50%;
+}
+
+.searchForm {
+    padding: 10%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}

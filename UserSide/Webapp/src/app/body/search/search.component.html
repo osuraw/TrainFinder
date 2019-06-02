@@ -1,0 +1,26 @@
+<div class="searchForm">
+    <mat-card>
+        <mat-card-content>
+            <form (ngSubmit)="onSubmit(form)" #form="ngForm" fxLayout="column" fxLayoutAlign="center center">
+
+                <mat-form-field>
+                    <input type="text" placeholder="Start Station" matInput required [matAutocomplete]="auto" ngModel name="startstation" #input1/>
+                    <mat-error>Start Station Reuired</mat-error>
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let station of options | filterPipe:input1.value " [value]="station.Name">{{station.Name}}</mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input type="text" matInput placeholder="End Station" required [matAutocomplete]="auto2" ngModel name="endstation" #input2/>
+                    <mat-error>End Station Reuired</mat-error>
+                    <mat-autocomplete #auto2="matAutocomplete">
+                        <mat-option *ngFor="let station of options | filterPipe:input2.value " [value]="station.Name">{{station.Name}}</mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <button [disabled]="!form.valid" type="submit" mat-raised-button color="primayr">Submit</button>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

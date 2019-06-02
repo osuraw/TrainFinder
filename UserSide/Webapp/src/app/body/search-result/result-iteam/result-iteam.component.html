@@ -1,0 +1,36 @@
+<mat-card *ngFor="let Ooption of result.Result">
+    <mat-card-header>
+        <mat-card-title>Option : </mat-card-title>
+        <mat-card-subtitle>Approximate Time : *****</mat-card-subtitle>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content *ngFor="let option of Ooption.Options">
+        <!-- main result area -->
+        <div>
+            <hr>
+            <div class="result data">
+                <div>
+                    <span> <mat-icon>train</mat-icon> Train : {{option.TrainName}}</span>
+                    <button mat-icon-button matTooltip=""><mat-icon>more_vert</mat-icon></button>
+                </div>
+                <div>
+                    <span>{{option.StartStationName}}</span>
+                    <span>To</span>
+                    <span>{{option.EndStationName}}</span>
+                </div>
+                <div>
+                    <span>Departure   : {{option.StartStationDeparture}}</span>
+                    <span>Departure : {{option.EndStationArrival}}</span>
+                    <span>Duration  : {{option.Duration}}</span>
+                </div>
+            </div>
+        </div>
+        <!-- optional area -->
+        <div class="result">
+            <hr>
+            <div>
+                <span><pre> <mat-icon>transfer_within_a_station</mat-icon>  Waiting Time : *******</pre></span>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
