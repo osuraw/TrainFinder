@@ -11,7 +11,7 @@ namespace pro_web_a.Controllers
 {
     public class StationsController : ApiController
     {
-        private ProjectDB _context = new ProjectDB();
+        private readonly ProjectDB _context = new ProjectDB();
 
         // GET: api/Stations
         public IQueryable<Station> Getstations()
@@ -68,7 +68,7 @@ namespace pro_web_a.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!stationExists(id))
+                if (!StationExists(id))
                 {
                     return NotFound();
                 }
@@ -123,7 +123,7 @@ namespace pro_web_a.Controllers
             base.Dispose(disposing);
         }
 
-        private bool stationExists(short id)
+        private bool StationExists(short id)
         {
             return _context.Stations.Count(e => e.SID == id) > 0;
         }

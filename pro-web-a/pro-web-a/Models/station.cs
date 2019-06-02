@@ -12,7 +12,8 @@ namespace pro_web_a.Models
         public short SID { get; set; }
 
         [Required]
-        [StringLength(20)]
+        [Column(TypeName = "varchar")]
+        [StringLength(40)]
         public string Name { get; set; }
 
         public double Distance { get; set; }
@@ -22,9 +23,11 @@ namespace pro_web_a.Models
         public double Llatitude { get; set; }
 
         [StringLength(100)]
+        [Column(TypeName = "varchar")]
         public string Address { get; set; }
 
         [StringLength(15)]
+        [Column(TypeName = "varchar")]
         public string Telephone { get; set; }
         
         public short RID { get; set; }

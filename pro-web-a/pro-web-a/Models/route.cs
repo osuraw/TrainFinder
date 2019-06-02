@@ -18,8 +18,11 @@ namespace pro_web_a.Models
 
         public double? Distance { get; set; }
 
+        [Column(TypeName = "varchar")]
         public string Name { get; set; }
-        [MaxLength(500)]
+
+        [MaxLength(200)]
+        [Column(TypeName = "varchar")]
         public string Description { get; set; }
 
         public int prid { get; set; }

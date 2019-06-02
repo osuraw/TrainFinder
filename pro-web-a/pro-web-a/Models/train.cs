@@ -20,6 +20,7 @@ namespace pro_web_a.Models
         public short TID { get; set; }
 
         [StringLength(50)]
+        [Column(TypeName = "varchar")]
         public string Name { get; set; }
 
         public short Sstation { get; set; }
@@ -27,6 +28,7 @@ namespace pro_web_a.Models
         public short Estation { get; set; }
 
         [StringLength(150)]
+        [Column(TypeName = "varchar")]
         public string Description { get; set; }
 
         public short RID { get; set; }

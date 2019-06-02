@@ -12,9 +12,11 @@ namespace pro_web_a.Models
 
         public bool Direction { get; set; }
         public byte DeviceId { get; set; }
-        
+
+        [Column(TypeName = "varchar")]
         public string StartTime { get; set; }
-       
+
+        [Column(TypeName = "varchar")]
         public string EndTime { get; set; }
 
         public double MaxSpeed { get; set; }
@@ -25,8 +27,11 @@ namespace pro_web_a.Models
 
         public byte Status { get; set; }
 
+        
+        [Column(TypeName = "varchar")]
         public string LastLocation { get; set; }
 
+        [Column(TypeName = "varchar")]
         public string LastReceive { get; set; }
 
         public int NextStop { get; set; }

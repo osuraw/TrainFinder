@@ -235,6 +235,10 @@
     <Compile Include="Migrations\201906011206180_AddNextStopToLog.Designer.cs">
       <DependentUpon>201906011206180_AddNextStopToLog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906020957411_ChangetoVarchar.cs" />
+    <Compile Include="Migrations\201906020957411_ChangetoVarchar.Designer.cs">
+      <DependentUpon>201906020957411_ChangetoVarchar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\device.cs" />
     <Compile Include="Models\LocationLog.cs" />
@@ -247,17 +251,10 @@
     <Compile Include="Models\user.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DTOs\UserDto.cs" />
-    <Compile Include="userss.cs" />
+    <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Locations\Create.cshtml" />
-    <Content Include="Views\Locations\Delete.cshtml" />
-    <Content Include="Views\Locations\Details.cshtml" />
-    <Content Include="Views\Locations\Edit.cshtml" />
-    <Content Include="Views\Locations\Index.cshtml" />
     <None Include="Properties\PublishProfiles\TrainFinder - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -332,6 +329,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906011206180_AddNextStopToLog.resx">
       <DependentUpon>201906011206180_AddNextStopToLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906020957411_ChangetoVarchar.resx">
+      <DependentUpon>201906020957411_ChangetoVarchar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

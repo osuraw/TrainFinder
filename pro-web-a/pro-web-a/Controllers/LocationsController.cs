@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data.Entity;
-using System.Data.Entity.Spatial;
 using System.Device.Location;
 using System.Linq;
 using System.Text;
@@ -25,6 +23,7 @@ namespace pro_web_a.Controllers
         [HttpGet]
         [Route("Setlocation/")]
         [Route("{id}/{data}")]
+        //use to add Location from device to database 
         public IHttpActionResult SetLocation(byte id, string data)
         {
             char[] split = new[] {','};

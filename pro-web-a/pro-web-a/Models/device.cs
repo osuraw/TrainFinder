@@ -17,6 +17,7 @@ namespace pro_web_a.Models
         public short TID { get; set; }
 
         [StringLength(100)]
+        [Column(TypeName = "varchar")]
         public string Description { get; set; }
 
         public train train { get; set; }

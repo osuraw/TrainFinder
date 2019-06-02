@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Data.Entity;
 using Newtonsoft.Json;
 using pro_web_a.Models;
 
@@ -11,18 +10,14 @@ namespace pro_web_a.Controllers
 {
     public class RouteController : ApiController
     {
-        private ProjectDB _context;
+        private readonly ProjectDB _context;
 
         public RouteController()
         {
             _context = new ProjectDB();
         }
 
-        /// <summary>
-        /// Add New Route(post)
-        /// </summary>
-        /// <param name="route"></param>
-        /// <returns></returns> 
+        
         [HttpPost]
         public HttpResponseMessage CreateRoute(route route)
         {
@@ -34,12 +29,12 @@ namespace pro_web_a.Controllers
                 }
                 else
                 {
-                    var routetemp = _context.Routes.Single(r => r.RID == route.RID);
-                    routetemp.Distance = route.Distance;
-                    routetemp.Name = route.Name;
-                    routetemp.Sstation = route.Sstation;
-                    routetemp.Estation = route.Estation;
-                    routetemp.Description = route.Description;
+                    var routeTemp = _context.Routes.Single(r => r.RID == route.RID);
+                    routeTemp.Distance = route.Distance;
+                    routeTemp.Name = route.Name;
+                    routeTemp.Sstation = route.Sstation;
+                    routeTemp.Estation = route.Estation;
+                    routeTemp.Description = route.Description;
                 }
 
                 _context.SaveChanges();
@@ -61,12 +56,12 @@ namespace pro_web_a.Controllers
         {
             if (ModelState.IsValid)
             {
-                var routetemp = _context.Routes.Single(r => r.RID == route.RID);
-                routetemp.Distance = route.Distance;
-                routetemp.Name = route.Name;
-                routetemp.Sstation = route.Sstation;
-                routetemp.Estation = route.Estation;
-                routetemp.Description = route.Description;
+                var routeTtemp = _context.Routes.Single(r => r.RID == route.RID);
+                routeTtemp.Distance = route.Distance;
+                routeTtemp.Name = route.Name;
+                routeTtemp.Sstation = route.Sstation;
+                routeTtemp.Estation = route.Estation;
+                routeTtemp.Description = route.Description;
                 _context.SaveChanges();
 
                 return Ok();
