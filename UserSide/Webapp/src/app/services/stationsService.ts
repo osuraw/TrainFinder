@@ -1,15 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import { Station } from '../dataModels/stationModel';
 import { SearchResultDto } from '../dataModels/search-result-dto';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { MatDialog } from '@angular/material';
+import { SpinDialogComponent } from '../MessageBox/spin-dialog/spin-dialog.component';
+
 @Injectable()
 export class StationService {
-
+    @Output() Stationload = new EventEmitter<Station[]>();
     private url = 'http://localhost:11835/Api/';
     public result: SearchResultDto;
     public stations: Station[];
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private dialog: MatDialog) { }
 
     Oncall(url: string) {
         const promise = new Promise((resolve, reject) => {
@@ -30,8 +32,15 @@ export class StationService {
         return promise;
     }
 
-    GetStations(path: string): Observable<Station[]> {
-        return this.http.get<Station[]>(this.url + path);
+    GetStations(path: string): void {
+        this.dialog.open(SpinDialogComponent);
+        this.http.get<Station[]>(this.url + path).subscribe((response: Station[]) => {
+
+            this.Stationload.emit(response);
+            this.stations = response;
+            this.dialog.closeAll();
+            console.log(response);
+        });
     }
 
     GetStationsResults() {

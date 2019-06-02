@@ -5,7 +5,7 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from 'src/app/MessageBox/error-dialog/error-dialog.component';
-import { SpinDialogComponent } from "src/app/MessageBox/spin-dialog/spin-dialog.component";
+import { SpinDialogComponent } from 'src/app/MessageBox/spin-dialog/spin-dialog.component';
 
 
 @Component({
@@ -16,15 +16,21 @@ import { SpinDialogComponent } from "src/app/MessageBox/spin-dialog/spin-dialog.
 export class SearchComponent {
 
   options: Station[];
-  loading = false;
   StartStationId = -1;
   EndStationId = -1;
+  private start: string;
+  private end: string;
+
 
   constructor(private stationservice: StationService, private route: Router, private dialog: MatDialog) {
-    this.stationservice.GetStations('Search/GetStations').subscribe((response: Station[]) => {
-      this.options = response;
-      console.log(response);
-    });
+    this.options = this.stationservice.stations;
+    if (this.options === undefined) {
+      console.log('options empty');
+      this.stationservice.Stationload.subscribe((result: Station[]) => this.Onload(result));
+    }
+  }
+  private Onload(result: Station[]) {
+    this.options = result;
   }
 
   private _filter(value: string): Station[] {
@@ -33,24 +39,20 @@ export class SearchComponent {
   }
 
   onSubmit(form): void {
-    console.log(form);
+    // console.log(form);
     const val = this.CheckValidity(form);
-    console.log(this.StartStationId);
-    console.log(this.EndStationId);
-    console.log(val);
+    // console.log(val);
     if (val) {
-      this.loading = true;
       this.dialog.open(SpinDialogComponent);
       this.SendApiRequest();
     }
-    console.log(this.loading);
   }
   // Validation check
   CheckValidity(form: NgForm): boolean {
 
-    const start = form.value.startstation;
-    const end = form.value.endstation;
-    if (start === end) {
+    this.start = form.value.startstation;
+    this.end = form.value.endstation;
+    if (this.start === this.end) {
       this.dialog.open(ErrorDialogComponent, {
         data: {
           title: 'Validation Check',
@@ -59,12 +61,11 @@ export class SearchComponent {
       });
       return false;
     }
-    this.StartStationId = this.GetID(start);
-    this.EndStationId = this.GetID(end);
+    this.StartStationId = this.GetID(this.start);
+    this.EndStationId = this.GetID(this.end);
     if (this.EndStationId !== 0 && this.StartStationId !== 0) {
       return true;
-    }
-    else {
+    } else {
       this.dialog.open(ErrorDialogComponent, {
         data: {
           title: 'Validation Check',
@@ -91,12 +92,11 @@ export class SearchComponent {
   SendApiRequest() {
     const urlpath = 'Search/SearchTrain?startStationId=' + this.StartStationId + '&endStationId=' + this.EndStationId;
     this.stationservice.Oncall(urlpath).then((res: any) => {
-      console.log(res);
-      this.loading = false;
-      console.log(this.loading);
-      this.route.navigate(['SearchResult']);
+      // console.log(res);
+      this.route.navigate(['SearchResult'], { queryParams: { start: this.start, end: this.end } });
+      this.dialog.closeAll();
     }, (reject) => {
-      console.log(reject);
+
       console.log('rejected');
     });
   }

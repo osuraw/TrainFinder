@@ -44,6 +44,9 @@ import { SpinDialogComponent } from './MessageBox/spin-dialog/spin-dialog.compon
     StationService
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ErrorDialogComponent]
+  entryComponents: [
+    ErrorDialogComponent,
+    SpinDialogComponent
+  ]
 })
 export class AppModule { }

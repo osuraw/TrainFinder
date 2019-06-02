@@ -11,6 +11,6 @@ export class AppComponent implements OnInit {
   constructor(private stationService: StationService) { }
 
   ngOnInit(): void {
-    //this.stationService.Oncall();
+    this.stationService.GetStations('Search/GetStations');
   }
 }

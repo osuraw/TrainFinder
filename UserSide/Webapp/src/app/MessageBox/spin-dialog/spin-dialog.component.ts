@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 
 @Component({
   selector: 'app-spin-dialog',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SpinDialogComponent implements OnInit {
 
-  constructor() { }
+  constructor(private dialog: MatDialogRef<SpinDialogComponent>) {
+    this.dialog.disableClose = true;
+  }
 
   ngOnInit() {
   }
