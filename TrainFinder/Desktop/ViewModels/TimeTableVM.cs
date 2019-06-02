@@ -39,9 +39,9 @@ namespace Desktop.ViewModels
             set
             {
                 _routeSelected = value;
-                if(StationTicked)
+                if (StationTicked)
                     OnSelectionChange(1);
-                if(TrainTicked)
+                if (TrainTicked)
                     OnSelectionChange(2);
             }
         }
@@ -72,8 +72,8 @@ namespace Desktop.ViewModels
             set
             {
                 _trainTicked = value;
-                if(TrainTicked)
-                OnSelectionChange(2);
+                if (TrainTicked)
+                    OnSelectionChange(2);
             }
         }
 
@@ -183,7 +183,22 @@ namespace Desktop.ViewModels
 
         #region Overides
 
-        protected override void Reset()
+        //protected override void Reset()
+        //{
+        //    Clear();
+        //    ListData?.Clear();
+        //    Trains?.Clear();
+        //    Stations?.Clear();
+        //    TimeTable?.Clear();
+        //}
+
+        //protected override bool CheckValid()
+        //{
+        //    if (Errors == 0)
+        //        return true;
+        //    return false;
+        //}
+        protected void Reset()
         {
             Clear();
             ListData?.Clear();
@@ -192,7 +207,7 @@ namespace Desktop.ViewModels
             TimeTable?.Clear();
         }
 
-        protected override bool CheckValid()
+        protected bool CheckValid()
         {
             if (Errors == 0)
                 return true;
@@ -220,7 +235,7 @@ namespace Desktop.ViewModels
             var routeId = RouteList[RouteSelected].RID;
             ListData = new ObservableCollection<dynamic>();
 
-            if (index ==1)
+            if (index == 1)
             {
                 ObservableCollection<Station> data = Station.GetStationByRouteId(routeId);
                 foreach (Station station in data)
@@ -229,7 +244,7 @@ namespace Desktop.ViewModels
                 }
             }
 
-            if (index==2)
+            if (index == 2)
             {
                 ObservableCollection<Train> data = Train.GetTrainByRouteId(routeId);
                 foreach (Train station in data)
@@ -243,12 +258,12 @@ namespace Desktop.ViewModels
 
         private void OnDataGridSelectionChange(object data)
         {
-            var timetable = (Stopat) data;
+            var timetable = (Stopat)data;
             TrainId = timetable.TID;
             StationId = timetable.SID;
             ATime1 = timetable.Atime.ToString("F");
             DTime1 = timetable.Dtime.ToString("F");
-            
+
         }
 
         private void Clear()

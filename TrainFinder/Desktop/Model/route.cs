@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace Desktop.Model
 {
-    public partial class Route 
+    public class Route 
     {
         #region Entity
 

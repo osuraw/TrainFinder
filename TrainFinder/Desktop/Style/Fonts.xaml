@@ -11,10 +11,6 @@
         <Setter Property="FontFamily" Value="{StaticResource LetoThin}" />
     </Style>
 
-    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BaseStyle}" />
-    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource BaseStyle}" />
-    <Style TargetType="{x:Type Label}" BasedOn="{StaticResource BaseStyle}" />
-    <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource BaseStyle}" />
     <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource BaseStyle}" />
     <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource BaseStyle}" />
 
@@ -23,7 +19,7 @@
         <Setter Property="FontFamily" Value="{StaticResource LetoThin}" />
     </Style>
 
-    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BaseTextBlockStyle}" />
+    <!--<Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BaseTextBlockStyle}" />-->
 
     <system:Double x:Key="Large">30</system:Double>
     <system:Double x:Key="Medium">24</system:Double>

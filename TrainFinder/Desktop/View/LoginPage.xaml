@@ -1,19 +1,19 @@
 ﻿<local:BasePage x:TypeArguments="local:LoginPageVm"   x:Class="Desktop.LoginPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:Desktop"
-      mc:Ignorable="d"
-      d:DesignHeight="450" d:DesignWidth="800"
-      x:Name="Page"
-      Title="loginPage">
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:local="clr-namespace:Desktop"
+                mc:Ignorable="d"
+                d:DesignHeight="450" d:DesignWidth="800"
+                x:Name="Page"
+                Title="loginPage">
 
     <Border >
         <Grid Background="Transparent">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" TextBlock.TextAlignment="Center">
-                    <Border Background="Azure" Padding="15,50,15,15"
+                    <Border Background="{StaticResource TemplateBackGroundBrush2}" Padding="15,50,15,15"
                             CornerRadius="10"
                             Width="400"
                             Margin="50">
@@ -24,7 +24,7 @@
                             <Button Content="LOG IN" FontSize="{StaticResource Medium}" 
                                     Command="{Binding LoginCommand}" 
                                     CommandParameter="{Binding ElementName=Page}"
-                                    local:IsBusyAttachedProperty.Value="{Binding LoginIsRunning}"          />
+                                    local:IsBusyAttachedProperty.Value="{Binding LoginIsRunning}"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>

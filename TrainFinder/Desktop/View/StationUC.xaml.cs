@@ -18,13 +18,13 @@ namespace Desktop
         public StationUC()
         {
             InitializeComponent();
-            this.DataContext = new StationVM();
+            this.DataContext = new StationVm();
         }
       
         private void Validation_Error(object sender, ValidationErrorEventArgs e)
         {
-            if (e.Action == ValidationErrorEventAction.Added) StationVM.Errors += 1;
-            if (e.Action == ValidationErrorEventAction.Removed) StationVM.Errors -= 1;
+            if (e.Action == ValidationErrorEventAction.Added) StationVm.Errors += 1;
+            if (e.Action == ValidationErrorEventAction.Removed) StationVm.Errors -= 1;
         }
 
         

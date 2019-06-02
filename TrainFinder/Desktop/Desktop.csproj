@@ -117,7 +117,7 @@
     <Compile Include="BaseClasses\CommandBase.cs" />
     <Compile Include="Helpers\ExpressionHelper.cs" />
     <Compile Include="Model\Pinlocation.cs" />
-    <Compile Include="Model\device.cs" />
+    <Compile Include="Model\Device.cs" />
     <Compile Include="Model\Route.cs" />
     <Compile Include="Model\Station.cs" />
     <Compile Include="Model\stopat.cs" />
@@ -128,6 +128,8 @@
     <Compile Include="ViewModels\IHavePassword.cs" />
     <Compile Include="ViewModels\LoginPageVm.cs" />
     <Compile Include="ViewModels\LoginWindowVm.cs" />
+    <Compile Include="ViewModels\MainVm.cs" />
+    <Compile Include="ViewModels\UserVm.cs" />
     <Compile Include="View\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
@@ -136,7 +138,7 @@
     </Compile>
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModels\PinLocationVm.cs" />
-    <Compile Include="ViewModels\StationVM.cs" />
+    <Compile Include="ViewModels\StationVm.cs" />
     <Compile Include="ViewModels\TimeTableVm.cs" />
     <Compile Include="ViewModels\TrainVM.cs" />
     <Compile Include="View\PinLocationUC.xaml.cs">
@@ -162,6 +164,10 @@
     </Compile>
     <Compile Include="ViewModels\RouteVM.cs" />
     <Compile Include="BaseClasses\WebConnect.cs" />
+    <Page Include="Style\ControlBase.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Style\ErrorTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

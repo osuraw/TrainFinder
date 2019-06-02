@@ -2,18 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
-using PropertyChanged;
+using Desktop.Properties;
 
 namespace Desktop
 {
-    [ImplementPropertyChanged]
-    public abstract class BaseViewModelMain : INotifyPropertyChanged, IDataErrorInfo
+    public class BaseViewModelMain : INotifyPropertyChanged, IDataErrorInfo
     {
-        private readonly Dictionary<string, object> _values = new Dictionary<string, object>();
-
         #region ClassMethods
 
         protected void SetValue<T>(Expression<Func<T>> propertySelector, T value)
@@ -48,20 +44,18 @@ namespace Desktop
                 throw new ArgumentException("Invalid property name", propertyName);
             }
 
-            object value;
-            if (!_values.TryGetValue(propertyName, out value))
+            if (!_values.TryGetValue(propertyName, out object value))
             {
                 value = default(T);
                 _values.Add(propertyName, value);
             }
 
-            return (T) value;
+            return (T)value;
         }
 
         private string GetPropertyName(LambdaExpression expression)
         {
-            var memberExpression = expression.Body as MemberExpression;
-            if (memberExpression == null)
+            if (!(expression.Body is MemberExpression memberExpression))
             {
                 throw new InvalidOperationException();
             }
@@ -71,8 +65,7 @@ namespace Desktop
 
         private object GetValue(string propertyName)
         {
-            object value;
-            if (!_values.TryGetValue(propertyName, out value))
+            if (!_values.TryGetValue(propertyName, out object value))
             {
                 var propertyDescriptor = TypeDescriptor.GetProperties(GetType()).Find(propertyName, false);
                 if (propertyDescriptor == null)
@@ -89,36 +82,6 @@ namespace Desktop
 
         protected bool AlwaysTrue() => true;
 
-        #region Abstract Methods
-
-        protected abstract bool CheckValid();
-        protected abstract void Reset();
-
-        #endregion
-
-        #region debuging
-
-        [Conditional("DEBUG")]
-        [DebuggerStepThrough]
-        public void VerifyPropertyName(string propertyName)
-        {
-            // Verify that the property name matches a real,  
-            // public, Instance property on this object.
-            if (TypeDescriptor.GetProperties(this)[propertyName] == null)
-            {
-                string msg = "Invalid property name: " + propertyName;
-
-                if (this.ThrowOnInvalidPropertyName)
-                    throw new Exception(msg);
-                else
-                    Debug.Fail(msg);
-            }
-        }
-
-        protected virtual bool ThrowOnInvalidPropertyName { get; private set; }
-
-        #endregion
-
         #endregion
 
         #region INotifyPropertyChange
@@ -127,57 +90,70 @@ namespace Desktop
 
         protected void OnPropertyChanged(string propertyName)
         {
-            //this.VerifyPropertyName(propertyName);
-
-            PropertyChangedEventHandler handler = this.PropertyChanged;
-            if (handler != null)
-            {
-                var e = new PropertyChangedEventArgs(propertyName);
-                handler(this, e);
-            }
-        }
-
-        protected void OnPropertyChanged<T>(Expression<Func<T>> propertySelector)
-        {
-            var propertyChanged = PropertyChanged;
-            if (propertyChanged != null)
-            {
-                string propertyName = GetPropertyName(propertySelector);
-                propertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            var handler = PropertyChanged;
+            if (handler == null) return;
+            var e = new PropertyChangedEventArgs(propertyName);
+            handler(this, e);
         }
 
         #endregion
 
         #region IDataErrorInfor
 
-        public string this[string PropertyName] => OnValidation(PropertyName);
+        private readonly Dictionary<string, object> _values = new Dictionary<string, object>();
+        private Dictionary<string, bool> ValidationResults { get; set; } = new Dictionary<string, bool>();
+
+        public string this[string propertyName] => OnValidation(propertyName);
 
         protected virtual string OnValidation(string propertyName)
         {
-            if (string.IsNullOrEmpty(propertyName))
-                throw new ArgumentException("Invalid Property Name", propertyName);
-
             string error = string.Empty;
-            var value = GetValue(propertyName);
-            var results = new List<ValidationResult>(1);
-            var result = Validator.TryValidateProperty(
-                value,
-                new ValidationContext(this, null, null)
-                {
-                    MemberName = propertyName
-                },
-                results);
-            if (!result)
+            if (string.IsNullOrEmpty(propertyName))
+                throw new ArgumentException("sssssssssssssssssssssssssss");
+                //throw new ArgumentException(Resources.BaseViewModelMain_OnValidation_Invalid_Property_Name,propertyName);
+
+            if (ValidationResults.Any(x => x.Key == propertyName))
             {
-                var validationResult = results.First();
-                error = validationResult.ErrorMessage;
+                var value = GetValue(propertyName);
+                var results = new List<ValidationResult>(1);
+                var result = Validator.TryValidateProperty(
+                    value,
+                    new ValidationContext(this, null, null)
+                    {
+                        MemberName = propertyName
+                    },
+                    results);
+                if (!result)
+                {
+                    var validationResult = results.First();
+                    error = validationResult.ErrorMessage;
+                    ValidationResults[propertyName] = true;
+                }
+                else
+                {
+                    ValidationResults[propertyName] = false;
+                }
+            }
+            else
+            {
+                ValidationResults.Add(propertyName, true);
             }
 
+            OnPropertyChanged(nameof(IsValid));
             return error;
         }
 
         public string Error => null;
+
+        public bool IsValid
+        {
+            get { return (!ValidationResults.Any(x => x.Value) && (ValidationResults.Count > 0)); }
+        }
+
+        public void ClearValidation()
+        {
+            ValidationResults.Clear();
+        }
 
         #endregion
     }

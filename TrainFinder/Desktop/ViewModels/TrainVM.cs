@@ -41,12 +41,13 @@ namespace Desktop.ViewModels
         public short StartStationId { get; set; }
 
         [Required(ErrorMessage = "End Station Required")]
-        [Compare("StartStationId",ErrorMessage ="Both Start And End Same")]
+        [Compare("StartStationId", ErrorMessage = "Both Start And End Same")]
         public short EndStationId { get; set; }
 
         [Required]
         [StingOnlyValidation]
-        public string Name {
+        public string Name
+        {
             get => GetValue(() => Name);
             set => SetValue(() => Name, value);
         }
@@ -112,7 +113,7 @@ namespace Desktop.ViewModels
         }
         private void GetStation()
         {
-            
+
             //SelectStationVisibility = false;
             if (RouteSelected != 0)
             {
@@ -178,7 +179,7 @@ namespace Desktop.ViewModels
         public bool Update()
         {
             var data = GetViewData();
-            if(data.TID!=0)
+            if (data.TID != 0)
             {
                 var response = WebConnect.UpdateDate("Trains/" + data.TID, data);
                 if (response.StatusCode == HttpStatusCode.NoContent)
@@ -194,7 +195,20 @@ namespace Desktop.ViewModels
 
         #region OvrideMethods
 
-        protected override bool CheckValid()
+        //protected override bool CheckValid()
+        //{
+        //    if (Errors == 0)
+        //        return true;
+        //    else
+        //        return false;
+        //}
+
+        //protected override void Reset()
+        //{
+        //    ClearViewProperties();
+        //    Trains?.Clear();
+        //}
+        protected bool CheckValid()
         {
             if (Errors == 0)
                 return true;
@@ -202,7 +216,7 @@ namespace Desktop.ViewModels
                 return false;
         }
 
-        protected override void Reset()
+        protected void Reset()
         {
             ClearViewProperties();
             Trains?.Clear();

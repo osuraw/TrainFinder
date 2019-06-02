@@ -7,24 +7,26 @@ using Desktop.Model;
 
 namespace Desktop.ViewModels
 {
-    class StationVM:BaseViewModelMain
+    class StationVm : BaseViewModelMain
     {
         private short _routeIdSelectCmb1 = 0;
 
         #region Propperties
 
         #region DataContaners
+
         public ObservableCollection<Station> Stations { get; set; }
 
         public static ObservableCollection<Route> RoutesList { get; set; }
 
         public Station Station { get; set; }
+
         #endregion
 
         #region Model
 
         [Required]
-        [Range(1,5)]
+        [Range(1, 5)]
         public short RouteId
         {
             get { return GetValue(() => RouteId); }
@@ -52,7 +54,7 @@ namespace Desktop.ViewModels
             get { return GetValue(() => Distance); }
             set { SetValue(() => Distance, value); }
         }
-        
+
         [Required]
         [Phone]
         public string Telephone
@@ -82,7 +84,6 @@ namespace Desktop.ViewModels
         public ICommand DataGridSelectionChangeCommand { get; private set; }
         public ICommand LocationCommand { get; private set; }
 
-
         #endregion
 
         #region Control
@@ -94,7 +95,6 @@ namespace Desktop.ViewModels
             {
                 _routeIdSelectCmb1 = value;
                 OnRouteIdSelectCmb1Change();
-
             }
         }
 
@@ -106,14 +106,14 @@ namespace Desktop.ViewModels
 
         #region Methods
 
-        public StationVM()
+        public StationVm()
         {
             RoutesList = Route.GetRouteList();
             AddCommand = new CommandBase(AddStation, CheckValid);
             UpdateCommand = new CommandBase(Update, CheckValid);
             ResetCommand = new CommandBase(action: Reset, canExecute: AlwaysTrue);
-            DataGridSelectionChangeCommand = new CommandBase(action:OnDataGridSelectionChange, canExecute: AlwaysTrue);
-            LocationCommand = new CommandBase(action:OnDataGridSelectionChange, canExecute: AlwaysTrue);
+            DataGridSelectionChangeCommand = new CommandBase(action: OnDataGridSelectionChange, canExecute: AlwaysTrue);
+            LocationCommand = new CommandBase(action: OnDataGridSelectionChange, canExecute: AlwaysTrue);
         }
 
         #region Action
@@ -127,16 +127,17 @@ namespace Desktop.ViewModels
             {
                 var ree = response.Content.ReadAsStringAsync();
                 station.SID = Int16.Parse(ree.Result);
-                StationId= Int16.Parse(ree.Result);
+                StationId = Int16.Parse(ree.Result);
                 return true;
             }
+
             return false;
         }
 
-        public  bool Update()
+        public bool Update()
         {
             var station = GetViewData();
-            var response = WebConnect.UpdateDate("Stations/"+ station.SID,station);
+            var response = WebConnect.UpdateDate("Stations/" + station.SID, station);
             if (response.StatusCode == HttpStatusCode.Created)
             {
                 ClearViewProperties();
@@ -145,24 +146,23 @@ namespace Desktop.ViewModels
 
             return false;
         }
-        
+
         #endregion
 
         #region OverideBaseVM
 
-        protected override bool CheckValid()
+        protected bool CheckValid()
         {
             if (Errors == 0)
                 return true;
-            else
-                return false;
+            return false;
         }
 
-        protected override void Reset()
+        protected void Reset()
         {
             ClearViewProperties();
-            if(Station!=null)
-            Stations.Clear();
+            if (Station != null)
+                Stations.Clear();
         }
 
         #endregion
@@ -177,9 +177,9 @@ namespace Desktop.ViewModels
                     RID = RouteId,
                     Name = Name,
                     Distance = float.Parse(Distance),
-                    Address =Address,
+                    Address = Address,
                     Telephone = Telephone,
-                    SID=StationId
+                    SID = StationId
                     //Location=Location
                 };
             return null;
@@ -192,14 +192,15 @@ namespace Desktop.ViewModels
             {
                 Stations = Station.GetStationByRouteId(RoutesList[RouteIdSelectCmb1].RID);
                 Stations.RemoveAt(0);
+                OnPropertyChanged(nameof(Stations));
             }
         }
 
         private void OnDataGridSelectionChange(object station)
         {
-            if(station!=null)
+            if (station != null)
             {
-                Station data = (Station) station;
+                Station data = (Station)station;
                 RouteId = data.RID;
                 Name = data.Name;
                 Distance = data.Distance.ToString("##.##");
@@ -209,23 +210,21 @@ namespace Desktop.ViewModels
                 Description = data.Description;
                 return;
             }
+
             ClearViewProperties();
         }
 
         private void ClearViewProperties()
         {
-            RouteIdSelectCmb1=RouteId = 0;
+            RouteIdSelectCmb1 = RouteId = 0;
             Name = Distance = Telephone = Address = Location = Description = "";
         }
 
         #endregion
+
         #endregion
     }
 }
-
-
-
-
 
 
 //public void GetStation(int id = 0)
