@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace pro_web_a.DTOs
 {
@@ -12,10 +13,7 @@ namespace pro_web_a.DTOs
         public int EndStationId;
         public string EndStationName;
         public float EndStationArrival;
-        public float Duration;
-        //public float EndStationDeparture;
-        //public float StartStationArrival;
-
+        public TimeSpan Duration;
     }
 
     public class OptionDto
@@ -25,7 +23,7 @@ namespace pro_web_a.DTOs
             Options=new List<TrainDataDto>();
         }
 
-        public float TimeTaken { get; set; }
+        public string TimeTaken { get; set; }
 
         public List<TrainDataDto> Options { get; set; }
     }

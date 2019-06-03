@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,7 +29,9 @@ namespace pro_web_a.Controllers
             //both stations in same GetRoute
             if (statStationRouteId == endStationRouteId)
             {
-                var options = new OptionDto {Options = GetTrains(startStationId, endStationId)};
+                var data = GetTrains(startStationId, endStationId);
+                var timeTaken = TimeSpan.FromSeconds(CalculateApproximateTime(data));
+                var options = new OptionDto {TimeTaken = timeTaken.ToString("g"), Options =data };
                 var result = new SearchTrainResult();
                 result.Result.Add(options);
                 result.Count = "1";
@@ -58,7 +61,18 @@ namespace pro_web_a.Controllers
            
         }
 
-        private SearchTrainResult FilterResult(List<TrainDataDto> list1, List<TrainDataDto> list2)
+        private static double CalculateApproximateTime(IEnumerable<TrainDataDto> data)
+        {
+            var timeTaken = TimeSpan.Zero;
+            foreach (var trainDataDto in data)
+            {
+                timeTaken += trainDataDto.Duration;
+            }
+
+            return Math.Round(timeTaken.TotalSeconds,0);
+        }
+
+        private static SearchTrainResult FilterResult(IEnumerable<TrainDataDto> list1, List<TrainDataDto> list2)
         {
             SearchTrainResult result = new SearchTrainResult();
             foreach (TrainDataDto dataDto in list1)
@@ -85,8 +99,10 @@ namespace pro_web_a.Controllers
                         }
                     }
                 }
-                if(data.Options.Count>0)
-                    result.Result.Add(data);
+
+                if (data.Options.Count <= 0) continue;
+                data.TimeTaken = TimeSpan.FromSeconds(CalculateApproximateTime(data.Options)).ToString();
+                result.Result.Add(data);
             }
 
             result.Count =  result.Result.Count.ToString();
@@ -162,6 +178,11 @@ namespace pro_web_a.Controllers
                     s.SID == endStationId && s.TID == record.TID && s.Direction == flag);
                 if(matchingRecord!=null)
                 {
+                    var value = Math.Round((matchingRecord.Atime- record.Dtime),4);
+                    var duration =TimeSpan.FromHours(value);
+                    if (record.Dtime > matchingRecord.Atime)
+                        duration=duration.Negate();
+
                     //if match add to possible selections
                     var data = new TrainDataDto()
                     {
@@ -173,9 +194,7 @@ namespace pro_web_a.Controllers
                         EndStationId = matchingRecord.SID,
                         EndStationName = matchingRecord.station.Name,
                         EndStationArrival = matchingRecord.Atime,
-                        Duration = 1000
-                        //EndStationDeparture = matchingRecord.Dtime
-                        //StartStationArrival = record.Atime,
+                        Duration = duration
                     };
                     trainDataDto.Add(data);
                 }
