@@ -61,6 +61,7 @@ export class SearchComponent {
       });
       return false;
     }
+
     this.StartStationId = this.GetID(this.start);
     this.EndStationId = this.GetID(this.end);
     if (this.EndStationId !== 0 && this.StartStationId !== 0) {
@@ -92,7 +93,6 @@ export class SearchComponent {
   SendApiRequest() {
     const urlpath = 'Search/SearchTrain?startStationId=' + this.StartStationId + '&endStationId=' + this.EndStationId;
     this.stationservice.Oncall(urlpath).then((res: any) => {
-      // console.log(res);
       this.route.navigate(['SearchResult'], { queryParams: { start: this.start, end: this.end } });
       this.dialog.closeAll();
     }, (reject) => {

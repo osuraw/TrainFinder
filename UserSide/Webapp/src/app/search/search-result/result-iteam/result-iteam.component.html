@@ -1,10 +1,10 @@
-<mat-card *ngFor="let Ooption of result.Result let optionnum = index ">
+<mat-card *ngFor="let options of result.Result let optionnum = index ">
     <mat-card-header>
         <mat-card-title>Option : {{optionnum+1}} </mat-card-title>
-        <mat-card-subtitle>Approximate Time : *****</mat-card-subtitle>
+        <mat-card-subtitle>Approximate Time : {{options.TimeTaken}}</mat-card-subtitle>
     </mat-card-header>
     <mat-divider></mat-divider>
-    <mat-card-content *ngFor="let option of Ooption.Options">
+    <mat-card-content *ngFor="let option of options.Options">
         <!-- main result area -->
         <div>
             <hr>
@@ -19,8 +19,8 @@
                     <span>{{option.EndStationName}}</span>
                 </div>
                 <div>
-                    <span>Departure   : {{option.StartStationDeparture}}</span>
-                    <span>Departure : {{option.EndStationArrival}}</span>
+                    <span>Departure : {{option.StartStationDeparture}}</span>
+                    <span>Arrive    : {{option.EndStationArrival}}</span>
                     <span>Duration  : {{option.Duration}}</span>
                 </div>
             </div>

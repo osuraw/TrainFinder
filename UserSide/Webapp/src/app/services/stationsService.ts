@@ -8,7 +8,7 @@ import { SpinDialogComponent } from '../MessageBox/spin-dialog/spin-dialog.compo
 @Injectable()
 export class StationService {
     @Output() Stationload = new EventEmitter<Station[]>();
-    private url = 'http://localhost:11835/Api/';
+    private url = 'https://trainfinder.azurewebsites.net/Api/';
     public result: SearchResultDto;
     public stations: Station[];
     constructor(private http: HttpClient, private dialog: MatDialog) { }
@@ -21,9 +21,11 @@ export class StationService {
                 .then(
                     res => {
                         this.result = res;
+                        console.log(this.result);
                         resolve();
                     },
                     rej => {
+
                         console.log(rej);
                         reject();
                     }

@@ -12,7 +12,8 @@ import {
     MatButtonModule,
     MatCardModule,
     MatToolbarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatMenuModule
 } from '@angular/material';
 
 @NgModule(
@@ -29,7 +30,8 @@ import {
             MatInputModule,
             MatAutocompleteModule,
             MatDialogModule,
-            MatProgressSpinnerModule
+            MatProgressSpinnerModule,
+            MatMenuModule
         ],
         exports: [
             BrowserAnimationsModule,
@@ -43,7 +45,8 @@ import {
             MatInputModule,
             MatAutocompleteModule,
             MatDialogModule,
-            MatProgressSpinnerModule
+            MatProgressSpinnerModule,
+            MatMenuModule
         ]
     })
 
