@@ -1,0 +1,23 @@
+<mat-card>
+    <mat-card-content>
+        <div>
+            <hr>
+            <div>
+                <div class="Details">
+                    <div>Estimate Time to Arivel : {{TrainDetails.ETA}} </div>
+                    <div>Estimate Time to Destination : {{TrainDetails.ETD}} </div>
+                    <div>Status : {{TrainDetails.Status}} </div>
+                </div>
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+        <agm-map [latitude]="lat" [longitude]="lng" [zoom]="19" [streetViewControl]="false">
+            <agm-marker [latitude]="lat" [longitude]="lng" [label]="'T'" [iconUrl]="" [markerClickable]="false">
+                <agm-info-window [isOpen]=true>
+                    <div>Name : {{TrainDetails.TrainName}}</div>
+                    <div>Speed : {{TrainDetails.Speed}}</div>
+                </agm-info-window>
+            </agm-marker>
+        </agm-map>
+    </mat-card-content>
+</mat-card>

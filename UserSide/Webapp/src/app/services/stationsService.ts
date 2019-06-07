@@ -1,21 +1,28 @@
 import { Injectable, Output, EventEmitter } from '@angular/core';
 import { Station } from '../dataModels/stationModel';
 import { SearchResultDto } from '../dataModels/search-result-dto';
+import { TrainDetails } from '../dataModels/TrainDetails';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material';
 import { SpinDialogComponent } from '../MessageBox/spin-dialog/spin-dialog.component';
 
 @Injectable()
 export class StationService {
+
     @Output() Stationload = new EventEmitter<Station[]>();
-    private url = 'https://trainfinder.azurewebsites.net/Api/';
+    // private url = 'https://trainfinder.azurewebsites.net/Api/';
+    private url = 'http://localhost:11835//Api/';
     public result: SearchResultDto;
     public stations: Station[];
+    public TrainDetails: TrainDetails;
+    grttraindatapat: string;
+
+
     constructor(private http: HttpClient, private dialog: MatDialog) { }
 
     Oncall(url: string) {
         const promise = new Promise((resolve, reject) => {
-            setTimeout(() => { }, 5000);
+            // setTimeout(() => { }, 5000);
             this.http.get<SearchResultDto>(this.url + url)
                 .toPromise()
                 .then(
@@ -47,6 +54,31 @@ export class StationService {
 
     GetStationsResults() {
         return this.result;
+    }
+
+    GetTrainDetails() {
+        const promise = new Promise((resolve, reject) => {
+            // setTimeout(() => { }, 5000);
+            console.log(this.grttraindatapat);
+            this.http.get<TrainDetails>(this.url + 'Search/GetTrainDetails?' + this.grttraindatapat)
+                .toPromise()
+                .then(
+                    res => {
+                        this.TrainDetails = res;
+                        console.log(this.result);
+                        resolve();
+                    },
+                    rej => {
+
+                        console.log(rej);
+                        reject();
+                    }
+                );
+        });
+        return promise;
+    }
+    setpath(path: string) {
+        this.grttraindatapat = path;
     }
 }
 

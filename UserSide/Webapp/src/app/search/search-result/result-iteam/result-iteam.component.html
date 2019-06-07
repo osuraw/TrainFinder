@@ -11,7 +11,11 @@
             <div class="result data">
                 <div>
                     <span> <mat-icon>train</mat-icon> Train : {{option.TrainName}}</span>
-                    <button mat-icon-button matTooltip=""><mat-icon>more_vert</mat-icon></button>
+                    <button mat-icon-button matTooltip="More" class="more" [matMenuTriggerFor]=menutrigger><mat-icon>more_vert</mat-icon></button>
+                    <mat-menu #menutrigger="matMenu" xPosition="before">
+                        <button mat-menu-item (click)="GetLiveTraindata(option.TrainId,option.StationId,option.EndStationId,option.Direction)">Locate Train</button >
+                        <button mat-menu-item (click)="GetTrainShedule()">Train Shedule</button >
+                    </mat-menu>
                 </div>
                 <div>
                     <span>{{option.StartStationName}}</span>

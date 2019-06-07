@@ -41,3 +41,9 @@
     flex-direction: row;
     justify-content: space-between;
 }
+
+.more {
+    position: absolute;
+    right: 10px;
+    left: auto;
+}

@@ -11,6 +11,7 @@ export class OptionDto {
 export class TrainDto {
     public TrainId: number;
     public TrainName: string;
+    public Direction: string;
     public StationId: number;
     public StartStationName: string;
     public StartStationDeparture: number;
