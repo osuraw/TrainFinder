@@ -4,9 +4,11 @@ namespace pro_web_a.DTOs
 {
     public class TrainDetailsDto
     {
-        public string Status { get; set; }
-        public string EstimateTimeToArrive { get; set; }
-        public string EstimateTimeToDestination { get; set; }
-        public List<StopStationDto> StopStationDto { get; set; }
+        public string Status;
+        public string ETA;
+        public string ETD;
+        public string TrainName;
+        public string Speed;
+        public string Location;
     }
 }

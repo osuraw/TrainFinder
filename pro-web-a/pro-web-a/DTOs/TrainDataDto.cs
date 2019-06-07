@@ -7,6 +7,7 @@ namespace pro_web_a.DTOs
     {
         public int TrainId;
         public string TrainName;
+        public string Direction;
         public int StationId;
         public string StartStationName;
         public float StartStationDeparture;
