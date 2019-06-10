@@ -20,6 +20,6 @@ namespace pro_web_a.Models
         [Column(TypeName = "varchar")]
         public string Description { get; set; }
 
-        public train train { get; set; }
+        public Train train { get; set; }
     }
 }

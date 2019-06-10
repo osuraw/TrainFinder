@@ -56,6 +56,12 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IdentityModel.Logging, Version=1.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Logging.1.1.2\lib\net451\Microsoft.IdentityModel.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens, Version=5.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.5.1.2\lib\net451\Microsoft.IdentityModel.Tokens.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
@@ -64,6 +70,10 @@
     </Reference>
     <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Device" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=5.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.5.1.2\lib\net451\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
@@ -111,6 +121,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
+    <Reference Include="Twilio, Version=5.29.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Twilio.5.29.1\lib\net451\Twilio.dll</HintPath>
+    </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
@@ -131,7 +144,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\MappingProfile.cs" />
@@ -139,14 +154,15 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Helpers.cs" />
     <Compile Include="Controllers\LocationsController.cs" />
+    <Compile Include="Controllers\PinLocationController.cs" />
     <Compile Include="Controllers\RouteController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\StationsController.cs" />
     <Compile Include="Controllers\TimeTablesController.cs" />
-    <Compile Include="DTOs\LoctionDto.cs" />
     <Compile Include="DTOs\LogDto.cs" />
     <Compile Include="DTOs\StopStationDto.cs" />
     <Compile Include="DTOs\StopTrainDto.cs" />
+    <Compile Include="DTOs\TimeTable.cs" />
     <Compile Include="DTOs\TrainDataDto.cs" />
     <Compile Include="Controllers\TrainsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -239,15 +255,36 @@
     <Compile Include="Migrations\201906020957411_ChangetoVarchar.Designer.cs">
       <DependentUpon>201906020957411_ChangetoVarchar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906050946220_changeSizeLocationLog.cs" />
+    <Compile Include="Migrations\201906050946220_changeSizeLocationLog.Designer.cs">
+      <DependentUpon>201906050946220_changeSizeLocationLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906091012048_ChangeTableNamesStopAtAndTrain.cs" />
+    <Compile Include="Migrations\201906091012048_ChangeTableNamesStopAtAndTrain.Designer.cs">
+      <DependentUpon>201906091012048_ChangeTableNamesStopAtAndTrain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906091508494_AddPinLocationTable.cs" />
+    <Compile Include="Migrations\201906091508494_AddPinLocationTable.Designer.cs">
+      <DependentUpon>201906091508494_AddPinLocationTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906091550350_ChangeTyprToBytePinLocationTable.cs" />
+    <Compile Include="Migrations\201906091550350_ChangeTyprToBytePinLocationTable.Designer.cs">
+      <DependentUpon>201906091550350_ChangeTyprToBytePinLocationTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906101615165_UpdatrStationTableColumns.cs" />
+    <Compile Include="Migrations\201906101615165_UpdatrStationTableColumns.Designer.cs">
+      <DependentUpon>201906101615165_UpdatrStationTableColumns.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\device.cs" />
     <Compile Include="Models\LocationLog.cs" />
     <Compile Include="Models\Log.cs" />
+    <Compile Include="Models\Pinlocation.cs" />
     <Compile Include="Models\ProjectDB.cs" />
-    <Compile Include="Models\route.cs" />
+    <Compile Include="Models\Route.cs" />
     <Compile Include="Models\Station.cs" />
-    <Compile Include="Models\stopat.cs" />
-    <Compile Include="Models\train.cs" />
+    <Compile Include="Models\StopAt.cs" />
+    <Compile Include="Models\Train.cs" />
     <Compile Include="Models\user.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DTOs\UserDto.cs" />
@@ -332,6 +369,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906020957411_ChangetoVarchar.resx">
       <DependentUpon>201906020957411_ChangetoVarchar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906050946220_changeSizeLocationLog.resx">
+      <DependentUpon>201906050946220_changeSizeLocationLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906091012048_ChangeTableNamesStopAtAndTrain.resx">
+      <DependentUpon>201906091012048_ChangeTableNamesStopAtAndTrain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906091508494_AddPinLocationTable.resx">
+      <DependentUpon>201906091508494_AddPinLocationTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906091550350_ChangeTyprToBytePinLocationTable.resx">
+      <DependentUpon>201906091550350_ChangeTyprToBytePinLocationTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906101615165_UpdatrStationTableColumns.resx">
+      <DependentUpon>201906101615165_UpdatrStationTableColumns.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -7,7 +7,7 @@ namespace pro_web_a.Models
     using System.Data.Entity.Spatial;
 
     [Table("route")]
-    public partial class route
+    public partial class Route
     {
         [Key]
         public short RID { get; set; }
@@ -29,6 +29,6 @@ namespace pro_web_a.Models
 
         public  List<Station> stations { get; set; }
 
-        public  List<train> trains { get; set; }
+        public  List<Train> trains { get; set; }
     }
 }

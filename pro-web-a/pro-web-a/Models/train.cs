@@ -6,14 +6,13 @@ namespace pro_web_a.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("train")]
-    public partial class train
+    public partial class Train
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public train()
+        public Train()
         {
             devices = new HashSet<device>();
-            stopats = new HashSet<stopat>();
+            stopats = new HashSet<StopAt>();
         }
 
         [Key]
@@ -36,9 +35,9 @@ namespace pro_web_a.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<device> devices { get; set; }
         
-        public virtual route route { get; set; }
+        public virtual Route route { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<stopat> stopats { get; set; }
+        public virtual ICollection<StopAt> stopats { get; set; }
     }
 }

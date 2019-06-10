@@ -38,6 +38,6 @@ namespace pro_web_a.Models
 
         public int LogId { get; set; }
 
-        public train Train { get; set; }
+        public Train Train { get; set; }
     }
 }

@@ -284,7 +284,7 @@ namespace pro_web_a.Controllers
         [Route("GetStations")]
         public IHttpActionResult GetStations()
         {
-            var data = _context.Stations.ToList().Select(s => new {s.Name, s.SID});
+            var data = _context.Stations.ToList().Select(s => new {s.Name, SID = s.SID});
             return Ok(data);
         }
 

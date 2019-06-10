@@ -19,7 +19,7 @@ namespace pro_web_a.Controllers
 
         
         [HttpPost]
-        public HttpResponseMessage CreateRoute(route route)
+        public HttpResponseMessage CreateRoute(Route route)
         {
             if (ModelState.IsValid)
             {
@@ -52,7 +52,7 @@ namespace pro_web_a.Controllers
         }
 
         [HttpPut]
-        public IHttpActionResult UpdateRoute(route route)
+        public IHttpActionResult UpdateRoute(Route route)
         {
             if (ModelState.IsValid)
             {
@@ -93,7 +93,7 @@ namespace pro_web_a.Controllers
         {
             if (id != 0)
             {
-                route route = _context.Routes.Find(id);
+                Route route = _context.Routes.Find(id);
                 if (route == null)
                 {
                     return HttpStatusCode.Conflict;
@@ -101,7 +101,6 @@ namespace pro_web_a.Controllers
 
                 _context.Routes.Remove(route);
                 _context.SaveChanges();
-                //_context.Database.ExecuteSqlCommandAsync("UPDATE Person SET additionalData = JSON_MODIFY(additionalData, 'append  $.phoneNumbers', @phoneNumber) WHERE Id = '@personId', personIdParam,phoneNumberParam");
 
                 return HttpStatusCode.OK;
             }

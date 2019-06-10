@@ -18,9 +18,7 @@ namespace pro_web_a.Models
 
         public double Distance { get; set; }
 
-        public double Llongitude { get; set; }
-
-        public double Llatitude { get; set; }
+        public string Location { get; set; }
 
         [StringLength(100)]
         [Column(TypeName = "varchar")]
@@ -32,8 +30,34 @@ namespace pro_web_a.Models
         
         public short RID { get; set; }
 
-        public  route route { get; set; }
+        public  Route Route { get; set; }
 
-        public  List<stopat> stopats { get; set; }
+        public  List<StopAt> Stops { get; set; }
     }
 }
+
+//[Key]
+//public short StationId { get; set; }
+
+//[Required]
+//[Column(TypeName = "varchar")]
+//[StringLength(40)]
+//public string Name { get; set; }
+
+//public double Distance { get; set; }
+
+//public string Location { get; set; }
+
+//[StringLength(100)]
+//[Column(TypeName = "varchar")]
+//public string Address { get; set; }
+
+//[StringLength(15)]
+//[Column(TypeName = "varchar")]
+//public string Telephone { get; set; }
+
+//public short RouteId { get; set; }
+
+//public Route Route { get; set; }
+
+//public List<StopAt> Stops { get; set; }

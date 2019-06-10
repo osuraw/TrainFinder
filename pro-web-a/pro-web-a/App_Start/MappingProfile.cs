@@ -10,7 +10,7 @@ namespace pro_web_a
     {
         public MappingProfile()
         {
-            Mapper.CreateMap<route, RouteDto>();
+            Mapper.CreateMap<Route, RouteDto>();
             
         }
     }

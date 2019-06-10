@@ -18,16 +18,16 @@ namespace pro_web_a.Controllers
         #region Train
 
         // GET: api/Train
-        public IQueryable<train> GetTrains()
+        public IQueryable<Train> GetTrains()
         {
             return _context.Trains;
         }
 
         // GET: api/Train/5
-        [ResponseType(typeof(train))]
+        [ResponseType(typeof(Train))]
         public IHttpActionResult GetTrain(short id)
         {
-            train train = _context.Trains.Find(id);
+            Train train = _context.Trains.Find(id);
             if (train == null)
             {
                 return NotFound();
@@ -38,7 +38,7 @@ namespace pro_web_a.Controllers
 
         [HttpGet]
         [Route("GetTrainInRoute/{id}")]
-        [ResponseType(typeof(train))]
+        [ResponseType(typeof(Train))]
         public IHttpActionResult GetTrainInRoute(short id = 0)
         {
             var station = _context.Trains.Where(t => t.RID.Equals(id));
@@ -53,7 +53,7 @@ namespace pro_web_a.Controllers
         // PUT: api/Train/5
         [HttpPut]
         [ResponseType(typeof(void))]
-        public IHttpActionResult UpdateTrain(short id, train train)
+        public IHttpActionResult UpdateTrain(short id, Train train)
         {
             if (!ModelState.IsValid)
             {
@@ -87,8 +87,8 @@ namespace pro_web_a.Controllers
         }
 
         // POST: api/Train
-        [ResponseType(typeof(train))]
-        public IHttpActionResult AddTrain(train train)
+        [ResponseType(typeof(Train))]
+        public IHttpActionResult AddTrain(Train train)
         {
             if (!ModelState.IsValid)
             {
@@ -101,10 +101,10 @@ namespace pro_web_a.Controllers
         }
 
         // DELETE: api/Train/5
-        [ResponseType(typeof(train))]
+        [ResponseType(typeof(Train))]
         public IHttpActionResult DeleteTrain(short id)
         {
-            train train = _context.Trains.Find(id);
+            Train train = _context.Trains.Find(id);
             if (train == null)
             {
                 return NotFound();

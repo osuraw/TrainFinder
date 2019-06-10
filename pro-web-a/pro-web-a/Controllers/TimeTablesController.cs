@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
+using pro_web_a.DTOs;
 using pro_web_a.Models;
 
 namespace pro_web_a.Controllers
@@ -18,48 +19,53 @@ namespace pro_web_a.Controllers
         [Route("GetTimeTableByTypeId")]
         [Route("{type}&{id}")]
         // GET: api/TimeTables/GetTimeTableByTypeId?type=<1-station/2-train>&id=<1>
-        [ResponseType(typeof(stopat))]
+        [ResponseType(typeof(StopAt))]
         public IHttpActionResult GetTimeTableByTypeId(byte type, int id)
         {
-            var data = new List<stopat>();
+            var data = new List<TimeTable>();
 
             if (type != 1 && type != 2)
                 return BadRequest();
 
             var tempList = type == 1
-                ? _dbContext.StopAts.Where(st => st.TID == id).GroupBy(st => st.SID)
-                : _dbContext.StopAts.Where(st => st.TID == id).GroupBy(st => st.TID);
+                ? _dbContext.StopAts.Where(st => st.SID == id)
+                    .Select(s => new TimeTable
+                    {
+                        TrainId = s.TID, StationId = s.SID, ArriveTime = s.Atime, DepartureTime = s.Dtime,
+                        Direction = s.Direction
+                    }).GroupBy(st => st.StationId).ToList()
+                : _dbContext.StopAts.Where(st => st.TID == id)
+                    .Select(s => new TimeTable
+                    {
+                        TrainId = s.TID, StationId = s.SID, ArriveTime = s.Atime, DepartureTime = s.Dtime,
+                        Direction = s.Direction
+                    })
+                    .GroupBy(st => st.TrainId).ToList();
             foreach (var group in tempList)
             {
-                foreach (stopat stopat in group)
-                    data.Add(stopat);
+                foreach (var timeTable in group)
+                    data.Add(timeTable);
             }
 
-            if (data == null)
-            {
+            if (data.Count == 0)
                 return NotFound();
-            }
-
             return Ok(data);
         }
 
         // PUT: api/TimeTables/sid=/tid=
         [ResponseType(typeof(void))]
-        public IHttpActionResult Putstopat(short sid, short tid, stopat[] stopat)
+        public IHttpActionResult Putstopat(short sid, short tid, StopAt stopAt)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            foreach (var stopadata in stopat)
+            if (sid != stopAt.SID || tid != stopAt.TID)
             {
-                if (sid != stopadata.SID || tid != stopadata.TID)
-                {
-                    return BadRequest();
-                }
-                _dbContext.Entry(stopadata).State = EntityState.Modified;
+                return BadRequest();
             }
+            _dbContext.Entry(stopAt).State = EntityState.Modified;
 
             try
             {
@@ -80,19 +86,19 @@ namespace pro_web_a.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/TimeTables
-        [ResponseType(typeof(stopat))]
-        public IHttpActionResult Poststopat(stopat[] stopat)
+        [ResponseType(typeof(StopAt))]
+        public IHttpActionResult Poststopat(StopAt[] stopAt)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            foreach (stopat stopat1 in stopat)
+            foreach (StopAt stopat1 in stopAt)
             {
                 _dbContext.StopAts.Add(stopat1);
             }
+
             try
             {
                 _dbContext.SaveChanges();
@@ -103,22 +109,6 @@ namespace pro_web_a.Controllers
             }
 
             return CreatedAtRoute("DefaultApi", null, new { });
-        }
-
-        // DELETE: api/TimeTables/5
-        [ResponseType(typeof(stopat))]
-        public IHttpActionResult Deletestopat(short id)
-        {
-            stopat stopat = _dbContext.StopAts.Find(id);
-            if (stopat == null)
-            {
-                return NotFound();
-            }
-
-            _dbContext.StopAts.Remove(stopat);
-            _dbContext.SaveChanges();
-
-            return Ok(stopat);
         }
 
         protected override void Dispose(bool disposing)

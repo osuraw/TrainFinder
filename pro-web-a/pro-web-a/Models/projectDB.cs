@@ -14,13 +14,14 @@ namespace pro_web_a.Models
         }
 
         public virtual DbSet<device> Devices { get; set; }
-        public virtual DbSet<route> Routes { get; set; }
+        public virtual DbSet<Route> Routes { get; set; }
         public virtual DbSet<Station> Stations { get; set; }
-        public virtual DbSet<stopat> StopAts { get; set; }
-        public virtual DbSet<train> Trains { get; set; }
+        public virtual DbSet<StopAt> StopAts { get; set; }
+        public virtual DbSet<Train> Trains { get; set; }
         public virtual DbSet<user> Users { get; set; }
         public DbSet<LocationLog> Location { get; set; }
         public DbSet<Log> Log { get; set; }
+        public DbSet<PinLocation> PinLocation { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -28,12 +29,12 @@ namespace pro_web_a.Models
                 .Property(e => e.Description)
                 .IsFixedLength();
 
-            modelBuilder.Entity<route>()
+            modelBuilder.Entity<Route>()
                 .HasMany(e => e.stations)
-                .WithRequired(e => e.route)
+                .WithRequired(e => e.Route)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<route>()
+            modelBuilder.Entity<Route>()
                 .HasMany(e => e.trains)
                 .WithRequired(e => e.route)
                 .WillCascadeOnDelete(false);
@@ -51,24 +52,24 @@ namespace pro_web_a.Models
                 .IsFixedLength();
 
             modelBuilder.Entity<Station>()
-                .HasMany(e => e.stopats)
+                .HasMany(e => e.Stops)
                 .WithRequired(e => e.station)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<train>()
+            modelBuilder.Entity<Train>()
                 .Property(e => e.Name)
                 .IsFixedLength();
 
-            modelBuilder.Entity<train>()
+            modelBuilder.Entity<Train>()
                 .Property(e => e.Description)
                 .IsFixedLength();
 
-            modelBuilder.Entity<train>()
+            modelBuilder.Entity<Train>()
                 .HasMany(e => e.devices)
                 .WithRequired(e => e.train)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<train>()
+            modelBuilder.Entity<Train>()
                 .HasMany(e => e.stopats)
                 .WithRequired(e => e.train)
                 .WillCascadeOnDelete(false);

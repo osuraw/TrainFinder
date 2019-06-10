@@ -1,21 +1,19 @@
 namespace pro_web_a.Models
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
-    [Table("stopat")]
-    public partial class stopat
+    public class StopAt
     {
         [Key]
         [Column(Order = 0)]
+        [ForeignKey(nameof(train))]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public short TID { get; set; }
 
         [Key]
         [Column(Order = 1)]
+        [ForeignKey(nameof(station))]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public short SID { get; set; }
 
@@ -27,8 +25,8 @@ namespace pro_web_a.Models
 
         public float Dtime { get; set; }
 
-        public virtual Station station { get; set; }
+        public  Station station { get; set; }
 
-        public virtual train train { get; set; }
+        public  Train train { get; set; }
     }
 }
