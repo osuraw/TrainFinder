@@ -14,12 +14,14 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
+            <!--Left-->
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="150"/>
                 </Grid.RowDefinitions>
+                <!--Top-->
                 <GroupBox  Grid.Row="0" Header="Search" >
                     <Grid >
                         <Grid.ColumnDefinitions>
@@ -34,6 +36,7 @@
                         </StackPanel>
                     </Grid>
                 </GroupBox>
+                <!--middle-->
                 <GroupBox Grid.Row="1" Header="Route Details">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -51,10 +54,11 @@
                             <TextBlock Visibility="Collapsed" IsHitTestVisible="False" Text="{Binding RouteId}"></TextBlock>
                             <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" Validation.Error="Validation_Error"/>
                             <TextBox Text="{Binding Distance, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" Validation.Error="Validation_Error"/>
-                            <TextBox Height="150"  Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox Height="150"  Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" TextWrapping="WrapWithOverflow"/>
                         </StackPanel>
                     </Grid>
                 </GroupBox>
+                <!--Bottom-->
                 <Grid Grid.Row="2" Margin="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -71,11 +75,13 @@
 
                 </Grid>
             </Grid>
+            <!--Right-->
             <Grid Margin="10,0,0,0" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
+                <!--train-->
                 <GroupBox Grid.Row="0" Header="Trains">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -94,6 +100,7 @@
                         <Button Grid.Row="1" HorizontalAlignment="Right" Content="Print" Width="200" />
                     </Grid>
                 </GroupBox>
+                <!--station-->
                 <GroupBox Grid.Row="1" Header="Station">
                     <Grid>
                         <Grid.RowDefinitions>
