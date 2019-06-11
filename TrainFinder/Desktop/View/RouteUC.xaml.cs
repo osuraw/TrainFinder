@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using Desktop.ViewModels;
 
@@ -16,6 +15,7 @@ namespace Desktop
 
         public RouteUC()
         {
+
             InitializeComponent();
             _routeVm = new RouteVm();
             this.DataContext = _routeVm;
@@ -27,14 +27,14 @@ namespace Desktop
             if (e.Action == ValidationErrorEventAction.Removed) RouteVm.Errors -= 1;
         }
 
-        private void CmbRoutes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void CmbRoutes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             DgvStation.ItemsSource = "";
             DgvTrain.ItemsSource = "";
             if (CmbRoutes.SelectedIndex > 0)
             {
                 index = (byte)CmbRoutes.SelectedIndex;
-                _routeVm.LoadTableContent(index);
+                await _routeVm.LoadTableContent(index);
                 if (_routeVm.Stations != null)
                 {
                     DgvStation.ItemsSource = _routeVm.Stations.ToArray();

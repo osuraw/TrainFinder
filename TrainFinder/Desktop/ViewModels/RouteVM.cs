@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Desktop.Model;
@@ -79,69 +81,66 @@ namespace Desktop.ViewModels
 
         #endregion
 
-        #region Methods
-
         public RouteVm()
         {
-            RoutesList = Route.GetRouteList();
-            AddCommand = new CommandBase(AddRoute, CheckValid);
-            UpdateCommand = new CommandBase(Update, CheckValid);
+            LoadData();
+            AddCommand = new CommandBase(action:AddRoute,canExecute: CheckValid);
+            UpdateCommand = new CommandBase(action:Update, canExecute:CheckValid);
             ResetCommand = new CommandBase(action: Reset, canExecute: AlwaysTrue);
         }
 
-        public void LoadTableContent(int index)
+        #region Methods
+
+        public async Task LoadTableContent(int index)
         {
             UpdateViewsProperties(index);
-            Stations = Station.GetStationByRouteId(RouteId);
-            Stations.RemoveAt(0);
-            Trains = Train.GetTrainByRouteId(RouteId);
-            Trains.RemoveAt(0);
-            OnPropertyChanged("Route");
-        }
-
-        public bool AddRoute()
-        {
-            var route = GetViewData();
-            route.RID = 0;
-            var response = WebConnect.PostData("Route/CreateRoute", route);
-            if (response.StatusCode == HttpStatusCode.Created)
+            try
             {
-                var ree = response.Content.ReadAsStringAsync();
-                route.RID = Int16.Parse(ree.Result);
-                RoutesList.Add(route);
-                MessageBox.Show("ssss", "sadasdad");
-                UpdateViewsProperties(0);
-                return true;
+                Stations = await Station.GetStationByRouteId(RouteId);
+                Stations.RemoveAt(0);
+                OnPropertyChanged(nameof(Stations));
+            }
+            catch (Exception)
+            {
+                return;
             }
 
-            return false;
-        }
-
-        public bool Update()
-        {
-            var route = GetViewData();
-            if (route.RID != 0)
+            try
             {
-                var response = WebConnect.PostData("Route/CreateRoute", route);
-                if (response.StatusCode == HttpStatusCode.Created)
+                Trains = await Train.GetTrainByRouteId(RouteId);
+                Trains.RemoveAt(0);
+                foreach (var train in Trains)
                 {
-                    RoutesList[RouteSelectIndex] = route;
-                    OnPropertyChanged("Route");
-                    UpdateViewsProperties(0);
-                    return true;
+                    train.StartStation = Stations.First(s => s.SID.ToString() == train.StartStation).Name;
+                    train.EndStation = Stations.First(s => s.SID.ToString() == train.EndStation).Name;
                 }
+                OnPropertyChanged(nameof(Trains));
             }
-            return false;
+            catch (Exception )
+            {
+                return;
+            }
         }
 
+        private async void LoadData()
+        {
+            RoutesList = await Route.GetRouteList();
+            OnPropertyChanged(nameof(RoutesList));
+        }
+        
         private void UpdateViewsProperties(int index)
         {
             ClearValidation();
+            if(RoutesList==null)
+                return;
             var data = RoutesList[index];
             RouteId = data.RID;
             Name = index != 0 ? data.Name : "";
-            Description = data.Description;
+            Description = index != 0 ? data.Description:"";
             Distance = index != 0 ? data.Distance.ToString("##.##") : "";
+            OnPropertyChanged(nameof(Description));
+            Stations?.Clear();
+            Trains?.Clear();
         }
 
         private Route GetViewData()
@@ -157,17 +156,63 @@ namespace Desktop.ViewModels
             return null;
         }
 
-        protected bool CheckValid()
+        private bool CheckValid()
         {
             if (Errors == 0 && !string.IsNullOrWhiteSpace(Name) && !string.IsNullOrWhiteSpace(Distance))
                 return true;
             return false;
         }
 
+        #endregion
+
+        #region CommandActions
+
+        public void AddRoute()
+        {
+            var route = GetViewData();
+            if (route.RID != 0)
+            {
+                DialogDisplayHelper.DisplayMessageBox("Already Exist","Informative");
+                return;
+            }
+            var response = WebConnect.PostData("Route/CreateRoute", route);
+            if (response.StatusCode == HttpStatusCode.Created)
+            {
+                var ree = response.Content.ReadAsStringAsync();
+                route.RID = short.Parse(ree.Result);
+                RoutesList.Add(route);
+                DialogDisplayHelper.DisplayMessageBox("Action Completed", "Informative");
+                UpdateViewsProperties(0);
+                return ;
+            }
+            DialogDisplayHelper.DisplayMessageBox("Action Failed", "Informative");
+            return ;
+        }
+
+        public void Update()
+        {
+            var route = GetViewData();
+            if (route.RID != 0)
+            {
+                var response = WebConnect.UpdateDate("Route/UpdateRoute", route);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    DialogDisplayHelper.DisplayMessageBox("Update Completed", "Informative");
+                    RoutesList[RouteSelectIndex] = route;
+                    OnPropertyChanged("Route");
+                    UpdateViewsProperties(0);
+                    RouteSelectIndex = 0;
+                    return ;
+                }
+            }
+            DialogDisplayHelper.DisplayMessageBox("Action Failed", "Informative");
+            return ;
+        }
+
         protected void Reset()
         {
-            Stations.Clear();
-            Trains.Clear();
+            Stations?.Clear();
+            Trains?.Clear();
             UpdateViewsProperties(0);
             RouteSelectIndex = 0;
         }

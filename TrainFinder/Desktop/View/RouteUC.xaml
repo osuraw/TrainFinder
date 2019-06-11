@@ -3,16 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:Desktop"
              x:Class="Desktop.RouteUC"
              mc:Ignorable="d"
-             Background="Azure"
-             d:DesignHeight="765" d:DesignWidth="1385">
+             d:DesignHeight="765" d:DesignWidth="1385"
+             FontSize="24">
 
-
-
-
-    <Border Padding="10">
+    <Border >
         <Grid >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -22,26 +18,26 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="200"/>
+                    <RowDefinition Height="150"/>
                 </Grid.RowDefinitions>
-                <GroupBox Padding="10" Grid.Row="0" Header="Search" BorderThickness="3" BorderBrush="Black">
+                <GroupBox  Grid.Row="0" Header="Search" >
                     <Grid >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="175"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <Label Content="Route" />
                         </StackPanel>
                         <StackPanel Grid.Column="1">
-                            <ComboBox x:Name="CmbRoutes" SelectionChanged="CmbRoutes_SelectionChanged" IsEditable="False" ItemsSource="{Binding RoutesList, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedIndex="{Binding RouteSelectIndex}"/>
+                            <ComboBox x:Name="CmbRoutes" SelectionChanged="CmbRoutes_SelectionChanged" IsEditable="False" ItemsSource="{Binding RoutesList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedIndex="{Binding RouteSelectIndex}"/>
                         </StackPanel>
                     </Grid>
                 </GroupBox>
-                <GroupBox Padding="10" Grid.Row="1" Header="Route Details" BorderThickness="3" BorderBrush="Black">
+                <GroupBox Grid.Row="1" Header="Route Details">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="175" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
@@ -51,12 +47,11 @@
                             <Label Content="Description"/>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="1">
+                        <StackPanel Grid.Column="1" BindingGroup="{Binding BindingGroupName=Group}">
                             <TextBlock Visibility="Collapsed" IsHitTestVisible="False" Text="{Binding RouteId}"></TextBlock>
                             <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" Validation.Error="Validation_Error"/>
                             <TextBox Text="{Binding Distance, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" Validation.Error="Validation_Error"/>
                             <TextBox Height="150"  Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
-                           
                         </StackPanel>
                     </Grid>
                 </GroupBox>
@@ -70,9 +65,9 @@
                         <ColumnDefinition  Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Row="0" Grid.Column="0"   Command="{Binding AddCommand}" Content="Add New" Grid.ColumnSpan="2" />
-                    <Button Grid.Row="1" Grid.Column="0"   Command="{Binding UpdateCommand}" Content="Update" />
-                    <Button Grid.Row="1" Grid.Column="1"  Content="Clear" Command="{Binding ResetCommand}"/>
+                    <Button Grid.Row="0" Grid.Column="0" Command="{Binding AddCommand}" Content="Add New" Grid.ColumnSpan="2" />
+                    <Button Grid.Row="1" Grid.Column="0" Command="{Binding UpdateCommand}" Content="Update" />
+                    <Button Grid.Row="1" Grid.Column="1" Command="{Binding ResetCommand}" Content="Clear"/>
 
                 </Grid>
             </Grid>
@@ -81,40 +76,40 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <GroupBox Grid.Row="0" Header="Trains" BorderThickness="3" BorderBrush="Black">
+                <GroupBox Grid.Row="0" Header="Trains">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="55"/>
                         </Grid.RowDefinitions>
-                        <DataGrid Grid.Row="0" x:Name="DgvTrain" IsReadOnly="True" AutoGenerateColumns="False">
+                        <DataGrid Grid.Row="0" x:Name="DgvTrain" >
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Train ID" Binding="{Binding TID}" />
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                                <DataGridTextColumn Header="Starting Station" />
-                                <DataGridTextColumn Header="Ending Station" />
-                                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="250" />
+                                <DataGridTextColumn Header="Starting Station" Binding="{Binding StartStation}"/>
+                                <DataGridTextColumn Header="Ending Station" Binding="{Binding EndStation}"/>
+                                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" />
                             </DataGrid.Columns>
                         </DataGrid>
-                        <Button Grid.Row="1" HorizontalAlignment="Right" Margin="5" Content="Print" Width="200" />
+                        <Button Grid.Row="1" HorizontalAlignment="Right" Content="Print" Width="200" />
                     </Grid>
                 </GroupBox>
-                <GroupBox Grid.Row="1" Header="Station" BorderThickness="3" BorderBrush="Black" >
+                <GroupBox Grid.Row="1" Header="Station">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="55"/>
                         </Grid.RowDefinitions>
-                        <DataGrid Grid.Row="0" x:Name="DgvStation" IsReadOnly="True" AutoGenerateColumns="False">
+                        <DataGrid Grid.Row="0" x:Name="DgvStation" >
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Station ID" Binding="{Binding SID}"/>
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
                                 <DataGridTextColumn Header="Distance" Binding="{Binding Distance}"/>
                                 <DataGridTextColumn Header="Telephone No" Binding="{Binding Telephone}"/>
-                                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="250"/>
+                                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <Button Grid.Row="1" Content="Print" Margin="5" Width="200" Height="45" HorizontalAlignment="Right" />
+                        <Button Grid.Row="1" Content="Print"  Width="200"  HorizontalAlignment="Right" />
                     </Grid>
                 </GroupBox>
             </Grid>

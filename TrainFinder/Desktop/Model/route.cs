@@ -1,8 +1,6 @@
-using System.ComponentModel;
-using System.Diagnostics;
-using Desktop.ViewModels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Desktop.Model
@@ -11,23 +9,35 @@ namespace Desktop.Model
     {
         #region Entity
 
-        public Route()
-        {
-        }
-
         public short RID { get; set; }
-        public int Sstation { get; set; }
-        public int Estation { get; set; }
+        public string StartStation { get; set; }
+        public string EndStation { get; set; }
         public float Distance { get; set; }
         public string Description { get; set; }
         public string Name { get; set; }
 
+        public static ObservableCollection<Route> Routes { get; set; }
+
         #endregion
-        
+
         #region static methods 
-        public static ObservableCollection<Route> GetRouteList()
+
+        public static  async Task<ObservableCollection<Route>> GetRouteList()
         {
-            var tempData = WebConnect.GetData("Route/GetRouteList");
+            if (Routes==null)
+            {
+                await GetRouteList1();
+            }
+
+            return Routes;
+        }
+
+        //private static async Task<ObservableCollection<Route>> GetRouteList1()
+        private static async Task GetRouteList1()
+        {
+            
+            //var tempData = WebConnect.GetData("Route/GetRouteList");
+            var tempData = await WebConnect.GetData("Route/GetRouteList");
             var results = JsonConvert.DeserializeObject<IEnumerable<Route>>(tempData);
             //---------------------------------------------------------------------
             var routes = new ObservableCollection<Route>() {new Route {RID = 0,Name = "Select Route"}};
@@ -38,14 +48,15 @@ namespace Desktop.Model
                     RID = result.RID,
                     Name = result.Name,
                     Distance = result.Distance,
-                    Sstation = result.Sstation,
-                    Estation = result.Estation,
+                    StartStation = result.StartStation,
+                    EndStation = result.EndStation,
                     Description = result.Description
                 };
                 routes.Add(temp);
             }
 
-            return routes;
+            Routes = routes;
+            //return routes;
         }
         #endregion
     }
