@@ -1,0 +1,168 @@
+﻿<UserControl x:Class="Desktop.TrainUc"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d"
+             FontSize="20"
+             d:DesignHeight="765" d:DesignWidth="1385">
+
+    <Border>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <!--Left-->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="150" />
+                </Grid.RowDefinitions>
+                <!--Top-->
+                <GroupBox Grid.Row="0" Header="Search">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="175" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <Label Content="Route" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <ComboBox IsEditable="False" IsReadOnly="True"
+                                      ItemsSource="{Binding Routes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                      DisplayMemberPath="Name" SelectedIndex="{Binding RouteSelected}" />
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
+                 <!--Middle-->
+                <GroupBox Grid.Row="1" Header="Train Details">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="175" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="1" Grid.Row="0">
+
+                            <ComboBox IsEditable="False" IsReadOnly="True"
+                                      ItemsSource="{Binding Routes}" DisplayMemberPath="Name"
+                                      SelectedValue="{Binding RouteId,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay,ValidatesOnDataErrors=True,NotifyOnValidationError=True}"
+                                      Validation.Error="Validation_Error" SelectedValuePath="RID" />
+
+                            <TextBlock Visibility="Collapsed"
+                                       Text="{Binding RouteId,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" />
+                            <TextBlock Visibility="Collapsed"
+                                       Text="{Binding TrainId,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" />
+
+                            <TextBox
+                                Text="{Binding Name,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay,ValidatesOnDataErrors=True,NotifyOnValidationError=True}"
+                                Validation.Error="Validation_Error"
+                                Validation.ErrorTemplate="{StaticResource TextBoxErrorTemplate}" />
+
+                            <ComboBox IsEditable="False" ItemsSource="{Binding Stations}"
+                                      DisplayMemberPath="Name"
+                                      IsEnabled="{Binding SelectStationVisibility}"
+                                      SelectedValue="{Binding StartStationId,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                                      Validation.Error="Validation_Error" SelectedValuePath="SID"
+                                      ToolTip="{Binding }"/>
+
+                            <ComboBox IsEditable="False" ItemsSource="{Binding Stations}"
+                                      DisplayMemberPath="Name"
+                                      IsEnabled="{Binding SelectStationVisibility}"
+                                      SelectedValue="{Binding EndStationId,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                                      Validation.Error="Validation_Error" SelectedValuePath="SID"/>
+
+                            <TextBox Height="200"
+
+                                     Text="{Binding Description,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" TextWrapping="WrapWithOverflow" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="0" Grid.Row="0">
+                            <Label Content="Route" />
+                            <Label Content="Name" />
+                            <Label Content="Start Station" />
+                            <Label Content="End Station" />
+                            <Label Content="Description" />
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
+                 <!--Bottom-->
+                <Grid Grid.Row="2" Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="BtnAdd" Content="Add"
+                            Command="{Binding AddCommand}" />
+                    <Button Grid.Row="1" Grid.Column="0" Name="BtnUpdate" Content="Update"
+                            Command="{Binding UpdateCommand}" />
+                    <Button Grid.Row="1" Grid.Column="1" Name="BtnClear" Content="Clear"
+                            Command="{Binding ResetCommand}" />
+                    <!--<Button Grid.Row="1" Grid.Column="0" Name="BtnDelete" Content="Delete" />-->
+                </Grid>
+
+            </Grid>
+                <!--Right-->
+            <Grid Column="1" Margin="10,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <!--<RowDefinition Height="*"/>-->
+                </Grid.RowDefinitions>
+                
+                <GroupBox Grid.Row="0" Header="Trains Details" >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="55" />
+                        </Grid.RowDefinitions>
+                        <DataGrid Name="DgvTrains" Grid.Row="0" ItemsSource="{Binding Trains,Mode=TwoWay}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Visibility="Collapsed" Binding="{Binding RID}" />
+                                <DataGridTextColumn Header="Train ID" Binding="{Binding TID}" />
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                                <DataGridTextColumn Header="Start Station" Binding="{Binding StartStation}" />
+                                <DataGridTextColumn Header="End Station" Binding="{Binding EndStation}" />
+                                <DataGridTextColumn Width="*" Header="Description" Binding="{Binding Description}" />
+                            </DataGrid.Columns>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding DataGridSelectionChangeCommand}"
+                                                           CommandParameter="{Binding Path=SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </DataGrid>
+                        <Button Grid.Row="1" HorizontalAlignment="Right" Content="Print" Width="200"/>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Visibility="Collapsed" Grid.Row="1" Header="Train" >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="55" />
+                        </Grid.RowDefinitions>
+                        <DataGrid Grid.Row="0" />
+                        <Button Grid.Row="1" HorizontalAlignment="Right" Content="Print" Width="200"/>
+                    </Grid>
+                </GroupBox>
+
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>
+
+
+<!--<ComboBox.ItemTemplate>
+    <DataTemplate>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding RID}" Width="0"></TextBlock>
+            <TextBlock Text="{Binding Name}"></TextBlock>
+        </StackPanel>
+    </DataTemplate>
+</ComboBox.ItemTemplate>-->

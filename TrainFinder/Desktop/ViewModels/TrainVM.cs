@@ -3,21 +3,28 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 using Desktop.Model;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Desktop.ViewModels
 {
-    class TrainVM : BaseViewModelMain
+    class TrainVm : BaseViewModelMain
     {
-        private int _routeSelected = 0;
+        private int _routeSelected;
         private short _routeId;
-
-        #region Properties
+        private short _startStationId;
+        private short _endStationId;
+        private bool _stationCheck=false;
 
         #region DataStore
 
         public ObservableCollection<Station> Stations { get; set; }
+        public ObservableCollection<Station> Stations1 { get; set; }
         public ObservableCollection<Route> Routes { get; set; }
         public ObservableCollection<Train> Trains { get; set; }
 
@@ -27,32 +34,53 @@ namespace Desktop.ViewModels
 
         public short TrainId { get; set; }
 
+        [Required(ErrorMessage = "Route Required")]
         public short RouteId
         {
             get => _routeId;
             set
             {
                 _routeId = value;
-                GetStation();
+                    GetStation();
             }
         }
 
-        [Required(ErrorMessage = "Start Station Required")]
-        public short StartStationId { get; set; }
+        [Compare(nameof(EndStationId), ErrorMessage = "Both Start And End Same")]
+        public short StartStationId
+        {
+            get => _startStationId;
+            set
+            {
+                _startStationId = value;
+                CheckStation();
+                OnPropertyChanged(nameof(StartStationId));
+            }
+        }
 
-        [Required(ErrorMessage = "End Station Required")]
-        [Compare("StartStationId", ErrorMessage = "Both Start And End Same")]
-        public short EndStationId { get; set; }
+        [Compare(nameof(StartStationId),ErrorMessage = "Both Start And End Same")]
+        public short EndStationId
+        {
+            get => _endStationId;
+            set
+            {
+                _endStationId = value;
+                CheckStation();
+                OnPropertyChanged(nameof(EndStationId));
+            }
+        }
 
         [Required]
-        [StingOnlyValidation]
         public string Name
         {
             get => GetValue(() => Name);
             set => SetValue(() => Name, value);
         }
 
-        public string Description { get; set; }
+        public string Description
+        {
+            get => GetValue(() => Description);
+            set => SetValue(() => Description, value);
+        }
 
         #endregion
 
@@ -65,66 +93,91 @@ namespace Desktop.ViewModels
             set
             {
                 _routeSelected = value;
-                if (_routeSelected < 0)
-                    _routeSelected = 0;
-                GetTrains();
+                if (RouteSelected != 0)
+                    GetTrains();
             }
         }
 
-        public bool SelectStationVisibility { get; set; } = false;
+        public bool SelectStationVisibility { get; set; }
 
         public static int Errors { get; set; }
 
         #endregion
 
-        #region Commands
-
-        public ICommand AddCommand { get; private set; }
-        public ICommand UpdateCommand { get; private set; }
-        public ICommand ResetCommand { get; private set; }
-        public ICommand DataGridSelectionChangeCommand { get; private set; }
-        public ICommand LocationCommand { get; private set; }
-
-        #endregion
-
-        #endregion
-
-        public TrainVM()
+        public TrainVm()
         {
-            Routes = Route.GetRouteList();
-            AddCommand = new CommandBase(AddTrain, CheckValid);
-            UpdateCommand = new CommandBase(Update, CheckValid);
+            LoadData();
+            AddCommand = new CommandBase(action: AddTrain, canExecute: CheckValid);
+            UpdateCommand = new CommandBase(action: Update, canExecute: CheckValid);
             ResetCommand = new CommandBase(action: Reset, canExecute: AlwaysTrue);
             DataGridSelectionChangeCommand = new CommandBase(action: OnDataGridSelectionChange, canExecute: AlwaysTrue);
         }
 
-        #region Privet
+        #region Methods
 
-        private void GetTrains()
+        private async void LoadData()
+        {
+            Routes = await Route.GetRouteList();
+            OnPropertyChanged(nameof(Routes));
+        }
+
+        private async void GetTrains()
         {
             Trains?.Clear();
-            SelectStationVisibility = false;
             if (RouteSelected != 0)
             {
-                Trains = Train.GetTrainByRouteId(Routes[RouteSelected].RID);
+                try
+                {
+                    Trains = await Train.GetTrainByRouteId(Routes[RouteSelected].RID);
+                    Stations1 = await Station.GetStationByRouteId(Routes[RouteSelected].RID);
+                }
+                catch (Exception)
+                {
+                    DialogDisplayHelper.DisplayMessageBox("Non Of Trains Registered With This Route", "Informative");
+                    RouteSelected = 0;
+                    OnPropertyChanged(nameof(RouteSelected));
+                    return;
+                }
+
                 Trains.RemoveAt(0);
-                SelectStationVisibility = true;
+                foreach (var train in Trains)
+                {
+                    train.StartStation = Stations1.First(s => s.SID.ToString() == train.StartStation).Name;
+                    train.EndStation = Stations1.First(s => s.SID.ToString() == train.EndStation).Name;
+                }
+
+                OnPropertyChanged(nameof(Trains));
             }
         }
-        private void GetStation()
-        {
 
-            //SelectStationVisibility = false;
-            if (RouteSelected != 0)
+        private async void GetStation()
+        {
+            Stations?.Clear();
+            SelectStationVisibility = true;
+            StartStationId = EndStationId = 0;
+            OnPropertyChanged(nameof(SelectStationVisibility));
+            if (RouteId!=0)
             {
-                Stations = Station.GetStationByRouteId(Routes[RouteSelected].RID);
-                //SelectStationVisibility = true;
+                try
+                {
+                    Stations = await Station.GetStationByRouteId(Routes[RouteId].RID);
+                }
+                catch (HttpRequestException)
+                {
+                    DialogDisplayHelper.DisplayMessageBox("No Station Found With this Route", "Informative");
+                    return;
+                }
+                OnPropertyChanged(nameof(Stations));
             }
         }
 
-        private void ClearViewProperties()
+        private void UpdateViewsProperties()
         {
-            RouteSelected = RouteId = StartStationId = EndStationId = 0;
+            ClearValidation();
+            RouteId = 0;
+            TrainId = 0;
+            StartStationId = EndStationId = 0;
+            OnPropertyChanged(nameof(RouteId));
             Name = Description = "";
         }
 
@@ -136,94 +189,128 @@ namespace Desktop.ViewModels
                     TID = TrainId,
                     RID = RouteId,
                     Name = Name,
-                    Sstation = StartStationId,
-                    Estation = EndStationId,
+                    StartStation = StartStationId.ToString(),
+                    EndStation = EndStationId.ToString(),
                     Description = Description
                 };
             return null;
         }
 
-        private void OnDataGridSelectionChange(object station)
+        private void CheckStation()
         {
-            if (station != null)
+            if(EndStationId==StartStationId&&StartStationId!=0&&EndStationId!=0)
             {
-                Train data = (Train)station;
-                RouteId = data.RID;
-                TrainId = data.TID;
-                Name = data.Name;
-                StartStationId = data.Sstation;
-                EndStationId = data.Estation;
-                Description = data.Description;
+                DialogDisplayHelper.DisplayMessageBox("Both Start And End Stations Are Same", "Informative",
+                    boxIcon: MessageBoxImage.Hand);
+                _stationCheck = false;
+            }
+
+            _stationCheck = true;
+
+        }
+
+
+        #endregion
+
+        #region Commands
+
+        public ICommand AddCommand { get; }
+        public ICommand UpdateCommand { get; }
+        public ICommand ResetCommand { get; }
+        public ICommand DataGridSelectionChangeCommand { get; }
+
+        #endregion
+
+        #region CommandActions
+
+        public void AddTrain()
+        {
+            var train = GetViewData();
+            if (train.TID != 0)
+            {
+                DialogDisplayHelper.DisplayMessageBox("All Ready Exist", "Informative",boxIcon:MessageBoxImage.Hand);
                 return;
             }
-            ClearViewProperties();
-        }
 
-        #endregion
+            var response = WebConnect.PostData("Trains/AddTrain", train);
+            if (response.StatusCode != HttpStatusCode.Created)
+                return;
 
-        #region Actions
-
-        public bool AddTrain()
-        {
-            var data = GetViewData();
-            data.TID = 0;
-            var response = WebConnect.PostData("Trains/AddTrain", data);
-            if (response.StatusCode == HttpStatusCode.Created)
+            DialogDisplayHelper.DisplayMessageBox("Action Completed", "Informative");
+            if (RouteSelected == train.RID)
             {
-                return true;
+                var data = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+                train.TID = Convert.ToInt16(data["TID"].ToString());
+                train.StartStation = Stations.First(s => s.SID == Convert.ToInt16(train.StartStation)).Name;
+                train.EndStation = Stations.First(s => s.SID == Convert.ToInt16(train.EndStation)).Name;
+                Trains.Add(train);
+                OnPropertyChanged(nameof(Trains));
             }
 
-            return false;
+            UpdateViewsProperties();
         }
 
-        public bool Update()
+        public void Update()
         {
-            var data = GetViewData();
-            if (data.TID != 0)
+            var train = GetViewData();
+            if (train.TID == 0)
+                return;
+            var response = WebConnect.UpdateDate("Trains/" + train.TID, train);
+            if (response.StatusCode == HttpStatusCode.NoContent)
             {
-                var response = WebConnect.UpdateDate("Trains/" + data.TID, data);
-                if (response.StatusCode == HttpStatusCode.NoContent)
-                {
-                    return true;
-                }
-                return false;
+                DialogDisplayHelper.DisplayMessageBox("Update Completed", "Informative");
+                if (RouteSelected != train.RID)
+                    return;
+                var index = Trains.First(t => t.TID == train.TID);
+                index.Name = train.Name;
+                index.EndStation = Stations.First(s => s.SID == Convert.ToInt16(train.EndStation)).Name;
+                index.StartStation = Stations.First(s => s.SID == Convert.ToInt16(train.StartStation)).Name;
+                index.Description = train.Description;
+                ObservableCollection<Train> temp = new ObservableCollection<Train>(Trains);
+                Trains.Clear();
+                Trains = temp;
+                OnPropertyChanged(nameof(Trains));
             }
-            return false;
-        }
-
-        #endregion
-
-        #region OvrideMethods
-
-        //protected override bool CheckValid()
-        //{
-        //    if (Errors == 0)
-        //        return true;
-        //    else
-        //        return false;
-        //}
-
-        //protected override void Reset()
-        //{
-        //    ClearViewProperties();
-        //    Trains?.Clear();
-        //}
-        protected bool CheckValid()
-        {
-            if (Errors == 0)
-                return true;
-            else
-                return false;
         }
 
         protected void Reset()
         {
-            ClearViewProperties();
+            UpdateViewsProperties();
             Trains?.Clear();
+            Stations?.Clear();
+            RouteSelected = 0;
+            OnPropertyChanged(nameof(RouteSelected));
+            SelectStationVisibility = false;
+            OnPropertyChanged(nameof(SelectStationVisibility));
         }
 
+        protected bool CheckValid()
+        {
+            if (Errors == 0 && !string.IsNullOrWhiteSpace(Name) && _stationCheck &&RouteId != 0)
+                return true;
+            return false;
+        }
+
+        private void OnDataGridSelectionChange(object station)
+        {
+           // var dd = new Dispatcher
+            if (station != null)
+            {
+                var data = (Train) station;
+                RouteId = data.RID;
+                TrainId = data.TID;
+                Name = data.Name;
+
+                StartStationId = Stations1.First(s => s.Name == data.StartStation).SID;
+                EndStationId = Stations1.First(s => s.Name == data.EndStation).SID;
+
+                Description = data.Description;
+                return;
+            }
+
+            UpdateViewsProperties();
+        }
 
         #endregion
-
     }
 }

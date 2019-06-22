@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Desktop.Model
@@ -10,18 +11,26 @@ namespace Desktop.Model
 
         public short TID { get; set; }
         public string Name { get; set; }
-        public short Sstation { get; set; }
-        public short Estation { get; set; }
+        public string StartStation { get; set; }
+        public string EndStation { get; set; }
         public string Description { get; set; }
         public short RID { get; set; }
+
+        public static ObservableCollection<Train> Trains { get; set; }
 
         #endregion
 
         #region static methods
 
-        public static ObservableCollection<Train> GetTrainByRouteId(int id)
+        public static async Task<ObservableCollection<Train>> GetTrainByRouteId(int id = 0)
         {
-            var tempData = WebConnect.GetData("Train/GetTrainInRoute/" + id);
+           await GetTrain(id);
+           return Trains;
+        }
+
+        public static async Task GetTrain(int id)
+        {
+            var tempData =await WebConnect.GetData("Train/GetTrainInRoute/" + id);
             var results = JsonConvert.DeserializeObject<IEnumerable<Train>>(tempData);
             var trains = new ObservableCollection<Train>(){new Train(){Name = "Select Train"}};
             foreach (var result in results)
@@ -31,13 +40,13 @@ namespace Desktop.Model
                     RID = result.RID,
                     TID = result.TID,
                     Name = result.Name,
-                    Sstation = result.Sstation,
-                    Estation = result.Estation,
+                    StartStation = result.StartStation,
+                    EndStation = result.EndStation,
                     Description = result.Description
                 };
                 trains.Add(temp);
             }
-            return trains;
+            Trains= trains;
         }
 
 

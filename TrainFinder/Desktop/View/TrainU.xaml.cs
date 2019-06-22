@@ -6,16 +6,15 @@ using Desktop.ViewModels;
 namespace Desktop
 {
     
-    public partial class TrainU : UserControl
+    public partial class TrainUc : UserControl
     {
-        public TrainU()
+        public TrainUc()
         {
             InitializeComponent();
             this.DataContext = new TrainVm();
         }
 
-        private void Validation_Error(object sender, ValidationErrorEventArgs e)
-        {
+        private void Validation_Error(object sender, ValidationErrorEventArgs e){
             if (e.Action == ValidationErrorEventAction.Added) TrainVm.Errors += 1;
             if (e.Action == ValidationErrorEventAction.Removed) TrainVm.Errors -= 1;
         }
