@@ -204,7 +204,7 @@ namespace Desktop.ViewModels
                     boxIcon: MessageBoxImage.Hand);
                 _stationCheck = false;
             }
-
+            else
             _stationCheck = true;
 
         }
@@ -286,7 +286,7 @@ namespace Desktop.ViewModels
 
         protected bool CheckValid()
         {
-            if (Errors == 0 && !string.IsNullOrWhiteSpace(Name) && _stationCheck &&RouteId != 0)
+            if (Errors == 0 && !string.IsNullOrWhiteSpace(Name) && _stationCheck && StartStationId != 0 && EndStationId != 0 && RouteId != 0)
                 return true;
             return false;
         }
