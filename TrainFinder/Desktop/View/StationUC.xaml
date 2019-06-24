@@ -6,89 +6,81 @@
              xmlns:local="clr-namespace:Desktop"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d"
-             Background="Azure"
-             FontSize="24"
+             FontSize="20"
              d:DesignHeight="765" d:DesignWidth="1385">
-    <Border Padding="10">
+    <Border>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="500" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
             <Grid Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="100" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="100" />
+                    <RowDefinition Height="150" />
                 </Grid.RowDefinitions>
-                <GroupBox Padding="10" Grid.Row="0" Header="Search" BorderThickness="3" BorderBrush="Black">
+                <GroupBox Grid.Row="0" Header="Search" >
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="175" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <Label Content="Route Name" />
-                            <!--<Label Content="Station" FontSize="20" />-->
                         </StackPanel>
                         <StackPanel Grid.Column="1">
                             <ComboBox Name="CmbRoutes"
                                       ItemsSource="{Binding RoutesList, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                      DisplayMemberPath="Name" Height="45" SelectedIndex="{Binding RouteIdSelectCmb1}" />
-                            <!--<ComboBox Name="CmbStation"  SelectedIndex="0" Height="30" Margin="168,60,167.2,28.8"></ComboBox>-->
+                                      DisplayMemberPath="Name"  SelectedIndex="{Binding RouteIdSelectCmb1}" />
                         </StackPanel>
                     </Grid>
                 </GroupBox>
-                <GroupBox Grid.Row="1" Padding="10" Header="Station Details" BorderThickness="3" BorderBrush="Black">
+
+                <GroupBox Grid.Row="1" Header="Station Details">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="175" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0">
-                            <Label Height="45" Margin="0,5" Content="Route Name" />
-                            <Label Height="45" Margin="0,5" Content="Station Name" />
-                            <Label Height="45" Margin="0,5" Content="Location" />
-                            <Label Height="45" Margin="0,5" Content="Distance" />
-                            <Label Height="45" Margin="0,5" Content="Telephone" />
-                            <Label Height="45" Margin="0,5" Content="Address" />
-                            <Label Height="45" Margin="0,5" Content="Description" />
+                            <Label Content="Route Name" />
+                            <Label Content="Station Name" />
+                            <Label Content="Location" />
+                            <Label Content="Distance" />
+                            <Label Content="Telephone" />
+                            <!--<Label Content="Address" />-->
                         </StackPanel>
 
                         <StackPanel Grid.Column="1">
-                            <ComboBox Height="45" Margin="0,5" Name="CmbRoute"
-                                      ItemsSource="{Binding RoutesList, UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True,NotifyOnValidationError=True}"
+                            <ComboBox x:Name="CmbRoute"
+                                      ItemsSource="{Binding RoutesList, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                                       Validation.Error="Validation_Error"
                                       Validation.ErrorTemplate="{StaticResource TextBoxErrorTemplate}"
                                       DisplayMemberPath="Name"
-                                      SelectedValue="{Binding RouteId,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
-                                      SelectedValuePath="RID" />
-                            <TextBox Margin="0,5"
-                                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True,NotifyOnValidationError=True}"
+                                      SelectedValue="{Binding RouteId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedValuePath="RID" Margin="10,10,9.6,10" />
+                            <TextBox Text="{Binding Name, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                                      Validation.Error="Validation_Error"
                                      Validation.ErrorTemplate="{StaticResource TextBoxErrorTemplate}" />
-                            <TextBox Margin="0,5"
-                                     Text="{Binding Locations,UpdateSourceTrigger=PropertyChanged,Mode=OneWay,ValidatesOnDataErrors=True,NotifyOnValidationError=True}"
+                            <TextBox Text="{Binding Locations, Mode=OneWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                                      Validation.Error="Validation_Error"
                                      Validation.ErrorTemplate="{StaticResource TextBoxErrorTemplate}" IsReadOnly="True" />
-                            <TextBox Margin="0,5"
-                                     Text="{Binding Distance,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True,NotifyOnValidationError=True}"
+                            <TextBox Text="{Binding Distance, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                                      Validation.Error="Validation_Error"
                                      Validation.ErrorTemplate="{StaticResource TextBoxErrorTemplate}" />
-                            <TextBox Margin="0,5"
-                                     Text="{Binding Telephone,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True,NotifyOnValidationError=True}"
+                            <TextBox Text="{Binding Telephone, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                                      Validation.Error="Validation_Error"
                                      Validation.ErrorTemplate="{StaticResource TextBoxErrorTemplate}" />
-                            <TextBox Margin="0,5" Text="{Binding Address,UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBox Height="105" Margin="0,5"
-                                     Text="{Binding Description,UpdateSourceTrigger=PropertyChanged}" />
+                            <!--<TextBox Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />-->
                             <TextBlock Text="{Binding StationId, UpdateSourceTrigger=PropertyChanged}"
                                        Visibility="Hidden" IsHitTestVisible="False" />
                         </StackPanel>
                     </Grid>
                 </GroupBox>
-                <Grid Row="2" Margin="0,10,0,0">
+
+                <Grid Row="2" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
@@ -97,39 +89,37 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Button Grid.Row="0" Grid.Column="0" Height="45" Name="BtnAdd" Content="Add Station"
+                    <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="BtnAdd" Content="Add Station"
                             Command="{Binding AddCommand}" />
-                    <Button Grid.Row="0" Grid.Column="1" Height="45" Name="BtnDelete" Content="Delete"
-                            Command="{Binding DeleteCommand}" />
-                    <Button Grid.Row="1" Grid.Column="0" Height="45" Name="BtnUpdate" Content="Update"
+                    <!--<Button Grid.Row="0" Grid.Column="1"  Name="BtnDelete" Content="Delete"
+                            Command="{Binding DeleteCommand}" />-->
+                    <Button Grid.Row="1" Grid.Column="0" Name="BtnUpdate" Content="Update"
                             Command="{Binding UpdateCommand}" />
-                    <Button Grid.Row="1" Grid.Column="1" Height="45" Name="BtnClear" Content="Clear"
+                    <Button Grid.Row="1" Grid.Column="1" Name="BtnClear" Content="Clear"
                             Command="{Binding ResetCommand}" />
                 </Grid>
+
             </Grid>
-            <Grid Column="1" Margin="10,0,0,0">
+            <Grid Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <GroupBox Padding="10" Grid.Row="0" Header="Station" BorderThickness="3" BorderBrush="Black">
+                <GroupBox  Grid.Row="0" Header="Station">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
-                            <RowDefinition Height="50" />
+                            <RowDefinition Height="55" />
                         </Grid.RowDefinitions>
-                        <DataGrid Grid.Row="0" Name="DgvStation" ItemsSource="{Binding Stations,Mode=OneWay}"
-                                  AutoGenerateColumns="False" SelectionMode="Single"
-                                  SelectionUnit="FullRow" IsReadOnly="True">
+                        <DataGrid Grid.Row="0" Name="DgvStation" ItemsSource="{Binding Stations}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Route ID" Binding="{Binding RID}" />
-                                <DataGridTextColumn Header="Station ID" Binding="{Binding SID}" />
-                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                                <DataGridTextColumn Header="Distance" Binding="{Binding Distance}" />
-                                <DataGridTextColumn Header="Location" Binding="{Binding Locations}" />
-                                <DataGridTextColumn Header="Telephone" Binding="{Binding Telephone}" />
-                                <DataGridTextColumn Header="Address" Binding="{Binding Address}" />
-                                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="250" />
+                                <!--<DataGridTextColumn Header="Route ID" Binding="{Binding RID}" />-->
+                                <DataGridTextColumn Header="Station" Binding="{Binding SID}" Width="*"/>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
+                                <DataGridTextColumn Header="Distance" Binding="{Binding Distance}" Width="150"/>
+                                <DataGridTextColumn Header="Location" Binding="{Binding Location}" Width="*" />
+                                <DataGridTextColumn Header="Telephone" Binding="{Binding Telephone}" Width="150" />
+                                <!--<DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="*" />-->
                             </DataGrid.Columns>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
@@ -138,19 +128,20 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </DataGrid>
-                        <Button Margin="0,10,0,0" Grid.Row="1" Content="Print" Width="150" HorizontalAlignment="Right" />
+                        <Button  Grid.Row="1" Content="Print" Width="200" HorizontalAlignment="Right"  Command="{Binding PrintCommand}" CommandParameter="{Binding ElementName=DgvStation}"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Grid.Row="1" Header="Station Locations" BorderThickness="3" BorderBrush="Black">
+                <GroupBox Grid.Row="1" Header="Station Locations" >
                     <Grid>
-                        <local:UCMaps x:Name="Maps" >
+                        <local:UcMap x:Name="Maps" 
+                                     LocationPin="{Binding Locations}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseDoubleClick">
                                     <i:InvokeCommandAction Command="{Binding LocationCommand}"
-                                                           CommandParameter="{Binding Location}"/>
+                                                           CommandParameter="{Binding ElementName=Maps, Path=LocationPin}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
-                        </local:UCMaps>
+                        </local:UcMap>
                     </Grid>
                 </GroupBox>
             </Grid>

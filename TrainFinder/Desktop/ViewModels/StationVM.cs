@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Windows.Input;
+using Desktop.CustomAttributes;
+using Desktop.Helpers;
 using Desktop.Model;
 
 namespace Desktop.ViewModels
@@ -11,13 +15,12 @@ namespace Desktop.ViewModels
     {
         private short _routeIdSelectCmb1 = 0;
 
-        #region Propperties
-
+       
         #region DataContaners
 
         public ObservableCollection<Station> Stations { get; set; }
 
-        public static ObservableCollection<Route> RoutesList { get; set; }
+        public ObservableCollection<Route> RoutesList { get; set; }
 
         public Station Station { get; set; }
 
@@ -56,7 +59,7 @@ namespace Desktop.ViewModels
         }
 
         [Required]
-        [Phone]
+        [PhoneNumber]
         public string Telephone
         {
             get { return GetValue(() => Telephone); }
@@ -64,11 +67,11 @@ namespace Desktop.ViewModels
         }
 
         [Required]
-        public string Location
+        public string Locations
         {
-            get { return GetValue(() => Location); }
-            set { SetValue(() => Location, value); }
-        }
+            get { return GetValue(() => Locations); }
+            set { SetValue(() => Locations, value); }
+        } 
 
         public string Address { get; set; }
 
@@ -83,6 +86,7 @@ namespace Desktop.ViewModels
         public ICommand ResetCommand { get; private set; }
         public ICommand DataGridSelectionChangeCommand { get; private set; }
         public ICommand LocationCommand { get; private set; }
+        public ICommand PrintCommand { get; private set; }
 
         #endregion
 
@@ -101,68 +105,114 @@ namespace Desktop.ViewModels
         public static int Errors { get; set; }
 
         #endregion
-
-        #endregion
-
-        #region Methods
-
+        
         public StationVm()
         {
-            RoutesList = Route.GetRouteList();
-            AddCommand = new CommandBase(AddStation, CheckValid);
-            UpdateCommand = new CommandBase(Update, CheckValid);
+            LoadData();
+            AddCommand = new CommandBase(action:AddStation,canExecute: CheckValid);
+            UpdateCommand = new CommandBase(action:Update, canExecute:CheckValid);
             ResetCommand = new CommandBase(action: Reset, canExecute: AlwaysTrue);
+            PrintCommand = new CommandBase(action: Print.PrintDocument, canExecute: AlwaysTrue);
             DataGridSelectionChangeCommand = new CommandBase(action: OnDataGridSelectionChange, canExecute: AlwaysTrue);
-            LocationCommand = new CommandBase(action: OnDataGridSelectionChange, canExecute: AlwaysTrue);
+            LocationCommand = new CommandBase(action: SetLocation, canExecute: AlwaysTrue);
         }
-
+        
         #region Action
 
-        public bool AddStation()
+        public void AddStation()
         {
             var station = GetViewData();
-            station.SID = 0;
-            var response = WebConnect.PostData("Stations/AddStation", station);
-            if (response.StatusCode == HttpStatusCode.Created)
+            if (station.SID !=0 )
             {
-                var ree = response.Content.ReadAsStringAsync();
-                station.SID = Int16.Parse(ree.Result);
-                StationId = Int16.Parse(ree.Result);
-                return true;
+                DialogDisplayHelper.DisplayMessageBox("All Ready Exist", "Informative");
             }
-
-            return false;
+            else
+            {
+                var response = WebConnect.PostData("Stations/AddStation", station);
+                if (response.StatusCode != HttpStatusCode.Created)
+                {
+                    DialogDisplayHelper.DisplayMessageBox("Action Failed", "Informative");
+                }
+                else
+                {
+                    DialogDisplayHelper.DisplayMessageBox("Action Completed", "Informative");
+                    if (station.RID == RouteIdSelectCmb1)
+                    {
+                        Stations.Add(station);
+                        OnPropertyChanged(nameof(Stations));
+                    }
+                    var ree = response.Content.ReadAsStringAsync();
+                    station.SID = short.Parse(ree.Result);
+                    StationId = short.Parse(ree.Result);
+                }
+                UpdateViewsProperties();
+            }
         }
 
-        public bool Update()
+        public void Update()
         {
             var station = GetViewData();
             var response = WebConnect.UpdateDate("Stations/" + station.SID, station);
             if (response.StatusCode == HttpStatusCode.Created)
             {
-                ClearViewProperties();
-                return true;
+                DialogDisplayHelper.DisplayMessageBox("Update Completed", "Informative");
+                var index = Stations.First(s => s.SID == station.SID);
+                index.Name = station.Name;
+                index.Location = station.Location;
+                index.Address = station.Address;
+                index.Distance = station.Distance;
+                index.Telephone = station.Telephone;
+                ObservableCollection<Station> temp = new ObservableCollection<Station>(Stations);
+                Stations.Clear();
+                Stations = temp;
+                OnPropertyChanged(nameof(Stations));
+            }
+            else
+                DialogDisplayHelper.DisplayMessageBox("Action Failed", "Informative");
+            UpdateViewsProperties();
+        }
+
+        private void OnDataGridSelectionChange(object station)
+        {
+            if (station != null)
+            {
+                Station data = (Station)station;
+                StationId = data.SID;
+                RouteId = data.RID;
+                Name = data.Name;
+                Distance = data.Distance.ToString("##.##");
+                Telephone = data.Telephone;
+                Address = data.Address;
+                Locations = data.Location;
+                OnPropertyChanged(nameof(Locations));
+                return;
             }
 
-            return false;
+            UpdateViewsProperties();
         }
 
-        #endregion
-
-        #region OverideBaseVM
-
-        protected bool CheckValid()
+        private void SetLocation(object location)
         {
-            if (Errors == 0)
+            Locations = location?.ToString();
+            OnPropertyChanged(nameof(Locations));
+        }
+
+        private void Reset()
+        {
+            UpdateViewsProperties();
+            Stations?.Clear();
+            RouteIdSelectCmb1 = 0;
+            OnPropertyChanged(nameof(RouteIdSelectCmb1));
+        }
+
+        private bool CheckValid()
+        {
+            if (Errors == 0 && RouteId != 0 && !string.IsNullOrWhiteSpace(Name)
+                && !string.IsNullOrWhiteSpace(Locations)
+                && !string.IsNullOrWhiteSpace(Distance)
+                && !string.IsNullOrWhiteSpace(Telephone))
                 return true;
             return false;
-        }
-
-        protected void Reset()
-        {
-            ClearViewProperties();
-            if (Station != null)
-                Stations.Clear();
         }
 
         #endregion
@@ -172,63 +222,63 @@ namespace Desktop.ViewModels
         private Station GetViewData()
         {
             if (CheckValid())
-                return new Station()
+                return new Station
                 {
                     RID = RouteId,
                     Name = Name,
                     Distance = float.Parse(Distance),
                     Address = Address,
                     Telephone = Telephone,
-                    SID = StationId
-                    //Location=Location
+                    SID = StationId,
+                    Location = Locations
                 };
             return null;
         }
 
-        private void OnRouteIdSelectCmb1Change()
+        private async void OnRouteIdSelectCmb1Change()
         {
-            Stations?.Clear();
             if (RouteIdSelectCmb1 != 0)
             {
-                Stations = Station.GetStationByRouteId(RoutesList[RouteIdSelectCmb1].RID);
+                Stations?.Clear();
+                try
+                {
+                    Stations = await Station.GetStationByRouteId(RoutesList[RouteIdSelectCmb1].RID);
+                }
+                catch (HttpRequestException)
+                {
+                    DialogDisplayHelper.DisplayMessageBox("No Station Found With this Route","Informative");
+                    return;
+                }
                 Stations.RemoveAt(0);
                 OnPropertyChanged(nameof(Stations));
             }
         }
 
-        private void OnDataGridSelectionChange(object station)
+        private void UpdateViewsProperties()
         {
-            if (station != null)
+            ClearValidation();
+            RouteId = 0;
+            StationId=RouteId = 0;
+            Name = Distance=Description = Telephone = Address = Locations = "";
+            OnPropertyChanged(nameof(Address));
+            OnPropertyChanged(nameof(Description));
+        }
+
+        private async void LoadData()
+        {
+            try
             {
-                Station data = (Station)station;
-                RouteId = data.RID;
-                Name = data.Name;
-                Distance = data.Distance.ToString("##.##");
-                Telephone = data.Telephone;
-                Address = data.Address;
-                Location = data.Locations;
-                Description = data.Description;
+                RoutesList = await Route.GetRouteList();
+                OnPropertyChanged(nameof(RoutesList));
+            }
+            catch (HttpRequestException)
+            {
+                DialogDisplayHelper.DisplayMessageBox("No Route Found", "Informative");
                 return;
             }
-
-            ClearViewProperties();
+            
         }
-
-        private void ClearViewProperties()
-        {
-            RouteIdSelectCmb1 = RouteId = 0;
-            Name = Distance = Telephone = Address = Location = Description = "";
-        }
-
-        #endregion
 
         #endregion
     }
 }
-
-
-//public void GetStation(int id = 0)
-//{
-//Stations = Station.GetStationByRouteId(id);
-//Stations.RemoveAt(0);
-//}
