@@ -3,12 +3,12 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace Fasetto.Word
+namespace Desktop
 {
     /// <summary>
     /// Fixes the issue with Windows of Style <see cref="WindowStyle.None"/> covering the taskbar
     /// </summary>
-    public class WindowResizer
+    public class WindowResize
     {
         #region Private Members
 
@@ -40,7 +40,7 @@ namespace Fasetto.Word
         /// </summary>
         /// <param name="window">The window to monitor and correctly maximize</param>
         /// <param name="adjustSize">The callback for the host to adjust the maximum available size if needed</param>
-        public WindowResizer(Window window)
+        public WindowResize(Window window)
         {
             mWindow = window;
 

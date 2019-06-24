@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
-using Desktop.Properties;
 
 namespace Desktop
 {
@@ -91,9 +90,7 @@ namespace Desktop
         protected void OnPropertyChanged(string propertyName)
         {
             var handler = PropertyChanged;
-            if (handler == null) return;
-            var e = new PropertyChangedEventArgs(propertyName);
-            handler(this, e);
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion
@@ -109,8 +106,8 @@ namespace Desktop
         {
             string error = string.Empty;
             if (string.IsNullOrEmpty(propertyName))
-                throw new ArgumentException("sssssssssssssssssssssssssss");
-                //throw new ArgumentException(Resources.BaseViewModelMain_OnValidation_Invalid_Property_Name,propertyName);
+                throw new ArgumentException("Property not found");
+                
 
             if (ValidationResults.Any(x => x.Key == propertyName))
             {
