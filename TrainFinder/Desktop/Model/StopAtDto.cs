@@ -8,8 +8,8 @@
        
         public bool Direction { get; set; }
 
-        public float Atime { get; set; }
+        public int Atime { get; set; }
 
-        public float Dtime { get; set; }
+        public int Dtime { get; set; }
     }
 }

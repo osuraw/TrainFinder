@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
+using Desktop.Helpers;
 using Newtonsoft.Json;
 
 namespace Desktop.Model
@@ -10,10 +9,13 @@ namespace Desktop.Model
     public class Stops
     {
         public short TrainId { get; set; }
+
         public short StationId { get; set; }
+        public string TrainName { get; set; }
+        public string StationName { get; set; }
         public bool Direction { get; set; }
-        public float ArriveTime { get; set; }
-        public float DepartureTime { get; set; }
+        public string ArriveTime { get; set; }
+        public string DepartureTime { get; set; }
 
         public static ObservableCollection<Stops> StopList { get; set; }
 
@@ -37,9 +39,11 @@ namespace Desktop.Model
                 {
                     TrainId = result.TrainId,
                     StationId = result.StationId,
+                    TrainName = result.TrainName,
+                    StationName = result.StationName,
                     Direction = result.Direction,
-                    ArriveTime = result.ArriveTime,
-                    DepartureTime = result.DepartureTime
+                    ArriveTime = result.ArriveTime.TimeToString(),
+                    DepartureTime = result.DepartureTime.TimeToString()
                 };
                 StopList.Add(temp);
             }
@@ -47,4 +51,5 @@ namespace Desktop.Model
 
         #endregion
     }
+
 }
