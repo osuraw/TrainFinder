@@ -5,9 +5,9 @@ namespace Desktop.Model
 
     public partial class user
     {
-        public byte UID { get; set; }
+        public byte UserId { get; set; }
         public string Name { get; set; }
-        public string Uname { get; set; }
+        public string UserName { get; set; }
         public string Password { get; set; }
 
         public static bool Login (user user)
@@ -15,8 +15,8 @@ namespace Desktop.Model
             var httpResponseMessage = WebConnect.PostData("User/Login", user);
             if (int.TryParse(httpResponseMessage.Content.ReadAsStringAsync().Result, out int id))
             {
-                logininfor.UserId = id;
-                logininfor.LogTime = DateTime.Now;
+                LogInFor.UserId = id;
+                LogInFor.LogTime = DateTime.Now;
                 return true;
             }
 
@@ -25,7 +25,7 @@ namespace Desktop.Model
 
 
     }
-    public static class logininfor
+    public static class LogInFor
     {
         public static int UserId { get; set; }
         public static DateTime LogTime { get; set; }
