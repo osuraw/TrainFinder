@@ -3,15 +3,12 @@ using Desktop.ViewModels;
 
 namespace Desktop
 {
-    /// <summary>
-    ///     Interaction logic for PinLocationUC.xaml
-    /// </summary>
-    public partial class PinLocationUC : UserControl
+    public partial class PinLocationUc
     {
-        public PinLocationUC()
+        public PinLocationUc()
         {
             InitializeComponent();
-            this.DataContext = new PinLocationUC();
+            this.DataContext = new PinLocationVm();
         }
         private void Validation_Error(object sender, ValidationErrorEventArgs e)
         {

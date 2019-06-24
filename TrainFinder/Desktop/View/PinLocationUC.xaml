@@ -1,103 +1,134 @@
-﻿<UserControl x:Class="Desktop.PinLocationUC"
+﻿<UserControl x:Class="Desktop.PinLocationUc"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Desktop"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d"
-             FontSize="18"
-             Background="Azure"
+             FontSize="20"
              d:DesignHeight="765" d:DesignWidth="1385">
+    
 
-    <Border Padding="10">
+    <Border>
         <Grid>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="3*" />
             </Grid.ColumnDefinitions>
+            <!--Left-->
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="250" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="150" />
                 </Grid.RowDefinitions>
-                <GroupBox Grid.Column="0" Grid.Row="0" Header="Search" BorderThickness="3" BorderBrush="Black">
+
+                <GroupBox Grid.Row="0" Header="Search">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="21*"/>
-                            <ColumnDefinition Width="512*"/>
+                            <ColumnDefinition Width="175" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="50" />
-                            <RowDefinition Height="*" />
+                            <RowDefinition Height="55" />
+                            <RowDefinition Height="150" />
                         </Grid.RowDefinitions>
-                        <Label FontSize="30" Height="45" Width="150" HorizontalAlignment="Left" Grid.Row="0"
-                               Content="Route" Margin="5,5,0,167.6" Grid.ColumnSpan="2" Grid.RowSpan="2" />
-                        <ComboBox Grid.Row="0" Width="350" HorizontalAlignment="Right" 
-                                  ItemsSource="{Binding Routes}" DisplayMemberPath="Name" 
-                                  SelectedValue="{Binding RouteId,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" SelectedValuePath="RID" Grid.Column="1"  />
-                        <DataGrid Grid.Row="1"  ItemsSource="{Binding Pinlocations}" Grid.ColumnSpan="2">
+                        <Label Content="Route" Grid.Row="0" Grid.Column="0" />
+                        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Routes}" DisplayMemberPath="Name"
+                                  SelectedValue="{Binding SelectRouteId,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                                  SelectedValuePath="RID" />
+
+                        <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding PinLocations}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Location"  Binding="{Binding Location}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Type"  Binding="{Binding Type}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Location Id" Binding="{Binding PinId}" />
+                                <DataGridTextColumn Header="Location" Binding="{Binding Location}" />
+                                <DataGridTextColumn Header="Type" Binding="{Binding Type,IsAsync=True}" />
+                                <DataGridTextColumn Header="Message" Binding="{Binding Message}" />
+                                <DataGridTextColumn Width="*" Header="Description" Binding="{Binding Description}" />
                             </DataGrid.Columns>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding DataGridSelectionChangeCommand}"
+                                                           CommandParameter="{Binding Path=SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                         </DataGrid>
                     </Grid>
                 </GroupBox>
-                <GroupBox Grid.Column="0" Grid.Row="1" Header="Train Details" Height="500" BorderThickness="3"
-                          BorderBrush="Black" Padding="10"
-                          VerticalAlignment="Bottom">
+
+                <GroupBox Grid.Row="1" Header="Train Details">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="175" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="120" />
-                        </Grid.RowDefinitions>
-                        <StackPanel Grid.Column="0" Grid.Row="0">
-                            <Label Height="35" Margin="0,0" Content="Route"/>
-                            <Label Height="35" Margin="0,10" Content="Location"/>
-                            <Label Height="35" Margin="0,10" Content="Type"/>
-                            <Label Height="35" Margin="0,10" Content="Message"/>
-                            <Label Height="35" Margin="0,10" Content="Description"/>
+
+                        <StackPanel Grid.Column="0">
+                            <Label Content="Route" />
+                            <Label Content="Location" />
+                            <Label Content="Type" />
+                            <Label Content="Message" />
+                            <Label Content="Description" />
                         </StackPanel>
 
-                        <Grid Column="0" ColumnSpan="2" Row="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Button Grid.Row="0" Grid.Column="0" Name="BtnAdd" Content="Add" />
-                            <Button Grid.Row="0" Grid.Column="1" Name="BtnUpdate" Content="Update RouteUC" />
-                            <Button Grid.Row="1" Grid.Column="0" Name="BtnDelete" Content="Delete" />
-                            <Button Grid.Row="1" Grid.Column="1" Name="BtnClear" Content="Clear" />
-                        </Grid>
-                        <StackPanel Grid.Column="1" Grid.Row="0">
-                            <ComboBox Height="35" Margin="0,00" IsReadOnly="True" SelectedIndex="0" />
-                            <TextBox  Height="35" Margin="0,10"/>
+                        <StackPanel Grid.Column="1">
+                            <ComboBox ItemsSource="{Binding Routes}" DisplayMemberPath="Name"
+                                      SelectedValue="{Binding RouteId,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                                      SelectedValuePath="RID" />
+                            <TextBox Text="{Binding Location, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                     Validation.Error="Validation_Error"
+                                     IsReadOnly="True"
+                                     Validation.ErrorTemplate="{StaticResource TextBoxErrorTemplate}" />
 
-                            <Grid Height="40" Margin="0,10">
+                            <Grid Height="40" Margin="10 0">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <RadioButton Grid.Column="0" GroupName="type" Content="High" />
-                                <RadioButton Grid.Column="1" GroupName="type" Content="Low" />
+                                <RadioButton x:Name="High" Grid.Column="0" GroupName="type" Command="{Binding SelectTypeCommand}" CommandParameter="1" IsChecked="{Binding Checked1}" Content="High" />
+                                <RadioButton x:Name="Low"  Grid.Column="1" GroupName="type" Command="{Binding SelectTypeCommand}" CommandParameter="2" IsChecked="{Binding Checked2}" Content="Low" />
                             </Grid>
-                            <TextBox  Height="35" Margin="0,10"/>
-                            <TextBox TextWrapping="Wrap"  Height="80" Margin="0,10"/>
+
+                            <TextBox Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBox  Visibility="Collapsed" Text="{Binding LocationId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                            <TextBox TextWrapping="Wrap" Height="80" Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
                         </StackPanel>
                     </Grid>
                 </GroupBox>
+
+                <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Command="{Binding AddCommand}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Add" />
+                    <Button Command="{Binding UpdateCommand}" Grid.Row="1" Grid.Column="0" Content="Update" />
+                    <Button Command="{Binding ResetCommand}" Grid.Row="1" Grid.Column="1" Content="Clear" />
+                </Grid>
+
             </Grid>
-            <GroupBox Grid.Column="1" Margin="10,0,0,0" Header="Station Locations" BorderBrush="Black">
+            <!--Right-->
+            <GroupBox Grid.Column="1" Margin="10,0,0,0" Header="Station Locations">
                 <Grid>
-                    <local:UCMaps Focusable="True"/>
+                    <local:UcMap 
+                        x:Name="Maps"
+                        Focusable="True"
+                        LocationPin="{Binding Location}"
+                        LocationList="{Binding Locations}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding LocationCommand}"
+                                                       CommandParameter="{Binding ElementName=Maps, Path=LocationPin}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </local:UcMap>
                 </Grid>
             </GroupBox>
         </Grid>

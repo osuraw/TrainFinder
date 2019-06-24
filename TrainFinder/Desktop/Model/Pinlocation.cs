@@ -1,40 +1,49 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows;
+using System.Threading.Tasks;
+using Desktop.Helpers;
+using Microsoft.Maps.MapControl.WPF;
 using Newtonsoft.Json;
 
 namespace Desktop.Model
 {
-    class Pinlocation
+    class PinLocation
     {
-        public short LID { get; set; }
-        public bool Type { get; set; }
-        public Point Location{ get; set; }
+        public short PinId { get; set; }
+        public byte Type { get; set; }
+        public string Location{ get; set; }
         public string Message { get; set; }
         public string Description { get; set; }
-        public short Rid { get; set; }
+        public short RouteId { get; set; }
 
+        public static ObservableCollection<PinLocation> PinLocations { get; set; }
 
-        public static ObservableCollection<Pinlocation> GetLocationList(short routeId)
+        public static async Task<ObservableCollection<PinLocation>> GetPinLocationList(short routeId)
         {
-            var tempData = WebConnect.GetData("PinLocation/GetLocations/" + routeId);
-            var results = JsonConvert.DeserializeObject<IEnumerable<Pinlocation>>(tempData);
-            var locationList = new ObservableCollection<Pinlocation>();
+            await GetLocations(routeId);
+            return PinLocations;
+        }
+
+        private static async Task GetLocations(short routeId)
+        {
+            var tempData = await WebConnect.GetData("PinLocation/GetPinLocation?rid=" + routeId);
+            var results = JsonConvert.DeserializeObject<IEnumerable<PinLocation>>(tempData);
+            var locationList = new ObservableCollection<PinLocation>();
             foreach (var result in results)
             {
-                var temp = new Pinlocation()
-                {
-                    LID = result.LID,
-                    Rid = result.Rid,
-                    Message = result.Message,
-                    Description = result.Description,
-                    Location = result.Location,
-                    Type = result.Type
-                };
-                locationList.Add(temp);
+                locationList.Add(result);
             }
-            //could make error
-            return locationList;
+            PinLocations = locationList;
+        }
+
+        public static ObservableCollection<Location> GetLocationList()
+        {
+            var list = new ObservableCollection<Location>();
+            foreach (PinLocation location in PinLocations)
+            {
+                list.Add(location.Location.ToLocation());
+            }
+            return list;
         }
     }
 }
