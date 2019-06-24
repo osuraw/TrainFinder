@@ -14,8 +14,9 @@ namespace Desktop.ViewModels
     class StationVm : BaseViewModelMain
     {
         private short _routeIdSelectCmb1 = 0;
+        private bool _routeReadOnly=true;
 
-       
+
         #region DataContaners
 
         public ObservableCollection<Station> Stations { get; set; }
@@ -104,6 +105,16 @@ namespace Desktop.ViewModels
 
         public static int Errors { get; set; }
 
+        public bool RouteReadOnly
+        {
+            get => _routeReadOnly;
+            set
+            {
+                _routeReadOnly = value;
+                OnPropertyChanged(nameof(RouteReadOnly));
+            }
+        }
+
         #endregion
         
         public StationVm()
@@ -166,6 +177,7 @@ namespace Desktop.ViewModels
                 Stations.Clear();
                 Stations = temp;
                 OnPropertyChanged(nameof(Stations));
+                RouteReadOnly = false;
             }
             else
                 DialogDisplayHelper.DisplayMessageBox("Action Failed", "Informative");
@@ -174,6 +186,7 @@ namespace Desktop.ViewModels
 
         private void OnDataGridSelectionChange(object station)
         {
+            RouteReadOnly = false;
             if (station != null)
             {
                 Station data = (Station)station;
@@ -203,6 +216,7 @@ namespace Desktop.ViewModels
             Stations?.Clear();
             RouteIdSelectCmb1 = 0;
             OnPropertyChanged(nameof(RouteIdSelectCmb1));
+            RouteReadOnly = true;
         }
 
         private bool CheckValid()
