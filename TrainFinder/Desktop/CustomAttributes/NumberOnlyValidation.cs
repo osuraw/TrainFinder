@@ -9,7 +9,7 @@ namespace Desktop
         {
             var text = value as string;
            
-            if(!text.All(char.IsNumber))
+            if(!double.TryParse(text,out double result))
                 return new ValidationResult("Numbers Only");
             return ValidationResult.Success;
         }
