@@ -19,7 +19,6 @@ namespace Desktop.ViewModels
         private short _routeId;
         private short _startStationId;
         private short _endStationId;
-        private bool _stationCheck=false;
 
         #region DataStore
 
@@ -53,7 +52,6 @@ namespace Desktop.ViewModels
             {
                 _startStationId = value;
                 CheckStation();
-                OnPropertyChanged(nameof(StartStationId));
             }
         }
 
@@ -65,7 +63,8 @@ namespace Desktop.ViewModels
             {
                 _endStationId = value;
                 CheckStation();
-                OnPropertyChanged(nameof(EndStationId));
+
+
             }
         }
 
@@ -196,19 +195,20 @@ namespace Desktop.ViewModels
             return null;
         }
 
-        private void CheckStation()
+        private bool CheckStation()
         {
             if(EndStationId==StartStationId&&StartStationId!=0&&EndStationId!=0)
             {
                 DialogDisplayHelper.DisplayMessageBox("Both Start And End Stations Are Same", "Informative",
                     boxIcon: MessageBoxImage.Hand);
-                _stationCheck = false;
+                return  false;
             }
             else
-            _stationCheck = true;
+            {
+                return  true;
+            }
 
         }
-
 
         #endregion
 
@@ -286,7 +286,7 @@ namespace Desktop.ViewModels
 
         protected bool CheckValid()
         {
-            if (Errors == 0 && !string.IsNullOrWhiteSpace(Name) && _stationCheck && StartStationId != 0 && EndStationId != 0 && RouteId != 0)
+            if (Errors == 0 && !string.IsNullOrWhiteSpace(Name) && CheckStation() && StartStationId != 0 && EndStationId != 0 && RouteId != 0)
                 return true;
             return false;
         }
