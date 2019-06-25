@@ -21,7 +21,7 @@ namespace pro_web_a.Controllers
         }
 
         [HttpPost]
-        public IHttpActionResult Login(user user)
+        public IHttpActionResult Login(User user)
         {
             var result = _context.Users.SingleOrDefault(c => (c.Uname.Equals(user.Uname)) && (c.Password.Equals(user.Password)));
             if (result != null)
@@ -37,7 +37,7 @@ namespace pro_web_a.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("api/User/Create")]
-        public HttpResponseMessage Create(user user)
+        public HttpResponseMessage Create(User user)
         {
             if (!ModelState.IsValid)
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);

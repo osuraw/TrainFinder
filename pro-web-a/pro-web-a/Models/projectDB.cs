@@ -18,7 +18,7 @@ namespace pro_web_a.Models
         public virtual DbSet<Station> Stations { get; set; }
         public virtual DbSet<StopAt> StopAts { get; set; }
         public virtual DbSet<Train> Trains { get; set; }
-        public virtual DbSet<user> Users { get; set; }
+        public virtual DbSet<User> Users { get; set; }
         public DbSet<LocationLog> Location { get; set; }
         public DbSet<Log> Log { get; set; }
         public DbSet<PinLocation> PinLocation { get; set; }
@@ -74,15 +74,15 @@ namespace pro_web_a.Models
                 .WithRequired(e => e.train)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<user>()
+            modelBuilder.Entity<User>()
                 .Property(e => e.Name)
                 .IsFixedLength();
 
-            modelBuilder.Entity<user>()
+            modelBuilder.Entity<User>()
                 .Property(e => e.Uname)
                 .IsFixedLength();
 
-            modelBuilder.Entity<user>()
+            modelBuilder.Entity<User>()
                 .Property(e => e.Password)
                 .IsFixedLength();
         }

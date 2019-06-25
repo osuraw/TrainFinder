@@ -37,7 +37,7 @@ namespace pro_web_a.Controllers
         [ResponseType(typeof(Station))]
         public IHttpActionResult GetStationInRoute(short id=0)
         {
-            var station = _context.Stations.Where(s => s.RID.Equals(id)).Select(s=>new {s.Name,SID = s.SID}).ToList();
+            var station = _context.Stations.Where(s => s.RID.Equals(id)).Select(s=>new {s.Name,s.SID}).ToList();
             if (station.Count==0)
             {
                 return NotFound();
@@ -93,14 +93,16 @@ namespace pro_web_a.Controllers
             _context.Stations.Add(station);
             _context.SaveChanges();
 
-            var res = new HttpResponseMessage(HttpStatusCode.Created);
-            res.Content = new StringContent(station.SID.ToString());
+            var res = new HttpResponseMessage(HttpStatusCode.Created)
+            {
+                Content = new StringContent(station.SID.ToString())
+            };
             return res;
         }
 
         // DELETE: api/Stations/5
         [ResponseType(typeof(Station))]
-        public HttpStatusCode Deletestation(short id)
+        public HttpStatusCode DeleteStation(short id)
         {
             Station station = _context.Stations.Find(id);
             if (station == null)

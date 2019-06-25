@@ -44,7 +44,11 @@ namespace pro_web_a.Controllers
             foreach (var group in tempList)
             {
                 foreach (var timeTable in group)
+                {
+                    timeTable.TrainName = _dbContext.Trains.First(t => t.TID == timeTable.TrainId).Name;
+                    timeTable.StationName = _dbContext.Stations.First(s => s.SID == timeTable.StationId).Name;
                     data.Add(timeTable);
+                }
             }
 
             if (data.Count == 0)
@@ -65,6 +69,7 @@ namespace pro_web_a.Controllers
             {
                 return BadRequest();
             }
+
             _dbContext.Entry(stopAt).State = EntityState.Modified;
 
             try
@@ -87,17 +92,14 @@ namespace pro_web_a.Controllers
         }
 
         [ResponseType(typeof(StopAt))]
-        public IHttpActionResult Poststopat(StopAt[] stopAt)
+        public IHttpActionResult Poststopat(StopAt stopAt)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            foreach (StopAt stopat1 in stopAt)
-            {
-                _dbContext.StopAts.Add(stopat1);
-            }
+            
+            _dbContext.StopAts.Add(stopAt);
 
             try
             {

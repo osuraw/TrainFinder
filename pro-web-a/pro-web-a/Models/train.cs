@@ -22,9 +22,9 @@ namespace pro_web_a.Models
         [Column(TypeName = "varchar")]
         public string Name { get; set; }
 
-        public short Sstation { get; set; }
+        public short StartStation { get; set; }
 
-        public short Estation { get; set; }
+        public short EndStation { get; set; }
 
         [StringLength(150)]
         [Column(TypeName = "varchar")]

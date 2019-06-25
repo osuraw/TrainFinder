@@ -12,9 +12,13 @@ namespace pro_web_a.Models
         public byte DeviceId { get; set; }
 
         //public string LastReceive { get; set; }
-
         [Column(TypeName = "varchar(MAX)")]
         public string LocationData { get; set; }
+
+        [Column(TypeName = "varchar(MAX)")]
+        public string LocationDataTemp { get; set; }
+
+        public int Delay { get; set; }
 
         //[Column(TypeName = "varchar"),MaxLength(50)]
         //public string LastLocation { get; set; }

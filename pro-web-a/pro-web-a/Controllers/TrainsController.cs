@@ -140,11 +140,11 @@ namespace pro_web_a.Controllers
         public IHttpActionResult AddTranToWatch(LogDto data)
         {
             var logRecord = _context.Log.SingleOrDefault(l => l.TrainId == data.TrainId);
-            var nextStation = Helpers.FindNextStation(data.TrainId, data.Direction,-1);
+            var nextStation = Helpers.FindNextStation(data.TrainId, data.Direction, -1);
             int locationLogId = -2;
 
             //Add new record to LocationLog If only status is 1(active Train)  
-            if (data.Status == 1)
+            if (data.Status == "Active")
             {
                 var location = new LocationLog()
                 {
@@ -175,22 +175,23 @@ namespace pro_web_a.Controllers
                     Direction = data.Direction,
                     StartTime = DateTime.Now.TimeOfDay.ToString("g"),
                     NextStop = nextStation
-            };
+                };
                 _context.Log.Add(log);
             }
+
             _context.SaveChanges();
-            return Ok();
+            return Ok("Activated");
         }
 
-        
 
         [HttpGet]
         [Route("GetActiveTrains")]
         public IHttpActionResult GetActiveTrains()
         {
-            var active = _context.Log.Where(l => l.Status != 0).Include(l=>l.Train).ToList();
+            var active = _context.Log.Where(l => l.Status != "0").Include(l => l.Train).ToList();
             return Ok(active);
         }
+
         #endregion
     }
 }

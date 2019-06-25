@@ -12,6 +12,10 @@ namespace pro_web_a.DTOs
 
         public short StationId { get; set; }
 
+        public string TrainName { get; set; }
+
+        public string StationName { get; set; }
+
         public bool Direction { get; set; }
 
         public float ArriveTime { get; set; }

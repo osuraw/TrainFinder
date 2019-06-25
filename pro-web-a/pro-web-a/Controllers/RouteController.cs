@@ -86,7 +86,6 @@ namespace pro_web_a.Controllers
             }
         }
         
-
         [Route("Api/Route/DeleteRoute/{id}")]
         [HttpDelete]
         public HttpStatusCode DeleteRoute(short id = 0)
@@ -106,6 +105,14 @@ namespace pro_web_a.Controllers
             }
 
             return HttpStatusCode.BadRequest;
+        }
+
+
+        [HttpGet]
+        [Route("Api/Route/Test")]
+        public IHttpActionResult ConnectionTest()
+        {
+            return Ok();
         }
     }
 }

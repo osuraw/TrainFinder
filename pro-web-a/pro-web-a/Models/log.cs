@@ -25,7 +25,7 @@ namespace pro_web_a.Models
 
         public TimeSpan? Delay { get; set; }
 
-        public byte Status { get; set; }
+        public string Status { get; set; }
 
         
         [Column(TypeName = "varchar")]

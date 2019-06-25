@@ -7,7 +7,7 @@ namespace pro_web_a.Models
     using System.Data.Entity.Spatial;
 
     [Table("user")]
-    public partial class user
+    public partial class User
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

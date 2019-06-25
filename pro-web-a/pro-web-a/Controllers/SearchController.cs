@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using pro_web_a.Models;
 using pro_web_a.DTOs;
@@ -16,13 +17,6 @@ namespace pro_web_a.Controllers
     {
         private readonly ProjectDB _context = new ProjectDB();
         private static List<int> _routeIdList;
-
-        //[HttpGet]
-        //[Route("Test")]
-        //public IHttpActionResult test()
-        //{
-        //    return Ok("OK test ");
-        //}
 
         #region search trains
 
@@ -190,8 +184,8 @@ namespace pro_web_a.Controllers
                     s.SID == endStationId && s.TID == record.TID && s.Direction == flag);
                 if (matchingRecord != null)
                 {
-                    var value = Math.Round((matchingRecord.Atime - record.Dtime), 4);
-                    var duration = TimeSpan.FromHours(value);
+                    var value = Math.Round((double) (matchingRecord.Atime - record.Dtime), 5);
+                    var duration = TimeSpan.FromSeconds(value);
                     if (record.Dtime > matchingRecord.Atime)
                         duration = duration.Negate();
 
@@ -261,13 +255,14 @@ namespace pro_web_a.Controllers
             var distanceStatStation = _context.Stations.Single(s => s.SID == start).Distance;
             var distanceEndStation = _context.Stations.Single(s => s.SID == end).Distance;
 
-            var eta = (data1.Delay +TimeSpan.FromHours(Math.Round((Math.Abs(distanceNextStation - distanceStatStation) / data1.Speed), 2))).ToString();
-            var etd = (data1.Delay +TimeSpan.FromHours(Math.Round((Math.Abs(distanceEndStation - distanceStatStation) / data1.Speed), 2))).ToString();
+            TimeSpan eta = (TimeSpan) (data1.Delay +TimeSpan.FromHours(Math.Round((Math.Abs(distanceNextStation - distanceStatStation) / data1.Speed), 2)));
+            TimeSpan etd = (TimeSpan) (data1.Delay +TimeSpan.FromHours(Math.Round((Math.Abs(distanceEndStation - distanceStatStation) / data1.Speed), 2)));
+
 
             var details = new TrainDetailsDto
             {
-                ETA = eta,
-                ETD = etd,
+                ETA = eta.ToString(@"hh\:mm\:ss"),
+                ETD = etd.ToString(@"hh\:mm\:ss"),
                 Status = data1.Status.ToString(),
                 TrainName = data1.Train.Name,
                 Speed = data1.Speed.ToString("F"),
@@ -284,7 +279,7 @@ namespace pro_web_a.Controllers
         [Route("GetStations")]
         public IHttpActionResult GetStations()
         {
-            var data = _context.Stations.ToList().Select(s => new {s.Name, SID = s.SID});
+            var data = _context.Stations.ToList().Select(s => new {s.Name,s.SID});
             return Ok(data);
         }
 
