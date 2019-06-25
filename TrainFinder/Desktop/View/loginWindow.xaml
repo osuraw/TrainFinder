@@ -19,10 +19,10 @@
                         <!--Outer Border-->
                         <Border Background="Transparent" Padding="{Binding OuterMarginSizeThickness, FallbackValue=5}">
                             <Grid>
-                                <Border x:Name="Container" Background="{StaticResource BackGroundLightBrush}" CornerRadius="{Binding WindowCornerRadius,FallbackValue=10}"/>
+                                <Border x:Name="Container" Background="{StaticResource TemplateHeadingBackGroundBrush}" CornerRadius="{Binding WindowCornerRadius,FallbackValue=10}"/>
                                 <!--Main Border-->
-                                <Border  Background="{StaticResource ForeGroundLightBrush}" CornerRadius="{Binding WindowCornerRadius,FallbackValue=10}" >
-                                  <Grid>
+                                <Border  Background="{StaticResource TemplateBackGroundBrush}" CornerRadius="{Binding WindowCornerRadius,FallbackValue=10}" >
+                                    <Grid>
                                         <Grid.OpacityMask>
                                             <VisualBrush Visual="{Binding ElementName=Container}"/>
                                         </Grid.OpacityMask>
@@ -32,9 +32,9 @@
                                             <RowDefinition Height="6"></RowDefinition>
                                             <RowDefinition Height="*"></RowDefinition>
                                         </Grid.RowDefinitions>
-                                        <!--Window Header--> 
+                                        <!--Window Header-->
                                         <Border Grid.Row="0" CornerRadius="10">
-                                            <Grid Background="{StaticResource BackGroundVeryLightBrush}"  Panel.ZIndex="1">
+                                            <Grid Background="{StaticResource TemplateHeadingBackGroundBrush}"  Panel.ZIndex="1">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                                                     <ColumnDefinition Width="*"></ColumnDefinition>
@@ -96,6 +96,6 @@
 
     <Grid >
         <Frame x:Name="LoginContainer"
-               Content="{Binding CurrentPage,Converter={local:ApplicationPageValueConverter}}"></Frame>
+               Content="{Binding CurrentPage,Converter={local:ApplicationPageValueConverter}}" Grid.ColumnSpan="2" Margin="0,0,0.4,0"></Frame>
     </Grid>
 </Window>

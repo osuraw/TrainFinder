@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Fasetto.Word;
 
 namespace Desktop
 {
@@ -71,7 +72,11 @@ namespace Desktop
             Maximize = new RelayCommand(() => SystemCommands.MaximizeWindow(_loginWindow));
             Close = new RelayCommand(() => SystemCommands.CloseWindow(_loginWindow));
 
-            var reSizer =new WindowResizer(_loginWindow);
+            Task.Run(action:WebConnect.CheckConnection);
+
+            Thread.CurrentThread.Name = "Main";
+
+            var reSizer =new WindowResize(_loginWindow);
         }
 
         #region privateMethods

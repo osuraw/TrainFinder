@@ -24,7 +24,7 @@ namespace Desktop
             if (updatingFlag.GetPropertyValue())
                 return;
 
-            //set property falg
+            //set property flag
             updatingFlag.SetPropertyValue(true);
 
             try

@@ -3,7 +3,10 @@ using System.Security;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Desktop.Model;
 using Desktop.ViewModels;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Desktop
 {
@@ -38,23 +41,27 @@ namespace Desktop
 
         public async Task Login(object parameter)
         {
-            //await RunCommand(() => this.LoginIsRunning, async () =>
-            //{
-            //await Task.Delay(2000);
-            var userName = UserName;
-            var password = (parameter as IHavePassword).SecureString.UnsSecure();
-
-            var response = WebConnect.PostData("user/login", new { Uname = userName, password });
-            if (response.StatusCode == HttpStatusCode.OK)
+            await RunCommand(() => this.LoginIsRunning, async () =>
             {
-                var data = response.Content.ReadAsStringAsync();
-                var page = (parameter as LoginPage);
-                var win = Application.Current.MainWindow;
-                new Main().Show();
-                win.Close();
-            }
+                await Task.Delay(2000);
+                var userName = UserName;
+                var password = (parameter as IHavePassword).SecureString.UnsSecure();
 
-            //});
+                var response = WebConnect.PostData("user/login", new {Uname = userName, password});
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var jObject = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+                    LogInFor.Data = jObject;
+                    var win = Application.Current.MainWindow;
+                    new Main().Show();
+                    win.Close();
+                }
+                else
+                {
+                    DialogDisplayHelper.DisplayMessageBox("Check Your PassWord And Username", "Login Failed",
+                        MessageBoxButton.OK, MessageBoxImage.Question);
+                }
+            });
         }
     }
 }

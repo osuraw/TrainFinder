@@ -1,7 +1,5 @@
 ﻿using System.Security;
-using System.Windows;
 using Desktop.ViewModels;
-using Fasetto.Word;
 
 namespace Desktop
 {
