@@ -13,7 +13,7 @@ namespace pro_web_a.Models
             this.Configuration.LazyLoadingEnabled = false;
         }
 
-        public virtual DbSet<device> Devices { get; set; }
+        public virtual DbSet<Device> Devices { get; set; }
         public virtual DbSet<Route> Routes { get; set; }
         public virtual DbSet<Station> Stations { get; set; }
         public virtual DbSet<StopAt> StopAts { get; set; }
@@ -25,7 +25,7 @@ namespace pro_web_a.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<device>()
+            modelBuilder.Entity<Device>()
                 .Property(e => e.Description)
                 .IsFixedLength();
 
@@ -63,16 +63,6 @@ namespace pro_web_a.Models
             modelBuilder.Entity<Train>()
                 .Property(e => e.Description)
                 .IsFixedLength();
-
-            modelBuilder.Entity<Train>()
-                .HasMany(e => e.devices)
-                .WithRequired(e => e.train)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Train>()
-                .HasMany(e => e.stopats)
-                .WithRequired(e => e.train)
-                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<User>()
                 .Property(e => e.Name)

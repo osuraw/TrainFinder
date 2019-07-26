@@ -12,6 +12,7 @@ namespace pro_web_a.Controllers
     {
         private ProjectDB db = new ProjectDB();
         
+        //Get Pined Location in Route
         [HttpGet]
         [Route("GetPinLocation")]
         public IHttpActionResult GetPinLocation(short rid)
@@ -25,7 +26,7 @@ namespace pro_web_a.Controllers
             return Ok(pinLocation);
         }
 
-        // PUT: api/PinLocation/5
+        //PUT Update Pined Location
         [HttpPut]
         [Route("Update")]
         public IHttpActionResult PutPinLocation(short lid, PinLocation pinLocation)
@@ -61,7 +62,7 @@ namespace pro_web_a.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/PinLocation
+        //POST Add New Pin Location
         [HttpPost]
         [Route("Add")]
         public IHttpActionResult PostPinLocation(PinLocation pinLocation)
@@ -78,7 +79,7 @@ namespace pro_web_a.Controllers
             //return CreatedAtRoute("DefaultApi", new { id = pinLocation.PinId }, pinLocation);
         }
 
-        // DELETE: api/PinLocation/5
+        //DELETE Pined Location
         [HttpDelete]
         [Route("Delete")]
         public IHttpActionResult DeletePinLocation(short lid)

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
-using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using pro_web_a.Models;
 using pro_web_a.DTOs;
@@ -20,9 +20,9 @@ namespace pro_web_a.Controllers
 
         #region search trains
 
+        //Get Search Possible Train Combinations
         [HttpGet]
         [Route("SearchTrain")]
-        [Route("{startStationId:int}/{endStationId:int}")]
         public IHttpActionResult SearchTrain(int startStationId, int endStationId)
         {
             int statStationRouteId = _context.Stations.Single(s => s.SID == startStationId).RID;
@@ -84,7 +84,7 @@ namespace pro_web_a.Controllers
                 var data = new OptionDto();
                 foreach (TrainDataDto trainDataDto in list2)
                 {
-                    if (trainDataDto.StartStationDeparture >= dataDto.EndStationArrival)
+                    if (trainDataDto.StartStationDeparture1 >= dataDto.EndStationArrival1)
                     {
                         if (dataDto.TrainId == trainDataDto.TrainId)
                         {
@@ -121,31 +121,31 @@ namespace pro_web_a.Controllers
 
         private List<int> GetRoute(int srid, int erid)
         {
-            Stack<int> Start = GetStack(srid);
-            Stack<int> End = GetStack(erid);
+            Stack<int> start = GetStack(srid);
+            Stack<int> end = GetStack(erid);
             int temp = 0;
 
-            while (Start.Count > 0)
+            while (start.Count > 0)
             {
-                if (Start.Peek() == End.Peek())
+                if (start.Peek() == end.Peek())
                 {
-                    temp = Start.Peek();
-                    Start.Pop();
-                    End.Pop();
+                    temp = start.Peek();
+                    start.Pop();
+                    end.Pop();
                 }
                 else
                 {
                     if (temp != 0)
                     {
-                        End.Push(temp);
+                        end.Push(temp);
                         temp = 0;
                     }
 
-                    End.Push(Start.Pop());
+                    end.Push(start.Pop());
                 }
             }
 
-            return End.ToList();
+            return end.ToList();
         }
 
         private Stack<int> GetStack(int rid)
@@ -165,13 +165,11 @@ namespace pro_web_a.Controllers
         {
             var trainDataDto = new List<TrainDataDto>();
 
-            var flag = false; //down line
-
             //use to find direction
             var distance1 = _context.Stations.Single(s => s.SID == startStationId).Distance;
             var distance2 = _context.Stations.Single(s => s.SID == endStationId).Distance;
 
-            flag = !(distance1 > distance2);
+            var flag = !(distance1 > distance2);
 
             //list of trains stop at start station
             var selectedRecords = _context.StopAts.Include(s => s.station)
@@ -184,7 +182,7 @@ namespace pro_web_a.Controllers
                     s.SID == endStationId && s.TID == record.TID && s.Direction == flag);
                 if (matchingRecord != null)
                 {
-                    var value = Math.Round((double) (matchingRecord.Atime - record.Dtime), 5);
+                    var value = Math.Round(matchingRecord.Atime - record.Dtime, 5);
                     var duration = TimeSpan.FromSeconds(value);
                     if (record.Dtime > matchingRecord.Atime)
                         duration = duration.Negate();
@@ -197,10 +195,12 @@ namespace pro_web_a.Controllers
                         Direction = (flag ? 1 : 0).ToString(),
                         StationId = record.SID,
                         StartStationName = record.station.Name,
-                        StartStationDeparture = record.Dtime,
+                        StartStationDeparture = TimeSpan.FromSeconds(record.Dtime).ToString(),
+                        StartStationDeparture1 =record.Dtime,
                         EndStationId = matchingRecord.SID,
                         EndStationName = matchingRecord.station.Name,
-                        EndStationArrival = matchingRecord.Atime,
+                        EndStationArrival = TimeSpan.FromSeconds(matchingRecord.Atime).ToString(),
+                        EndStationArrival1 = matchingRecord.Atime,
                         Duration = duration
                     };
                     trainDataDto.Add(data);
@@ -210,42 +210,52 @@ namespace pro_web_a.Controllers
             return trainDataDto;
         }
 
-        private string SerializeData(List<TrainDataDto> options)
-        {
-            return JsonConvert.SerializeObject(options);
-        }
+        //private string SerializeData(List<TrainDataDto> options)
+        //{
+        //    return JsonConvert.SerializeObject(options);
+        //}
 
         #endregion
 
         #region Station search
 
+        //Get Station Time Table
         [Route("GetStation")]
-        [Route("{sid:int}")]
-        private IHttpActionResult GetStation(int sid)
+        public IHttpActionResult GetStation(int sid)
         {
             var station = _context.StopAts.Where(s => s.SID == sid).Include(s => s.train)
                 .Select(s => new {s.train.Name, s.Atime, s.Dtime, s.station.Address,});
 
-            return Ok();
+            return Ok(station);
         }
 
         #endregion
 
         #region TrainStatus
 
+        //Get Train Stopping Stations
         [HttpGet]
         [Route("GetTrainStopData")]
-        public IHttpActionResult
-            GetTrainStopData(int trainId, int start, int end, bool direction) //check need of parameters
+        public IHttpActionResult GetTrainStopData(int trainId, int start, int end, bool direction) //check need of parameters
         {
-            var data = _context.StopAts.Where(s => s.TID == trainId && s.Direction == direction)
+            var temp = _context.StopAts.Where(s => s.TID == trainId && s.Direction == direction)
                 .OrderBy(s => s.Atime)
-                .Select(s => new StopStationDto
-                    {StationId = (byte) s.SID, ArriveTime = s.Atime.ToString(), DepartureTime = s.Dtime.ToString()})
                 .ToList();
+            var data = new List<StopStationDto>();
+            foreach (var stopAt in temp)
+            {
+                data.Add(new StopStationDto
+                {
+                    StationId = (byte)stopAt.SID,
+                    ArriveTime = (TimeSpan.FromSeconds(stopAt.Atime)).ToString(),
+                    DepartureTime = (TimeSpan.FromSeconds(stopAt.Dtime)).ToString()
+                });
+
+            }
             return Ok(data);
         }
 
+        //Get Trains Live Data
         [HttpGet]
         [Route("GetTrainDetails")]
         public IHttpActionResult GetTrainDetails(int trainId, int start, int end, byte direction)
@@ -254,16 +264,24 @@ namespace pro_web_a.Controllers
             var distanceNextStation = _context.Stations.Single(s => s.SID == data1.NextStop).Distance;
             var distanceStatStation = _context.Stations.Single(s => s.SID == start).Distance;
             var distanceEndStation = _context.Stations.Single(s => s.SID == end).Distance;
-
-            TimeSpan eta = (TimeSpan) (data1.Delay +TimeSpan.FromHours(Math.Round((Math.Abs(distanceNextStation - distanceStatStation) / data1.Speed), 2)));
-            TimeSpan etd = (TimeSpan) (data1.Delay +TimeSpan.FromHours(Math.Round((Math.Abs(distanceEndStation - distanceStatStation) / data1.Speed), 2)));
+            data1.Speed = data1.Speed < 10 ? 10 : data1.Speed;
+            TimeSpan eta = (TimeSpan) (data1.Delay == null
+                ? TimeSpan.Zero
+                : data1.Delay +
+                  TimeSpan.FromHours(Math.Round((Math.Abs(distanceNextStation - distanceStatStation) / data1.Speed),
+                      2)));
+            TimeSpan etd = (TimeSpan) (data1.Delay == null
+                ? TimeSpan.Zero
+                : data1.Delay +
+                  TimeSpan.FromHours(Math.Round((Math.Abs(distanceEndStation - distanceStatStation) / data1.Speed),
+                      2)));
 
 
             var details = new TrainDetailsDto
             {
                 ETA = eta.ToString(@"hh\:mm\:ss"),
                 ETD = etd.ToString(@"hh\:mm\:ss"),
-                Status = data1.Status.ToString(),
+                Status = data1.Status,
                 TrainName = data1.Train.Name,
                 Speed = data1.Speed.ToString("F"),
                 Location = data1.LastLocation
@@ -275,14 +293,82 @@ namespace pro_web_a.Controllers
 
         #region StationData
 
+        //Get Stations List
         [HttpGet]
         [Route("GetStations")]
         public IHttpActionResult GetStations()
         {
-            var data = _context.Stations.ToList().Select(s => new {s.Name,s.SID});
+            var data = _context.Stations.ToList().Select(s => new {s.Name, s.SID});
             return Ok(data);
         }
 
         #endregion
+
+        #region GetTrains
+
+        [Route("Trains")]
+        public IHttpActionResult GetTrains()
+        {
+            var data = _context.Trains.ToList().Select(t => new {TID = t.TID, Name = t.Name});
+            return Ok(data);
+        }
+        #endregion
+
+        #region Report
+        //Get Reports
+        [HttpGet]
+        [Route("Reports")]
+        public IHttpActionResult Reports(int trainId, string parameter1="", string parameter2="")
+        {
+            DateTime dateTime1, dateTime2;
+            List<ReportDto1> list;
+            if (trainId != 0)
+            {
+               list = _context.Location.Where(l => l.TrainId == trainId)
+                   .Select(l=>new ReportDto1{TrainId = l.TrainId,DateTime = l.DateTime,Delay = l.Delay,MaxSpeed = l.MaxSpeed})
+                   .ToList();
+            }
+            else
+            {
+                list=_context.Location
+                    .Select(l => new ReportDto1 { TrainId = l.TrainId, DateTime = l.DateTime, Delay = l.Delay, MaxSpeed = l.MaxSpeed })
+                    .ToList();
+            }
+
+            if (!string.IsNullOrEmpty(parameter1))
+            {
+                dateTime1 = DateTime.Parse(parameter1);
+                foreach (var locationLog in list.ToList())
+                {
+                    if (DateTime.Parse(locationLog.DateTime).CompareTo(dateTime1)<0)
+                    {
+                        list.Remove(locationLog);
+                    }
+                }
+            }
+            if (!string.IsNullOrEmpty(parameter2))
+            {
+                dateTime2 = DateTime.Parse(parameter2);
+                foreach (var locationLog in list.ToList())
+                {
+                    if (DateTime.Parse(locationLog.DateTime).CompareTo(dateTime2) > 0)
+                    {
+                        list.Remove(locationLog);
+                    }
+                }
+            }
+            DataTable dataTable =new DataTable();
+            dataTable.Columns.Add("c1");
+            dataTable.Columns.Add("c2");
+            dataTable.Columns.Add("c3");
+            dataTable.Columns.Add("c4");
+            foreach (var reportDto1 in list)
+            {
+                dataTable.Rows.Add(reportDto1.TrainId,reportDto1.DateTime, reportDto1.Delay, reportDto1.MaxSpeed);
+            }
+            return Ok(dataTable);
+        }
+        #endregion
+
     }
 }

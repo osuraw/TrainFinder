@@ -160,6 +160,7 @@
     <Compile Include="Controllers\StationsController.cs" />
     <Compile Include="Controllers\TimeTablesController.cs" />
     <Compile Include="DTOs\LogDto.cs" />
+    <Compile Include="DTOs\ReportDto1.cs" />
     <Compile Include="DTOs\StopStationDto.cs" />
     <Compile Include="DTOs\StopTrainDto.cs" />
     <Compile Include="DTOs\TimeTable.cs" />
@@ -287,8 +288,24 @@
     <Compile Include="Migrations\201906251525487_AddLocationdataTempAndDelayToLocationLog.Designer.cs">
       <DependentUpon>201906251525487_AddLocationdataTempAndDelayToLocationLog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907041833207_ChangeLocationLog.cs" />
+    <Compile Include="Migrations\201907041833207_ChangeLocationLog.Designer.cs">
+      <DependentUpon>201907041833207_ChangeLocationLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907041900119_AddNumberToDevice.cs" />
+    <Compile Include="Migrations\201907041900119_AddNumberToDevice.Designer.cs">
+      <DependentUpon>201907041900119_AddNumberToDevice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907070518121_UpdateDatabase.cs" />
+    <Compile Include="Migrations\201907070518121_UpdateDatabase.Designer.cs">
+      <DependentUpon>201907070518121_UpdateDatabase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907070745063_UpdateTrainForignKeys.cs" />
+    <Compile Include="Migrations\201907070745063_UpdateTrainForignKeys.Designer.cs">
+      <DependentUpon>201907070745063_UpdateTrainForignKeys.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\device.cs" />
+    <Compile Include="Models\Device.cs" />
     <Compile Include="Models\LocationLog.cs" />
     <Compile Include="Models\Log.cs" />
     <Compile Include="Models\Pinlocation.cs" />
@@ -303,7 +320,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Properties\PublishProfiles\TrainFinder - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\TrainFinderApi - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -404,6 +421,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906251525487_AddLocationdataTempAndDelayToLocationLog.resx">
       <DependentUpon>201906251525487_AddLocationdataTempAndDelayToLocationLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907041833207_ChangeLocationLog.resx">
+      <DependentUpon>201907041833207_ChangeLocationLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907041900119_AddNumberToDevice.resx">
+      <DependentUpon>201907041900119_AddNumberToDevice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907070518121_UpdateDatabase.resx">
+      <DependentUpon>201907070518121_UpdateDatabase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907070745063_UpdateTrainForignKeys.resx">
+      <DependentUpon>201907070745063_UpdateTrainForignKeys.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

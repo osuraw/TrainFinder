@@ -8,6 +8,7 @@ using pro_web_a.Models;
 
 namespace pro_web_a.Controllers
 {
+    [RoutePrefix("Api/Route")]
     public class RouteController : ApiController
     {
         private readonly ProjectDB _context;
@@ -19,6 +20,7 @@ namespace pro_web_a.Controllers
 
         
         [HttpPost]
+        [Route("CreateRoute")]
         public HttpResponseMessage CreateRoute(Route route)
         {
             if (ModelState.IsValid)
@@ -45,25 +47,22 @@ namespace pro_web_a.Controllers
                 };
                 return res;
             }
-            else
-            {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest);
-            }
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
         }
 
         [HttpPut]
+        [Route("UpdateRoute")]
         public IHttpActionResult UpdateRoute(Route route)
         {
             if (ModelState.IsValid)
             {
-                var routeTtemp = _context.Routes.Single(r => r.RID == route.RID);
-                routeTtemp.Distance = route.Distance;
-                routeTtemp.Name = route.Name;
-                routeTtemp.Sstation = route.Sstation;
-                routeTtemp.Estation = route.Estation;
-                routeTtemp.Description = route.Description;
+                var routeTemp = _context.Routes.Single(r => r.RID == route.RID);
+                routeTemp.Distance = route.Distance;
+                routeTemp.Name = route.Name;
+                routeTemp.Sstation = route.Sstation;
+                routeTemp.Estation = route.Estation;
+                routeTemp.Description = route.Description;
                 _context.SaveChanges();
-
                 return Ok();
             }
 
@@ -71,13 +70,12 @@ namespace pro_web_a.Controllers
         }
 
         [HttpGet]
+        [Route("GetRouteList")]
         public IHttpActionResult GetRoute()
         {
             try
             {
-                var re = _context.Routes.ToList();
-                var data = JsonConvert.SerializeObject(re);
-                return Ok(re);
+                return Ok(_context.Routes.ToList());
             }
             catch (Exception e)
             {
@@ -86,33 +84,33 @@ namespace pro_web_a.Controllers
             }
         }
         
-        [Route("Api/Route/DeleteRoute/{id}")]
-        [HttpDelete]
-        public HttpStatusCode DeleteRoute(short id = 0)
-        {
-            if (id != 0)
-            {
-                Route route = _context.Routes.Find(id);
-                if (route == null)
-                {
-                    return HttpStatusCode.Conflict;
-                }
-
-                _context.Routes.Remove(route);
-                _context.SaveChanges();
-
-                return HttpStatusCode.OK;
-            }
-
-            return HttpStatusCode.BadRequest;
-        }
-
-
         [HttpGet]
-        [Route("Api/Route/Test")]
+        [Route("Test")]
         public IHttpActionResult ConnectionTest()
         {
             return Ok();
         }
     }
 }
+
+
+//[Route("Api/Route/DeleteRoute/{id}")]
+//[HttpDelete]
+//public HttpStatusCode DeleteRoute(short id = 0)
+//{
+//if (id != 0)
+//{
+//Route route = _context.Routes.Find(id);
+//    if (route == null)
+//{
+//    return HttpStatusCode.Conflict;
+//}
+
+//_context.Routes.Remove(route);
+//_context.SaveChanges();
+
+//return HttpStatusCode.OK;
+//}
+
+//return HttpStatusCode.BadRequest;
+//}

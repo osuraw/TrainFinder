@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using pro_web_a.DTOs;
 using pro_web_a.Models;
+using WebGrease.Css.Extensions;
 
 namespace pro_web_a.Controllers
 {
@@ -17,40 +18,36 @@ namespace pro_web_a.Controllers
 
         #region Train
 
-        // GET: api/Train
+        //Get List Of All Train
         public IQueryable<Train> GetTrains()
         {
             return _context.Trains;
         }
 
-        // GET: api/Train/5
+        //Get Train by Train Id
         [ResponseType(typeof(Train))]
         public IHttpActionResult GetTrain(short id)
         {
             Train train = _context.Trains.Find(id);
-            if (train == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(train);
+            if (train != null)
+                return Ok(train);
+            return NotFound();
+            
         }
 
+        //Get List of Train By Router Id
         [HttpGet]
         [Route("GetTrainInRoute/{id}")]
         [ResponseType(typeof(Train))]
         public IHttpActionResult GetTrainInRoute(short id = 0)
         {
-            var station = _context.Trains.Where(t => t.RID.Equals(id));
-            if (!station.Any())
-            {
+            var trains = _context.Trains.Where(t => t.RID.Equals(id)).ToList();
+            if (trains.Count==0)
                 return NotFound();
-            }
-
-            return Ok(station);
+            return Ok(trains);
         }
 
-        // PUT: api/Train/5
+        //PUT Update Train
         [HttpPut]
         [ResponseType(typeof(void))]
         public IHttpActionResult UpdateTrain(short id, Train train)
@@ -86,7 +83,7 @@ namespace pro_web_a.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Train
+        //POST Add Train
         [ResponseType(typeof(Train))]
         public IHttpActionResult AddTrain(Train train)
         {
@@ -98,22 +95,6 @@ namespace pro_web_a.Controllers
             _context.Trains.Add(train);
             _context.SaveChanges();
             return CreatedAtRoute("DefaultApi", new {id = train.TID}, train);
-        }
-
-        // DELETE: api/Train/5
-        [ResponseType(typeof(Train))]
-        public IHttpActionResult DeleteTrain(short id)
-        {
-            Train train = _context.Trains.Find(id);
-            if (train == null)
-            {
-                return NotFound();
-            }
-
-            _context.Trains.Remove(train);
-            _context.SaveChanges();
-
-            return Ok(train);
         }
 
         protected override void Dispose(bool disposing)
@@ -135,22 +116,24 @@ namespace pro_web_a.Controllers
 
         #region TrainControl
 
+        //Get Activate Given Train
         [HttpPut]
         [Route("AddTranToWatch")]
         public IHttpActionResult AddTranToWatch(LogDto data)
         {
             var logRecord = _context.Log.SingleOrDefault(l => l.TrainId == data.TrainId);
             var nextStation = Helpers.FindNextStation(data.TrainId, data.Direction, -1);
+            if (nextStation == -5)
+                return BadRequest();
             int locationLogId = -2;
 
             //Add new record to LocationLog If only status is 1(active Train)  
-            if (data.Status == "Active")
+            if (data.Status != "Active")
+                return Conflict();
             {
-                var location = new LocationLog()
-                {
-                    DeviceId = data.DeviceId
-                };
-                _context.Location.Add(location);
+                var location = _context.Location.Create();
+                location.TrainId = data.TrainId;
+                location.DateTime = DateTime.Now.ToShortDateString();
                 _context.SaveChanges();
                 locationLogId = location.LocationLogId;
             }
@@ -161,7 +144,7 @@ namespace pro_web_a.Controllers
                 logRecord.Status = data.Status;
                 logRecord.LogId = locationLogId;
                 logRecord.Direction = data.Direction;
-                logRecord.StartTime = DateTime.Now.TimeOfDay.ToString("g");
+                logRecord.StartTime = DateTime.Now.TimeOfDay.ToString(@"hh\:mm");
                 logRecord.NextStop = nextStation;
             }
             else
@@ -169,12 +152,14 @@ namespace pro_web_a.Controllers
                 var log = new Log
                 {
                     TrainId = data.TrainId,
-                    DeviceId = data.DeviceId,
+                    DeviceId = _context.Devices.First(d=>d.TID==data.TrainId).DID,
+                    Delay = TimeSpan.Zero,
                     Status = data.Status,
                     LogId = locationLogId,
                     Direction = data.Direction,
-                    StartTime = DateTime.Now.TimeOfDay.ToString("g"),
-                    NextStop = nextStation
+                    StartTime = DateTime.Now.TimeOfDay.ToString(@"hh\:mm"),
+                    NextStop = nextStation,
+                    LastReceive = TimeSpan.Zero.ToString(@"hh\:mm"),
                 };
                 _context.Log.Add(log);
             }
@@ -183,15 +168,41 @@ namespace pro_web_a.Controllers
             return Ok("Activated");
         }
 
-
+        //Get Currently Activate Train List
         [HttpGet]
         [Route("GetActiveTrains")]
         public IHttpActionResult GetActiveTrains()
         {
-            var active = _context.Log.Where(l => l.Status != "0").Include(l => l.Train).ToList();
-            return Ok(active);
+            var active = _context.Log.Where(l => l.Status != "Canceled").Include(l => l.Train).ToList();
+            return Ok(active.Select(ac=>new {ac.Train.Name, ac.TrainId,ac.DeviceId,ac.StartTime,ac.MaxSpeed,ac.Speed,ac.Delay,ac.Status,ac.LastLocation,NextStop= _context.Stations.First(s => s.SID == ac.NextStop).Name }));
+        }
+
+        //Get Inactive Train List
+        [HttpGet]
+        [Route("InactiveTrains")]
+        public IHttpActionResult InactiveTrains()
+        {
+            var active = _context.Log.Where(l => l.Status != "Canceled").Select(l=>l.TrainId).ToList();
+            var trains = _context.Trains.Where(t => !active.Contains(t.TID)).Select(t=>new {t.TID,t.Name,t.StartStation,t.EndStation}).ToList();
+            return Ok(trains);
         }
 
         #endregion
     }
 }
+
+//// DELETE: api/Train/5
+//[ResponseType(typeof(Train))]
+//public IHttpActionResult DeleteTrain(short id)
+//{
+//Train train = _context.Trains.Find(id);
+//    if (train == null)
+//{
+//    return NotFound();
+//}
+
+//_context.Trains.Remove(train);
+//_context.SaveChanges();
+
+//return Ok(train);
+//}

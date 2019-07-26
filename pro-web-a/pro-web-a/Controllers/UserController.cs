@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
-using System.Data.SqlClient;
+﻿using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Microsoft.Ajax.Utilities;
 using pro_web_a.Models;
 
 namespace pro_web_a.Controllers
 {
     public class UserController : ApiController
     {
-        private ProjectDB _context;
+        private readonly ProjectDB _context;
 
         public UserController()
         {
             _context = new ProjectDB();
         }
 
+        //User Login Check
         [HttpPost]
         public IHttpActionResult Login(User user)
         {
@@ -29,12 +27,7 @@ namespace pro_web_a.Controllers
             return NotFound();
         }
 
-
-        /// <summary>
-        /// Create or Update User
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
+        //Create User
         [HttpPost]
         [Route("api/User/Create")]
         public HttpResponseMessage Create(User user)
@@ -50,8 +43,9 @@ namespace pro_web_a.Controllers
                     _context.SaveChanges();
                     return new HttpResponseMessage(HttpStatusCode.Created);
                 }
-                catch (DbUpdateException)
+                catch (DbUpdateException e)
                 {
+                    Debug.WriteLine(e.Message);
                     return new HttpResponseMessage(HttpStatusCode.Conflict);
                 }
             }

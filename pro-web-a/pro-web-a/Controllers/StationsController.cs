@@ -9,46 +9,35 @@ using pro_web_a.Models;
 
 namespace pro_web_a.Controllers
 {
+    [RoutePrefix("api/Stations")]
     public class StationsController : ApiController
     {
         private readonly ProjectDB _context = new ProjectDB();
 
-        // GET: api/Stations
-        public IQueryable<Station> Getstations()
+        // Get All Stations
+        public IHttpActionResult GetStations()
         {
-            return _context.Stations;
-        }
-
-        [Route("api/Stations/GetStation/{id}")]
-        [ResponseType(typeof(Station))]
-        public IHttpActionResult GetStation(short id)
-        {
-            var station = _context.Stations.Where(s => s.RID.Equals(id)).ToList();
+            var station = _context.Stations.Select(s => new { s.Name, s.SID ,s.RID}).ToList();
             if (station.Count == 0)
-            {
                 return NotFound();
-            }
-
             return Ok(station);
+            //return _context.Stations;
         }
 
         [HttpGet]
-        [Route("api/Stations/GetStationInRoute/{id}")]
+        [Route("GetStationInRoute/{id}")]
         [ResponseType(typeof(Station))]
         public IHttpActionResult GetStationInRoute(short id=0)
         {
-            var station = _context.Stations.Where(s => s.RID.Equals(id)).Select(s=>new {s.Name,s.SID}).ToList();
+            var station = _context.Stations.Where(s => s.RID.Equals(id)).ToList();
             if (station.Count==0)
-            {
                 return NotFound();
-            }
-
             return Ok(station);
         }
 
-        // PUT: api/Stations/5
+        //Put Update Station
         [ResponseType(typeof(void))]
-        public IHttpActionResult Putstation(short id, Station station)
+        public IHttpActionResult PutStation(short id, Station station)
         {
             if (!ModelState.IsValid)
             {
@@ -81,7 +70,7 @@ namespace pro_web_a.Controllers
             return StatusCode(HttpStatusCode.Created);
         }
 
-        // POST: api/Stations
+        //Post Add Station
         [ResponseType(typeof(Station))]
         public HttpResponseMessage AddStation(Station station)
         {
@@ -100,22 +89,6 @@ namespace pro_web_a.Controllers
             return res;
         }
 
-        // DELETE: api/Stations/5
-        [ResponseType(typeof(Station))]
-        public HttpStatusCode DeleteStation(short id)
-        {
-            Station station = _context.Stations.Find(id);
-            if (station == null)
-            {
-                return HttpStatusCode.Conflict;
-            }
-
-            _context.Stations.Remove(station);
-            _context.SaveChanges();
-
-            return HttpStatusCode.OK;
-        }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -131,3 +104,42 @@ namespace pro_web_a.Controllers
         }
     }
 }
+
+////Get Station by Route Id
+//[Route("GetStation/{id}")]
+//[ResponseType(typeof(Station))]
+//public IHttpActionResult GetStation(short id)
+//{
+//    var station = _context.Stations.Where(s => s.RID.Equals(id)).ToList();
+//    if (station.Count == 0)
+//        return NotFound();
+//    return Ok(station);
+//}
+
+////DELETE Station-Not Use
+//[ResponseType(typeof(Station))]
+//public HttpStatusCode DeleteStation(short id)
+//{
+//Station station = _context.Stations.Find(id);
+//    if (station == null)
+//{
+//    return HttpStatusCode.Conflict;
+//}
+
+//_context.Stations.Remove(station);
+//_context.SaveChanges();
+
+//return HttpStatusCode.OK;
+//}
+
+//Get Stations By Router Id
+//[HttpGet]
+//[Route("GetStationInRoute/{id}")]
+//[ResponseType(typeof(Station))]
+//public IHttpActionResult GetStationInRoute(short id=0)
+//{
+//    var station = _context.Stations.Where(s => s.RID.Equals(id)).Select(s=>new {s.Name,s.SID}).ToList();
+//    if (station.Count==0)
+//        return NotFound();
+//    return Ok(station);
+//}

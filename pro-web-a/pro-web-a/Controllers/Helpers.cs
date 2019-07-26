@@ -6,20 +6,14 @@ namespace pro_web_a.Controllers
 {
     public static class Helpers
     {
-        private static readonly ProjectDB _context = new ProjectDB();
+        private static readonly ProjectDB Context = new ProjectDB();
 
-        /// <summary>
-        /// Find next station in route
-        /// </summary>
-        /// <param name="trainId"></param>
-        /// <param name="direction">true : up-word false : down-word </param>
-        /// <param name="currentStation"></param>
-        /// <returns></returns>
         public static int FindNextStation(short trainId, bool direction, int currentStation = 0)
         {
-            
-            var data = _context.StopAts.Where(s => s.TID == trainId && s.Direction == direction).Include(s => s.station)
+            var data = Context.StopAts.Where(s => s.TID == trainId && s.Direction == direction).Include(s => s.station)
                 .OrderBy(s => s.station.Distance).Select(s => s.station).ToList();
+            if (data.Count == 0)
+                return -5;
             if (!direction)
             {
                 data.Reverse();
@@ -30,7 +24,7 @@ namespace pro_web_a.Controllers
             }
 
             var nextIndex = data.FindIndex(d => d.SID == currentStation) + 1;
-            return data.Count >= nextIndex ? data[nextIndex].SID : -1;
+            return data.Count > nextIndex ? data[nextIndex].SID : -1;
         }
     }
 }

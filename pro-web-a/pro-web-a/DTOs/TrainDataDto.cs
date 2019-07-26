@@ -10,10 +10,12 @@ namespace pro_web_a.DTOs
         public string Direction;
         public int StationId;
         public string StartStationName;
-        public float StartStationDeparture;
+        public string StartStationDeparture;
+        public float StartStationDeparture1;
         public int EndStationId;
         public string EndStationName;
-        public float EndStationArrival;
+        public string EndStationArrival;
+        public float EndStationArrival1;
         public TimeSpan Duration;
     }
 

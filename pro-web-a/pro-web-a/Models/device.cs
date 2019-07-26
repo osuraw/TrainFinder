@@ -1,13 +1,10 @@
 namespace pro_web_a.Models
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     [Table("device")]
-    public  class device
+    public  class Device
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -19,6 +16,8 @@ namespace pro_web_a.Models
         [StringLength(100)]
         [Column(TypeName = "varchar")]
         public string Description { get; set; }
+
+        public int Number { get; set; }
 
         public Train train { get; set; }
     }

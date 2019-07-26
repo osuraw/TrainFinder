@@ -15,10 +15,9 @@ namespace pro_web_a.Controllers
     {
         private readonly ProjectDB _dbContext = new ProjectDB();
 
+        //GET Get Time Table By Station Or Train
         [HttpGet]
         [Route("GetTimeTableByTypeId")]
-        [Route("{type}&{id}")]
-        // GET: api/TimeTables/GetTimeTableByTypeId?type=<1-station/2-train>&id=<1>
         [ResponseType(typeof(StopAt))]
         public IHttpActionResult GetTimeTableByTypeId(byte type, int id)
         {
@@ -56,9 +55,9 @@ namespace pro_web_a.Controllers
             return Ok(data);
         }
 
-        // PUT: api/TimeTables/sid=/tid=
+        //PUT Update Time Table
         [ResponseType(typeof(void))]
-        public IHttpActionResult Putstopat(short sid, short tid, StopAt stopAt)
+        public IHttpActionResult PutStopAt(short sid, short tid, StopAt stopAt)
         {
             if (!ModelState.IsValid)
             {
@@ -91,8 +90,9 @@ namespace pro_web_a.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+        //Post Add Recode to Time Table
         [ResponseType(typeof(StopAt))]
-        public IHttpActionResult Poststopat(StopAt stopAt)
+        public IHttpActionResult PostStopAt(StopAt stopAt)
         {
             if (!ModelState.IsValid)
             {
