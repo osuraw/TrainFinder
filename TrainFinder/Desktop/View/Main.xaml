@@ -19,8 +19,14 @@
         <viewModels:MainVm />
     </Window.DataContext>
     <Window.Resources>
-        <DataTemplate DataType="{x:Type viewModels:TrainVM}">
-            <local:TrainUC />
+        <DataTemplate DataType="{x:Type viewModels:ControlVm}">
+            <local:ControlUc/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:ReportVm}">
+            <local:ReportUc/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:TrainVm}">
+            <local:TrainUc />
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:StationVm}">
             <local:StationUC />
@@ -29,17 +35,14 @@
             <local:RouteUC />
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:TimeTableVm}">
-            <local:TimeTableUC />
+            <local:TimeTableUc />
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:PinLocationVm}">
-            <local:PinLocationUC />
+            <local:PinLocationUc />
         </DataTemplate>
-        <!--<DataTemplate DataType="{x:Type viewModels:UserVm}">
-            <local:StationUC/>
+        <DataTemplate DataType="{x:Type viewModels:UserVm}">
+            <local:UserUc/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type viewModels:PinLocationVm}">
-            <local:PinLocationUC/>
-        </DataTemplate>-->
     </Window.Resources>
 
     <Grid>
@@ -53,33 +56,32 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" Grid.Row="1" Background="{StaticResource BackGroundVeryLightBrush}">
             <StackPanel VerticalAlignment="Top">
-                <Button Command="{Binding NavigationCommand}" CommandParameter="Home" Content="HOME" />
+                <Button Command="{Binding NavigationCommand}" CommandParameter="Control" Content="Control"/>
                 <Button Command="{Binding NavigationCommand}" CommandParameter="Train" Content="TRAIN" />
                 <Button Command="{Binding NavigationCommand}" CommandParameter="Station" Content="STATION" />
                 <Button Command="{Binding NavigationCommand}" CommandParameter="Route" Content="ROUTE" />
                 <Button Command="{Binding NavigationCommand}" CommandParameter="TimeTable" Content="TIME TABLE" />
-                <Button Command="{Binding NavigationCommand}" CommandParameter="PinLocation" Content=" PIN  LOCATION" />
-                <Button Command="{Binding NavigationCommand}" CommandParameter="Control" Content="Control" />
-
+                <Button Command="{Binding NavigationCommand}" CommandParameter="PinLocation" Content=" PIN  LOCATION"/>
+                <Button Command="{Binding NavigationCommand}" CommandParameter="Report" Content="REPORT"/>
             </StackPanel>
             <StackPanel VerticalAlignment="Bottom">
-                <Button Command="{Binding NavigationCommand}" CommandParameter="User" Content="Create User" />
-                <Button Command="{Binding NavigationCommand}" CommandParameter="Logout" Content="Logout" />
+                <Button Command="{Binding NavigationCommand}" CommandParameter="User" Content="Create User"/>
+                <Button Command="{Binding NavigationCommand}" CommandParameter="Logout" Content="Logout"/>
             </StackPanel>
         </Grid>
         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0"
                     Background="{StaticResource BackGroundLightBrush}"
                     VerticalAlignment="Stretch">
-            <Label Content="Name:" />
-            <Label Content="*******" />
-            <Label Content="Date:" />
-            <Label Content="*******" />
-            <Label Content="Time:" />
-            <Label Content="*******" />
-            <Label Content="Log Time:" />
-            <Label Content="*******" />
+            <Label Content="Name:"/>
+            <Label Content="{Binding Name}"/>
+            <Label Content="Date:"/>
+            <Label Content="{Binding Date}"/>
+            <Label Content="Time:"/>
+            <Label Content="{Binding Time}"/>
+            <Label Content="Log Time:"/>
+            <Label Content="{Binding LogTime}"/>
         </StackPanel>
-        <ContentControl Opacity="{Binding Opacity}" Grid.Row="1" Grid.Column="1" Content="{Binding ViewContent}" />
+        <ContentControl Opacity="{Binding Opacity}" Grid.Row="1" Grid.Column="1" Content="{Binding ViewContent}"/>
     </Grid>
 
 </Window>

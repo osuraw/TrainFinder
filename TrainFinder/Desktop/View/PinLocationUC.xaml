@@ -45,7 +45,7 @@
                                 <DataGridTextColumn Header="Location" Binding="{Binding Location}" />
                                 <DataGridTextColumn Header="Type" Binding="{Binding Type,IsAsync=True}" />
                                 <DataGridTextColumn Header="Message" Binding="{Binding Message}" />
-                                <DataGridTextColumn Width="*" Header="Description" Binding="{Binding Description}" />
+                                <DataGridTextColumn Width="*" Header="Description" Binding="{Binding Description}"/>
                             </DataGrid.Columns>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">

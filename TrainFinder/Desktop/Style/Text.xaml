@@ -17,6 +17,7 @@
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="Margin" Value="0,4" />
     </Style>
+
     <!--passwordBox-->
     <Style TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource BaseStyle}">
 

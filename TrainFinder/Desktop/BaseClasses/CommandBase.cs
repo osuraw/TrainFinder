@@ -8,8 +8,6 @@ namespace Desktop
     {
         #region privateFeilds
 
-        private readonly Func<bool> _func;
-        private readonly Func<int, bool> _funcParameter1;
         private readonly Action _action;
         private readonly Action<object> _actionParamete1;
         private readonly Func<bool> _canExecute;
@@ -28,19 +26,7 @@ namespace Desktop
             this._canExecute = canExecute;
             this._actionParamete1 = action;
         }
-
-        public CommandBase(Func<bool> func, Func<bool> canExecute)
-        {
-            this._canExecute = canExecute;
-            this._func = func;
-        }
-
-        public CommandBase(Func<int, bool> funcParameter1, Func<bool> canExecute)
-        {
-            this._canExecute = canExecute;
-            this._funcParameter1 = funcParameter1;
-        }
-
+        
         #endregion
 
         #region ICommand
@@ -52,10 +38,7 @@ namespace Desktop
 
         public void Execute(object parameter)
         {
-            _func?.Invoke();
             _action?.Invoke();
-
-            _funcParameter1?.Invoke((int) parameter);
             _actionParamete1?.Invoke(parameter);
         }
 

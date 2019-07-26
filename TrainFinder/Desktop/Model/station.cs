@@ -31,7 +31,7 @@ namespace Desktop.Model
 
         private static async Task GetStationBy(int id)
         {
-            var tempData =await WebConnect.GetData("Stations/Getstation/" + id);
+            var tempData =await WebConnect.GetData("Stations/GetStationInRoute/" + id);
             var results = JsonConvert.DeserializeObject<IEnumerable<Station>>(tempData);
             var stations = new ObservableCollection<Station> { new Station() { Name = "Select Station" } };
             foreach (var result in results)

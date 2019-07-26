@@ -10,5 +10,6 @@ namespace Desktop.ViewModels
     public interface IHavePassword
     {
         SecureString SecureString { get; }
+        SecureString SecureString1 { get; } 
     }
 }

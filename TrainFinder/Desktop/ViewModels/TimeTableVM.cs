@@ -232,13 +232,27 @@ namespace Desktop.ViewModels
                 SID = StationId,
                 Atime = ATime1.ToTime(),
                 Dtime = DTime1.ToTime(),
-                Direction = true
+                Direction = Direction
             };
 
             var response = WebConnect.PostData("TimeTables", data);
             if (response.StatusCode == HttpStatusCode.Created)
             {
                 DialogDisplayHelper.DisplayMessageBox("Action Completed", "Informative");
+                if(data.TID==ListDataIndex||data.SID==ListDataIndex)
+                {
+                   TimeTable.Add(
+                        new Stops
+                        {
+                            StationName = Stations.First(s => s.SID == StationId).Name,
+                            TrainName = Trains.First(t=>t.TID==TrainId).Name,
+                            ArriveTime = ATime1.RemovedDate(),
+                            DepartureTime = DTime1.RemovedDate(),
+                            Direction = data.Direction,
+                            TrainId = data.TID,
+                            StationId = data.SID
+                        });
+                }
                 UpdateViewsProperties();
                 return;
             }
@@ -254,7 +268,7 @@ namespace Desktop.ViewModels
                 SID = StationId,
                 Atime = ATime1.ToTime(),
                 Dtime = DTime1.ToTime(),
-                Direction = true
+                Direction = Direction
             };
             HttpResponseMessage response = WebConnect.UpdateDate($"TimeTables?sid={StationId}&tid={TrainId}", data);
             if (response.StatusCode == HttpStatusCode.NoContent)

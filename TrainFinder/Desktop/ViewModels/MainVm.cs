@@ -1,5 +1,10 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
+using Desktop.Helpers;
+using Desktop.Model;
 
 namespace Desktop.ViewModels
 {
@@ -28,7 +33,17 @@ namespace Desktop.ViewModels
 
         public MainVm()
         {
+            ViewContent = new ControlVm();
             NavigationCommand = new CommandBase(action: Navigation, canExecute: CheckValid);
+            Name = LogInFor.User.Name;
+            Date = DateTime.Today.ToString("D");
+            LogTime = DateTime.Now.TimeOfDay.ToString("hh\\:mm\\:ss");
+            new DispatcherTimer(TimeSpan.FromSeconds(1),DispatcherPriority.Normal,
+                delegate 
+                {
+                    Time = DateTime.Now.TimeOfDay.ToString("hh\\:mm\\:ss");
+                    OnPropertyChanged(nameof(Time));
+                },Dispatcher.CurrentDispatcher);
         }
 
         
@@ -39,18 +54,14 @@ namespace Desktop.ViewModels
                 Opacity = i;
                 Thread.Sleep(50);
             }
-            switch (window as string)
+
+            if ("Logout".Equals(window.ToString()))
             {
-                case "Home": break;
-                case "Route":ViewContent=new RouteVm();break;
-                case "Train": ViewContent = new TrainVM(); break;
-                case "Station":ViewContent=new StationVm(); break;
-                case "PinLocation": break;
-                case "TimeTable":ViewContent=new TimeTableVm(); break;
-                case "User": break;
-                case "Logout":break;
-                default:break;
+                LoginWindow window1 =new LoginWindow();
+                window1.Show();
+                Application.Current.MainWindow.Close();
             }
+            ViewContent = ViewFactory.GetView(window as string);
             for (double i = 0; i < 1.1; i += 0.1)
             {
                 Opacity = i;

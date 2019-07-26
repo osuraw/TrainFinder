@@ -50,7 +50,6 @@
                             <Label Content="Location" />
                             <Label Content="Distance" />
                             <Label Content="Telephone" />
-                            <!--<Label Content="Address" />-->
                         </StackPanel>
 
                         <StackPanel Grid.Column="1">
@@ -60,7 +59,7 @@
                                       Validation.Error="Validation_Error"
                                       Validation.ErrorTemplate="{StaticResource TextBoxErrorTemplate}"
                                       DisplayMemberPath="Name"
-                                      SelectedValue="{Binding RouteId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedIndex="{Binding RouteId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       SelectedValuePath="RID" Margin="10,10,9.6,10" />
                             <TextBox Text="{Binding Name, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                                      Validation.Error="Validation_Error"
@@ -74,7 +73,6 @@
                             <TextBox Text="{Binding Telephone, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                                      Validation.Error="Validation_Error"
                                      Validation.ErrorTemplate="{StaticResource TextBoxErrorTemplate}" />
-                            <!--<TextBox Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />-->
                             <TextBlock Text="{Binding StationId, UpdateSourceTrigger=PropertyChanged}"
                                        Visibility="Hidden" IsHitTestVisible="False" />
                         </StackPanel>

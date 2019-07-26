@@ -51,6 +51,7 @@ namespace Desktop.ViewModels
             set
             {
                 _startStationId = value;
+                if(_startStationId>0)
                 CheckStation();
             }
         }
@@ -62,9 +63,8 @@ namespace Desktop.ViewModels
             set
             {
                 _endStationId = value;
+                if(_endStationId>0)
                 CheckStation();
-
-
             }
         }
 
@@ -197,7 +197,7 @@ namespace Desktop.ViewModels
 
         private bool CheckStation()
         {
-            if(EndStationId==StartStationId&&StartStationId!=0&&EndStationId!=0)
+            if(EndStationId==StartStationId)
             {
                 DialogDisplayHelper.DisplayMessageBox("Both Start And End Stations Are Same", "Informative",
                     boxIcon: MessageBoxImage.Hand);
@@ -293,21 +293,20 @@ namespace Desktop.ViewModels
 
         private void OnDataGridSelectionChange(object station)
         {
-           // var dd = new Dispatcher
             if (station != null)
             {
                 var data = (Train) station;
                 RouteId = data.RID;
                 TrainId = data.TID;
                 Name = data.Name;
-
                 StartStationId = Stations1.First(s => s.Name == data.StartStation).SID;
                 EndStationId = Stations1.First(s => s.Name == data.EndStation).SID;
-
                 Description = data.Description;
+                OnPropertyChanged(nameof(RouteId));
+                OnPropertyChanged(nameof(StartStationId));
+                OnPropertyChanged(nameof(EndStationId));
                 return;
             }
-
             UpdateViewsProperties();
         }
 

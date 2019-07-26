@@ -76,8 +76,8 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <RadioButton x:Name="High" Grid.Column="0" GroupName="type" Command="{Binding SelectDirectionCommand}" CommandParameter="1" IsChecked="{Binding Checked1}" Content="Up"  IsEnabled="{Binding IsEnable}"/>
-                                <RadioButton x:Name="Low"  Grid.Column="1" GroupName="type" Command="{Binding SelectDirectionCommand}" CommandParameter="0" IsChecked="{Binding Checked2}" Content="Down" IsEnabled="{Binding IsEnable}" />
+                                <RadioButton x:Name="High" ToolTip="Towards Fort" Grid.Column="0" GroupName="type" Command="{Binding SelectDirectionCommand}" CommandParameter="1" IsChecked="{Binding Checked1}" Content="Up"  IsEnabled="{Binding IsEnable}"/>
+                                <RadioButton x:Name="Low"  ToolTip="From Fort" Grid.Column="1" GroupName="type" Command="{Binding SelectDirectionCommand}" CommandParameter="0" IsChecked="{Binding Checked2}" Content="Down" IsEnabled="{Binding IsEnable}" />
                             </Grid>
                             <Grid Margin="5,10">
                                 <Grid.ColumnDefinitions>

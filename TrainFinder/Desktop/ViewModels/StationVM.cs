@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -13,7 +14,7 @@ namespace Desktop.ViewModels
 {
     class StationVm : BaseViewModelMain
     {
-        private short _routeIdSelectCmb1 = 0;
+        private short _routeIdSelectCmb1;
         private bool _routeReadOnly=true;
 
 
@@ -240,7 +241,7 @@ namespace Desktop.ViewModels
                 {
                     RID = RouteId,
                     Name = Name,
-                    Distance = float.Parse(Distance),
+                    Distance = Math.Round(float.Parse(Distance),3),
                     Address = Address,
                     Telephone = Telephone,
                     SID = StationId,

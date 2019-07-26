@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
@@ -11,10 +12,9 @@ namespace Desktop
 {
     class WebConnect
     {
-        //connection safty required
-
-        private const string Url = "https://trainfinder.azurewebsites.net/Api/";
+        //private const string Url = "https://trainfinderapi.azurewebsites.net/Api/";
         //private const string Url = "http://localhost:11835/Api/";
+        private static readonly string Url = ConfigurationManager.AppSettings["WebUri"];
 
         public static async Task<string> GetData(string rout)
         {

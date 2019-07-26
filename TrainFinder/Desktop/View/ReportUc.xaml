@@ -1,0 +1,57 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModles="clr-namespace:Desktop.ViewModels"
+             xmlns:Viewer="clr-namespace:SAPBusinessObjects.WPF.Viewer;assembly=SAPBusinessObjects.WPF.Viewer"
+             x:Class="Desktop.ReportUc"
+             mc:Ignorable="d" 
+             d:DesignHeight="765" d:DesignWidth="1385"
+             FontSize="24">
+
+    <UserControl.DataContext>
+        <viewModles:ReportVm x:Name="ReportVm"/>
+    </UserControl.DataContext>
+    <Border>
+        <Grid >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="5*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="150"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" FontSize="40" TextAlignment="Center"><Run Text="Generate Report"/></TextBlock>
+                <StackPanel Grid.Column="0" Grid.Row="1" >
+                    <Label Margin="10,40,10.4,40" Content="Train Select"/>
+                    <Label Margin="10 40" Content="From Date"/>
+                    <Label Margin="10 40" Content="To Date"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Grid.Row="1">
+                    <ComboBox x:Name="cmbTrain" Margin="10 40" IsEditable="False" IsReadOnly="True"
+                              ItemsSource="{Binding Trains}" DisplayMemberPath="Name"
+                              SelectedValue="{Binding TrainId, Mode=TwoWay}"
+                              SelectedValuePath="TID" />
+                    <DatePicker x:Name="Date1" Margin="10 40" FirstDayOfWeek="Monday" SelectedDate="{Binding Parameter1}"/>
+                    <DatePicker x:Name="Date2" Margin="10 40" FirstDayOfWeek="Monday" SelectedDate="{Binding Parameter2}"/>
+                </StackPanel>
+                <Button Click="ButtonBase_OnClick" FontSize="25" Grid.Column="1" Grid.Row="2" Margin="5 35" Command="{Binding GenerateCommand}" Content="Generate"/>
+                <Button FontSize="25" Grid.Column="0" Grid.Row="2" Margin="5 35" Command="{Binding ResetCommand}" Content="Clear"/>
+            </Grid>
+            <Border Grid.Column="1" Margin="10" BorderThickness="2" BorderBrush="Black">
+                <Grid>
+                    <Viewer:CrystalReportsViewer HorizontalAlignment="Left" x:Name="ReportsViewer" Height="741" VerticalAlignment="Top" Width="965" Margin="0"/>
+                </Grid>
+            </Border>
+
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,0 +1,142 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:core="clr-namespace:System;assembly=mscorlib"
+             xmlns:viewModels="clr-namespace:Desktop.ViewModels"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:desktop="clr-namespace:Desktop"
+             x:Class="Desktop.ControlUc"
+             mc:Ignorable="d"
+             FontSize="20"
+             d:DesignHeight="765" d:DesignWidth="1385">
+
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="ActionEnumList" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="desktop:ActionsEnum"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="DirectionEnumList" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="desktop:DirectionEnum"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <UserControl.DataContext>
+        <viewModels:ControlVm/>
+    </UserControl.DataContext>
+    <Border>
+        <Grid >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Column="0" Grid.Row="0" Margin="5">
+                <desktop:UcMap Focusable="True" LocationPin="{Binding LogData.LastLocation}" IsEnabled="False"/>
+            </Grid>
+            <!--TopRight-->
+            <Grid Grid.Column="1" Grid.Row="0" Margin="5">
+                <DataGrid ItemsSource="{Binding ActiveTrains}" SelectionUnit="FullRow" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Visibility="Collapsed" Binding="{Binding TrainId}"/>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                        <DataGridTextColumn Header="Start Time" Binding="{Binding StartTime}" Width="*"/>
+                        <DataGridTextColumn Header="State" Binding="{Binding Status}" Width="*"/>
+                        <DataGridTextColumn Header="Speed" Binding="{Binding Speed}" Width="100" />
+                        <DataGridTextColumn Header="Delay" Binding="{Binding Delay}" Width="100" />
+                    </DataGrid.Columns>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding TrainSelectedCommand}"
+                                                   CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}, Mode=FindAncestor}}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </DataGrid>
+            </Grid>
+            <!--BottomLeft-->
+            <Grid Grid.Column="0" Grid.Row="1">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <Label Content="Train Id" Margin="5 25"/>
+                    <Label Content="Name" Margin="5 25"/>
+                    <Label Content="Start Time" Margin="5 25"/>
+                    <Label Content="Next Stop" Margin="5 25"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <Label Content="{Binding LogData.TrainId}" Margin="5 25"/>
+                    <Label Content="{Binding LogData.Name}" Margin="5 25"/>
+                    <Label Content="{Binding LogData.StartTime}" Margin="5 25"/>
+                    <Label Content="{Binding LogData.NextStop}" Margin="5 25"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <Label Content="Delay" Margin="5 25"/>
+                    <Label Content="Speed" Margin="5 25"/>
+                    <Label Content="Location" Margin="5 25"/>
+                    <Label Content="Max Speed" Margin="5 25"/>
+                </StackPanel>
+                <StackPanel Grid.Column="3">
+                    <Label Content="{Binding LogData.Delay}" Margin="5 25"/>
+                    <Label Content="{Binding LogData.Speed}" Margin="5 25"/>
+                    <Label Content="{Binding LogData.LastLocation}" Margin="5 25"/>
+                    <Label Content="{Binding LogData.MaxSpeed}" Margin="5 25"/>
+                </StackPanel>
+            </Grid>
+            <!--BottomRight-->
+            <Grid Grid.Column="1" Grid.Row="1" Margin="5">
+                <DataGrid  AutoGenerateColumns="False" ItemsSource="{Binding InactiveTrain}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="100" Header="Train ID" Binding="{Binding TID}" />
+                        <DataGridTextColumn Width="*" Header="Name" Binding="{Binding Name}" />
+                        <!--<DataGridComboBoxColumn Header="Value" ItemsSource="{Binding Source={StaticResource ActionEnumList}}" Width="100" SelectedValueBinding="{Binding ActionsEnum}" />-->
+                        <DataGridTemplateColumn Header="Direction" Width="165">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox Margin="0" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource DirectionEnumList}}" SelectionChanged="Selector_OnSelectionChanged">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="SelectionChanged">
+                                                <i:InvokeCommandAction Command="{Binding }"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </ComboBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Action" Width="165">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox Margin="0" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource ActionEnumList}}" SelectionChanged="Direction_Change">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="SelectionChanged">
+                                                <i:InvokeCommandAction Command="{Binding }"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </ComboBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                    </DataGrid.Columns>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding ActionCommand}"
+                                                   CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}, Mode=FindAncestor}}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </DataGrid>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

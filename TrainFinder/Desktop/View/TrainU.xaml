@@ -65,14 +65,14 @@
                             <ComboBox IsEditable="False" ItemsSource="{Binding Stations}"
                                       DisplayMemberPath="Name"
                                       IsEnabled="{Binding SelectStationVisibility}"
-                                      SelectedValue="{Binding StartStationId,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                                      SelectedIndex="{Binding StartStationId,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
                                       Validation.Error="Validation_Error" SelectedValuePath="SID"
                                       ToolTip="{Binding }"/>
 
                             <ComboBox IsEditable="False" ItemsSource="{Binding Stations}"
                                       DisplayMemberPath="Name"
                                       IsEnabled="{Binding SelectStationVisibility}"
-                                      SelectedValue="{Binding EndStationId,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                                      SelectedIndex="{Binding EndStationId,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
                                       Validation.Error="Validation_Error" SelectedValuePath="SID"/>
 
                             <TextBox Height="200"

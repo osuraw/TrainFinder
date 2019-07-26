@@ -28,7 +28,7 @@ namespace Desktop.Model
            return Trains;
         }
 
-        public static async Task GetTrain(int id)
+        private static async Task GetTrain(int id)
         {
             var tempData =await WebConnect.GetData("Train/GetTrainInRoute/" + id);
             var results = JsonConvert.DeserializeObject<IEnumerable<Train>>(tempData);
@@ -49,8 +49,28 @@ namespace Desktop.Model
             Trains= trains;
         }
 
-
+        public static async Task<List<Train>> GetTrains()
+        {
+            var tempData = await WebConnect.GetData("Trains");
+            var results = JsonConvert.DeserializeObject<IEnumerable<Train>>(tempData);
+            var trains = new List<Train>() { new Train() { Name = "Select Train",TID = 0}, new Train() { Name = "All Trains", TID = 1 } };
+            foreach (var result in results)
+            {
+                var temp = new Train
+                {
+                    RID = result.RID,
+                    TID = result.TID,
+                    Name = result.Name,
+                    StartStation = result.StartStation,
+                    EndStation = result.EndStation,
+                    Description = result.Description
+                };
+                trains.Add(temp);
+            }
+            return trains;
+        }
         #endregion
+
 
     }
 }

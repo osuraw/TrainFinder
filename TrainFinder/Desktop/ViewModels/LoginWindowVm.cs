@@ -67,14 +67,14 @@ namespace Desktop
             _loginWindow = loginWindow;
             this._loginWindow.StateChanged += OnStateChange;
 
-            MenuCommand = new RelayCommand(() => SystemCommands.ShowSystemMenu(_loginWindow, GetMousePosition()));
-            Minimize = new RelayCommand(() => SystemCommands.MinimizeWindow(_loginWindow));
-            Maximize = new RelayCommand(() => SystemCommands.MaximizeWindow(_loginWindow));
-            Close = new RelayCommand(() => SystemCommands.CloseWindow(_loginWindow));
+            MenuCommand = new CommandBase(() => SystemCommands.ShowSystemMenu(_loginWindow, GetMousePosition()),()=>true);
+            Minimize = new CommandBase(() => SystemCommands.MinimizeWindow(_loginWindow), () => true);
+            Maximize = new CommandBase(() => SystemCommands.MaximizeWindow(_loginWindow), () => true);
+            Close = new CommandBase(() => SystemCommands.CloseWindow(_loginWindow), () => true);
 
             Task.Run(action:WebConnect.CheckConnection);
 
-            Thread.CurrentThread.Name = "Main";
+            //Thread.CurrentThread.Name = "Main";
 
             var reSizer =new WindowResize(_loginWindow);
         }

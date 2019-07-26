@@ -10,11 +10,12 @@ namespace Desktop.Model
         #region Entity
 
         public short RID { get; set; }
+        public string Name { get; set; }
         public string StartStation { get; set; }
         public string EndStation { get; set; }
         public float Distance { get; set; }
         public string Description { get; set; }
-        public string Name { get; set; }
+        
 
         public static ObservableCollection<Route> Routes { get; set; }
 

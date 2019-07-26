@@ -103,6 +103,8 @@ namespace Desktop.ViewModels
             OnPropertyChanged(nameof(Checked1));
             Checked2 = false;
             OnPropertyChanged(nameof(Checked2));
+            Location = null;
+            OnPropertyChanged(nameof(Location));
             OnPropertyChanged(nameof(RouteId));
             OnPropertyChanged(nameof(Message));
             OnPropertyChanged(nameof(Description));
@@ -253,8 +255,6 @@ namespace Desktop.ViewModels
         {
             UpdateViewsProperties();
             PinLocations?.Clear();
-            Location = null;
-            OnPropertyChanged(nameof(Location));
             SelectRouteId = 0;
             OnPropertyChanged(nameof(SelectRouteId));
         }

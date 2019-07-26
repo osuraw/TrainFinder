@@ -13,5 +13,6 @@ namespace Desktop
             InitializeComponent();
         }
         public SecureString SecureString => LoginPassword.SecurePassword;
+        public SecureString SecureString1 =>null;
     }
 }

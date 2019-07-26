@@ -21,5 +21,15 @@ namespace Desktop
                 Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
             }
         }
+        public static bool ComparePassword(this SecureString securePassword, SecureString secureConfirmPassword,
+            out string password)
+        {
+            password = null;
+            if (securePassword.UnsSecure().Equals(password=secureConfirmPassword.UnsSecure()))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
