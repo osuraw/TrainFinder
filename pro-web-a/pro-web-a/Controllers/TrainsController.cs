@@ -5,7 +5,9 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Antlr.Runtime.Misc;
 using pro_web_a.DTOs;
+using pro_web_a.Helpers;
 using pro_web_a.Models;
 using WebGrease.Css.Extensions;
 
@@ -122,7 +124,7 @@ namespace pro_web_a.Controllers
         public IHttpActionResult AddTranToWatch(LogDto data)
         {
             var logRecord = _context.Log.SingleOrDefault(l => l.TrainId == data.TrainId);
-            var nextStation = Helpers.FindNextStation(data.TrainId, data.Direction, -1);
+            var nextStation = FindNextStationHelpers.FindNextStation(data.TrainId, data.Direction, -1);
             if (nextStation == -5)
                 return BadRequest();
             int locationLogId = -2;
@@ -131,11 +133,14 @@ namespace pro_web_a.Controllers
             if (data.Status != "Active")
                 return Conflict();
             {
-                var location = _context.Location.Create();
-                location.TrainId = data.TrainId;
-                location.DateTime = DateTime.Now.ToShortDateString();
+                var location = new LocationLog {TrainId = data.TrainId, DateTime = DateTime.Now.ToShortDateString()};
+                _context.Location.Add(location);
                 _context.SaveChanges();
                 locationLogId = location.LocationLogId;
+                if(!ActiveTrainDetails.ActiveTrainDictionary.ContainsKey(data.TrainId))
+                    ActiveTrainDetails.ActiveTrainDictionary.Add(data.TrainId,new ListStack<int>());
+                else
+                    ActiveTrainDetails.ActiveTrainDictionary[data.TrainId].Clear();
             }
 
             //check whether there is existing record on log table if not add new one
@@ -146,6 +151,9 @@ namespace pro_web_a.Controllers
                 logRecord.Direction = data.Direction;
                 logRecord.StartTime = DateTime.Now.TimeOfDay.ToString(@"hh\:mm");
                 logRecord.NextStop = nextStation;
+                logRecord.MaxSpeed = logRecord.Speed = 0;
+                logRecord.Delay = TimeSpan.Zero;
+                logRecord.LastLocation =logRecord.LastReceive = "";
             }
             else
             {

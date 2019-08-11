@@ -2,9 +2,9 @@
 using System.Linq;
 using pro_web_a.Models;
 
-namespace pro_web_a.Controllers
+namespace pro_web_a.Helpers
 {
-    public static class Helpers
+    public static class FindNextStationHelpers
     {
         private static readonly ProjectDB Context = new ProjectDB();
 

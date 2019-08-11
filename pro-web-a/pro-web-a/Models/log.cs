@@ -11,13 +11,14 @@ namespace pro_web_a.Models
         public short TrainId { get; set; }
 
         public bool Direction { get; set; }
+
         public byte DeviceId { get; set; }
 
         [Column(TypeName = "varchar")]
         public string StartTime { get; set; }
 
         [Column(TypeName = "varchar")]
-        public string EndTime { get; set; }
+        public string EndTime { get; set; }//=========================
 
         public double MaxSpeed { get; set; }
 
@@ -26,7 +27,6 @@ namespace pro_web_a.Models
         public TimeSpan? Delay { get; set; }
 
         public string Status { get; set; }
-
         
         [Column(TypeName = "varchar")]
         public string LastLocation { get; set; }

@@ -21,6 +21,10 @@ namespace pro_web_a.Models
 
         public double MaxSpeed { get; set; }
 
+        //[Column(TypeName = "varchar")]
+        //public string EndTime { get; set; }
+
         public int Delay { get; set; }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace pro_web_a.Models
@@ -14,7 +15,6 @@ namespace pro_web_a.Models
 
         [ForeignKey("Route")]
         public short RouteId { get; set; }
-
 
         public Route Route { get; set; }
     }
