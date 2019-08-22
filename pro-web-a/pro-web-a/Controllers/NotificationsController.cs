@@ -17,22 +17,17 @@ namespace pro_web_a.Controllers
     {
         private readonly NotificationHubClient _hubClient = NotificationHubHelper.GetHubClient();
 
-        public class DeviceRegistration
-        {
-            public string Platform { get; set; }
-            public string Handle { get; set; }
-            public string[] Tags { get; set; }
-        }
 
-        // POST api/register
         // This creates a registration id
-        public async Task<string> Post(string pnsToken = null)
+        [Route("GetRegistrationId")]
+        public async Task<IHttpActionResult> GetRegistrationId(string pns_FCM_Token = null)
         {
             string newRegistrationId = null;
 
-            if (pnsToken != null)
+
+            if (pns_FCM_Token != null)
             {
-                var registrations = await _hubClient.GetRegistrationsByChannelAsync(pnsToken, 1);
+                var registrations = await _hubClient.GetRegistrationsByChannelAsync(pns_FCM_Token, 10);
 
                 foreach (RegistrationDescription registration in registrations)
                 {
@@ -50,18 +45,19 @@ namespace pro_web_a.Controllers
             if (newRegistrationId == null)
                 newRegistrationId = await _hubClient.CreateRegistrationIdAsync();
 
-            return newRegistrationId;
+            return Ok(newRegistrationId);
         }
 
-        // PUT api/register/5
+
         // This creates or updates a registration (with provided channelURI) at the specified id
-        public async Task<IHttpActionResult> Put(string id, DeviceRegistration deviceUpdate)
+        [Route("updateRegistration")]
+        public async Task<IHttpActionResult> GetUpdateRegistration(string id, string platform, string token)
         {
             RegistrationDescription registration = null;
-            switch (deviceUpdate.Platform)
+            switch (platform)
             {
                 case "fcm":
-                    registration = new FcmRegistrationDescription(deviceUpdate.Handle);
+                    registration = new FcmRegistrationDescription(token);
                     break;
                 default:
                     throw new HttpResponseException(HttpStatusCode.BadRequest);
@@ -71,7 +67,7 @@ namespace pro_web_a.Controllers
 
             try
             {
-                await _hubClient.CreateOrUpdateRegistrationAsync(registration);
+                var  dd = await _hubClient.CreateOrUpdateRegistrationAsync(registration);
             }
             catch (MessagingException e)
             {
@@ -80,13 +76,6 @@ namespace pro_web_a.Controllers
 
             return Ok();
         }
-
-        // DELETE api/register/5
-        //public async Task<HttpResponseMessage> Delete(string id)
-        //{
-        //    await _hubClient.DeleteRegistrationAsync(id);
-        //    return Request.CreateResponse(HttpStatusCode.OK);
-        //}
 
         private static void ReturnGoneIfHubResponseIsGone(MessagingException e)
         {

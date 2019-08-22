@@ -13,9 +13,9 @@
       <TextPosition>
         <Version>4</Version>
         <FileName>.\pro-web-a\Controllers\LocationsController.cs</FileName>
-        <startLine>96</startLine>
+        <startLine>161</startLine>
         <StartColumn>8</StartColumn>
-        <EndLine>96</EndLine>
+        <EndLine>161</EndLine>
         <EndColumn>9</EndColumn>
         <MarkerId>0</MarkerId>
         <IsLineBased>0</IsLineBased>
@@ -44,62 +44,7 @@
         <Language>00000000-0000-0000-0000-000000000000</Language>
       </AddressLocation>
       <DataCount>4</DataCount>
-      <AutomationInfo>1923c936-8cbe-4d7a-b02c-2907fdfa8e70</AutomationInfo>
-      <IsTracepointActive>0</IsTracepointActive>
-      <TracepointTargetType>VsOutputWindow</TracepointTargetType>
-      <IsBreakWhenHit>1</IsBreakWhenHit>
-      <IsRunMacroWhenHit>0</IsRunMacroWhenHit>
-      <UseChecksum>1</UseChecksum>
-      <Labels />
-      <RequestRemapped>0</RequestRemapped>
-      <IsSnapshotWhenHit>1</IsSnapshotWhenHit>
-      <SnapshotCountTarget>1</SnapshotCountTarget>
-      <parentIndex>-1</parentIndex>
-    </Breakpoint>
-    <Breakpoint>
-      <Version>15</Version>
-      <IsEnabled>1</IsEnabled>
-      <IsVisible>1</IsVisible>
-      <IsEmulated>0</IsEmulated>
-      <IsCondition>0</IsCondition>
-      <IsProductionBps>0</IsProductionBps>
-      <ConditionType>WhenTrue</ConditionType>
-      <LocationType>SourceLocation</LocationType>
-      <TextPosition>
-        <Version>4</Version>
-        <FileName>.\pro-web-a\Controllers\LocationsController.cs</FileName>
-        <startLine>130</startLine>
-        <StartColumn>8</StartColumn>
-        <EndLine>130</EndLine>
-        <EndColumn>9</EndColumn>
-        <MarkerId>0</MarkerId>
-        <IsLineBased>0</IsLineBased>
-        <IsDocumentPathNotFound>0</IsDocumentPathNotFound>
-        <ShouldUpdateTextSpan>1</ShouldUpdateTextSpan>
-        <Checksum>
-          <Version>1</Version>
-          <Algorithm>00000000-0000-0000-0000-000000000000</Algorithm>
-          <ByteCount>0</ByteCount>
-          <Bytes />
-        </Checksum>
-      </TextPosition>
-      <NamedLocationText>pro_web_a.Controllers.LocationsController.UpdateLog(SaveData str1, SaveData str2, int trainId, bool direction, double speed)</NamedLocationText>
-      <NamedLocationLine>1</NamedLocationLine>
-      <NamedLocationColumn>0</NamedLocationColumn>
-      <HitCountType>NoHitCount</HitCountType>
-      <HitCountTarget>1</HitCountTarget>
-      <Language>3f5162f8-07c6-11d3-9053-00c04fa302a1</Language>
-      <IsMapped>0</IsMapped>
-      <BreakpointType>PendingBreakpoint</BreakpointType>
-      <AddressLocation>
-        <Version>0</Version>
-        <MarkerId>0</MarkerId>
-        <FunctionLine>0</FunctionLine>
-        <FunctionColumn>0</FunctionColumn>
-        <Language>00000000-0000-0000-0000-000000000000</Language>
-      </AddressLocation>
-      <DataCount>4</DataCount>
-      <AutomationInfo>f015261f-2c63-4e3a-9d62-e0e0f808e45e</AutomationInfo>
+      <AutomationInfo>6ce1de82-463b-42dd-9c19-7835b1f162b3</AutomationInfo>
       <IsTracepointActive>0</IsTracepointActive>
       <TracepointTargetType>VsOutputWindow</TracepointTargetType>
       <IsBreakWhenHit>1</IsBreakWhenHit>
@@ -138,8 +83,8 @@
           <Bytes />
         </Checksum>
       </TextPosition>
-      <NamedLocationText>pro_web_a.Controllers.LocationsController.SetLocation(short id, string data)</NamedLocationText>
-      <NamedLocationLine>3</NamedLocationLine>
+      <NamedLocationText>pro_web_a.Controllers.LocationsController.SetLocation(short id,string data)</NamedLocationText>
+      <NamedLocationLine>6</NamedLocationLine>
       <NamedLocationColumn>0</NamedLocationColumn>
       <HitCountType>NoHitCount</HitCountType>
       <HitCountTarget>1</HitCountTarget>
@@ -155,6 +100,61 @@
       </AddressLocation>
       <DataCount>4</DataCount>
       <AutomationInfo>cc1b68aa-4573-4d7a-9cbc-6e43ff012ad1</AutomationInfo>
+      <IsTracepointActive>0</IsTracepointActive>
+      <TracepointTargetType>VsOutputWindow</TracepointTargetType>
+      <IsBreakWhenHit>1</IsBreakWhenHit>
+      <IsRunMacroWhenHit>0</IsRunMacroWhenHit>
+      <UseChecksum>1</UseChecksum>
+      <Labels />
+      <RequestRemapped>0</RequestRemapped>
+      <IsSnapshotWhenHit>1</IsSnapshotWhenHit>
+      <SnapshotCountTarget>1</SnapshotCountTarget>
+      <parentIndex>-1</parentIndex>
+    </Breakpoint>
+    <Breakpoint>
+      <Version>15</Version>
+      <IsEnabled>1</IsEnabled>
+      <IsVisible>1</IsVisible>
+      <IsEmulated>0</IsEmulated>
+      <IsCondition>0</IsCondition>
+      <IsProductionBps>0</IsProductionBps>
+      <ConditionType>WhenTrue</ConditionType>
+      <LocationType>SourceLocation</LocationType>
+      <TextPosition>
+        <Version>4</Version>
+        <FileName>.\pro-web-a\Controllers\LocationsController.cs</FileName>
+        <startLine>93</startLine>
+        <StartColumn>8</StartColumn>
+        <EndLine>93</EndLine>
+        <EndColumn>9</EndColumn>
+        <MarkerId>0</MarkerId>
+        <IsLineBased>0</IsLineBased>
+        <IsDocumentPathNotFound>0</IsDocumentPathNotFound>
+        <ShouldUpdateTextSpan>1</ShouldUpdateTextSpan>
+        <Checksum>
+          <Version>1</Version>
+          <Algorithm>00000000-0000-0000-0000-000000000000</Algorithm>
+          <ByteCount>0</ByteCount>
+          <Bytes />
+        </Checksum>
+      </TextPosition>
+      <NamedLocationText>pro_web_a.Controllers.LocationsController.UpdateLog(SaveData str1, SaveData str2, int trainId, bool direction, double speed)</NamedLocationText>
+      <NamedLocationLine>1</NamedLocationLine>
+      <NamedLocationColumn>0</NamedLocationColumn>
+      <HitCountType>NoHitCount</HitCountType>
+      <HitCountTarget>1</HitCountTarget>
+      <Language>3f5162f8-07c6-11d3-9053-00c04fa302a1</Language>
+      <IsMapped>0</IsMapped>
+      <BreakpointType>PendingBreakpoint</BreakpointType>
+      <AddressLocation>
+        <Version>0</Version>
+        <MarkerId>0</MarkerId>
+        <FunctionLine>0</FunctionLine>
+        <FunctionColumn>0</FunctionColumn>
+        <Language>00000000-0000-0000-0000-000000000000</Language>
+      </AddressLocation>
+      <DataCount>4</DataCount>
+      <AutomationInfo>accb348e-7737-49b4-8b05-c52d3c7809ae</AutomationInfo>
       <IsTracepointActive>0</IsTracepointActive>
       <TracepointTargetType>VsOutputWindow</TracepointTargetType>
       <IsBreakWhenHit>1</IsBreakWhenHit>

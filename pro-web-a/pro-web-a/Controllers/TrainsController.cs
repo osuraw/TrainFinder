@@ -125,6 +125,7 @@ namespace pro_web_a.Controllers
         {
             var logRecord = _context.Log.SingleOrDefault(l => l.TrainId == data.TrainId);
             var nextStation = FindNextStationHelpers.FindNextStation(data.TrainId, data.Direction, -1);
+            var lastStop = _context.Trains.Single(t => t.TID == data.TrainId).StartStation;
             if (nextStation == -5)
                 return BadRequest();
             int locationLogId = -2;
@@ -137,10 +138,15 @@ namespace pro_web_a.Controllers
                 _context.Location.Add(location);
                 _context.SaveChanges();
                 locationLogId = location.LocationLogId;
+                string path = $"Train-id-{data.TrainId}/Train-on-{data.Direction}-{DateTime.Now:y-MM-dd-HH-mm}.txt";
+                FileHandler.WriteToFile(path,$"Created :{DateTime.Now:y-MM-dd-HH-mm}");
                 if(!ActiveTrainDetails.ActiveTrainDictionary.ContainsKey(data.TrainId))
-                    ActiveTrainDetails.ActiveTrainDictionary.Add(data.TrainId,new ListStack<int>());
+                    ActiveTrainDetails.ActiveTrainDictionary.Add(data.TrainId,new ActiveTrain(path));
                 else
-                    ActiveTrainDetails.ActiveTrainDictionary[data.TrainId].Clear();
+                {
+                    ActiveTrainDetails.ActiveTrainDictionary[data.TrainId].PinLocations.Clear();
+                    ActiveTrainDetails.ActiveTrainDictionary[data.TrainId].file=path;
+                }
             }
 
             //check whether there is existing record on log table if not add new one
@@ -151,6 +157,7 @@ namespace pro_web_a.Controllers
                 logRecord.Direction = data.Direction;
                 logRecord.StartTime = DateTime.Now.TimeOfDay.ToString(@"hh\:mm");
                 logRecord.NextStop = nextStation;
+                logRecord.LastStop = lastStop;
                 logRecord.MaxSpeed = logRecord.Speed = 0;
                 logRecord.Delay = TimeSpan.Zero;
                 logRecord.LastLocation =logRecord.LastReceive = "";
@@ -167,6 +174,7 @@ namespace pro_web_a.Controllers
                     Direction = data.Direction,
                     StartTime = DateTime.Now.TimeOfDay.ToString(@"hh\:mm"),
                     NextStop = nextStation,
+                    LastStop = lastStop,
                     LastReceive = TimeSpan.Zero.ToString(@"hh\:mm"),
                 };
                 _context.Log.Add(log);
@@ -199,18 +207,3 @@ namespace pro_web_a.Controllers
     }
 }
 
-//// DELETE: api/Train/5
-//[ResponseType(typeof(Train))]
-//public IHttpActionResult DeleteTrain(short id)
-//{
-//Train train = _context.Trains.Find(id);
-//    if (train == null)
-//{
-//    return NotFound();
-//}
-
-//_context.Trains.Remove(train);
-//_context.SaveChanges();
-
-//return Ok(train);
-//}

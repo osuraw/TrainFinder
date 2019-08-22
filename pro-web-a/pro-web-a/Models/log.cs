@@ -34,6 +34,7 @@ namespace pro_web_a.Models
         [Column(TypeName = "varchar")]
         public string LastReceive { get; set; }
 
+        public int LastStop { get; set; }
         public int NextStop { get; set; }
 
         public int LogId { get; set; }

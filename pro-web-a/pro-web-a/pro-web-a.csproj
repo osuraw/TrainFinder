@@ -55,8 +55,20 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Azure.NotificationHubs, Version=3.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.NotificationHubs.3.1.0\lib\netstandard2.0\Microsoft.Azure.NotificationHubs.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Azure.Storage.Blob, Version=11.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.Storage.Blob.11.0.0\lib\net452\Microsoft.Azure.Storage.Blob.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Azure.Storage.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.Storage.Common.11.0.0\lib\net452\Microsoft.Azure.Storage.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Azure.Storage.File, Version=11.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.Storage.File.11.0.0\lib\net452\Microsoft.Azure.Storage.File.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
@@ -184,6 +196,8 @@
     <Compile Include="App_Start\MappingProfile.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="DTOs\StationDto.cs" />
+    <Compile Include="Helpers\FileHandler.cs" />
     <Compile Include="Helpers\FindNextStationHelpers.cs" />
     <Compile Include="Controllers\LocationsController.cs" />
     <Compile Include="Controllers\NotificationsController.cs" />
@@ -338,6 +352,10 @@
     <Compile Include="Migrations\201907070745063_UpdateTrainForignKeys.Designer.cs">
       <DependentUpon>201907070745063_UpdateTrainForignKeys.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908210718575_add last stop to log table.cs" />
+    <Compile Include="Migrations\201908210718575_add last stop to log table.Designer.cs">
+      <DependentUpon>201908210718575_add last stop to log table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ActiveTrainDetails.cs" />
     <Compile Include="Models\Device.cs" />
@@ -468,6 +486,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907070745063_UpdateTrainForignKeys.resx">
       <DependentUpon>201907070745063_UpdateTrainForignKeys.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908210718575_add last stop to log table.resx">
+      <DependentUpon>201908210718575_add last stop to log table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

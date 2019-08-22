@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Device.Location;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Web.Configuration;
 using System.Web.Http;
 using Newtonsoft.Json;
 using pro_web_a.Helpers;
@@ -22,13 +24,26 @@ namespace pro_web_a.Controllers
     [RoutePrefix("api/Location")]
     public class LocationsController : ApiController
     {
+        private readonly int _defaultSpeed = int.Parse(WebConfigurationManager.AppSettings["DefaultSpeed"]);
+        private readonly int _defaultGap = int.Parse(WebConfigurationManager.AppSettings["DefaultGap"]);
+        private readonly int _defaultPlatformLength = int.Parse(WebConfigurationManager.AppSettings["DefaultPlatformLength"]);
+        private readonly int _defaultPinLocationGap = int.Parse(WebConfigurationManager.AppSettings["DefaultPinLocationGap"]);
         private readonly ProjectDB _dbContext = new ProjectDB();
 
+        private string _writeToFile="";
+
+        private ActiveTrain _activeTrain = null;
+
         //Get Use to Add Location from device to database 
+        
         [HttpGet]
         [Route("Setlocation/")]
-        public IHttpActionResult SetLocation(short id, string data, int device = 0)
+        public IHttpActionResult SetLocation(short id, string data)
         {
+            ActiveTrainDetails.ActiveTrainDictionary.TryGetValue(id, out _activeTrain);
+            //get active train data
+            if (_activeTrain == null)//=========================================================== no need
+                return Ok();
             //Get relevant LogTable recode
             var logRecord = _dbContext.Log.Single(l => l.TrainId == id);
 
@@ -55,7 +70,7 @@ namespace pro_web_a.Controllers
 
             //Get relevant LocationTable recode
             var update = _dbContext.Location.FirstOrDefault(l => l.LocationLogId == logRecord.LogId);
-            
+
             //Last Location
             SaveData str1;
             str1.Lt = logRecord.LastReceive;
@@ -80,14 +95,13 @@ namespace pro_web_a.Controllers
                 Send(str2, logRecord.TrainId, logRecord.Direction);
             });
             thread1.Start();
-           // if(device==0)
-                return Ok("OK");
-            //return Redirect();
+            return Ok("OK");
         }
 
         //Update LogTable
         private void UpdateLog(SaveData str1, SaveData str2, int trainId, bool direction, double speed)
         {
+
             if (string.IsNullOrEmpty(str1.Lo))
                 return;
             //Last and Current Location difference
@@ -110,19 +124,18 @@ namespace pro_web_a.Controllers
             var nextStop = new GeoCoordinate(Convert.ToDouble(locationSplit[0]), Convert.ToDouble(locationSplit[1]));
 
             //Get data about next stop station timetable
-            var stopAt = _dbContext.StopAts.SingleOrDefault(s =>
-                (s.TID == trainId) && (s.Direction == direction) && (s.SID == station.SID));
+            var stopAt = _dbContext.StopAts.SingleOrDefault(s =>(s.TID == trainId) && (s.Direction == direction) && (s.SID == station.SID));
+            var distance = point2.GetDistanceTo(nextStop);
 
-            //WriteToFile($"gap : {gap}");
-            Debug.WriteLine("gap : " + gap);
+            Debug.WriteLine("gap between last receive point : " + gap);
+            Debug.WriteLine("gap between next stop : " + distance);
+
             //Train moves
-            if (gap > 20)
+            if (_defaultGap<gap)
             {
                 //distance to Next stop station 
-                var distance = point2.GetDistanceTo(nextStop);
-
-                if (speed < 15)
-                    speed = 15;
+                if (_defaultSpeed>speed)
+                    speed = _defaultSpeed;
                 //Time to arrive next station
                 var time = TimeSpan.FromSeconds(Math.Round(distance / (speed * 10 / 36), 2));
                 var estimateTime = DateTime.Now.TimeOfDay + time;
@@ -134,25 +147,30 @@ namespace pro_web_a.Controllers
             //Train stops
             else
             {
-                var val = point2.GetDistanceTo(nextStop);
-                //WriteToFile($"vale : {val}");
-                Debug.WriteLine("next stop : " + val);
-                if (val < 150)
+                if (_defaultPlatformLength>distance)
                 {
                     log.Status = $"Stop At {station.Name}";
+                    log.LastStop = log.NextStop;
                     log.NextStop = FindNextStationHelpers.FindNextStation(log.TrainId, log.Direction, log.NextStop);
                     if (log.NextStop == -1)
                     {
                         log.LogId = -2;
                         log.Status = $"At End Station";
+                        log.EndTime = DateTime.Now.TimeOfDay.ToString(@"hh\:mm");
                     }
                 }
-                else
-                    log.Status = "Waiting For Signals";
+                else 
+                {
+                    var lastStop = _dbContext.Stations.Single(s => s.SID == log.LastStop);
+                    var lastStopLocation = lastStop.Location.Split(':');
+                    var distanceToLastStop =
+                        point2.GetDistanceTo(new GeoCoordinate(Convert.ToDouble(lastStopLocation[0]),
+                            Convert.ToDouble(lastStopLocation[1])));
+                    log.Status = _defaultPlatformLength > distanceToLastStop ? $"Stop At {lastStop.Name}" : "Waiting For Signals";
+                }
             }
-
-            //WriteToFile("speed : " + log.Speed + "\n Status : " + log.Status + "\n Next stop : " + log.NextStop);
             _dbContext.SaveChanges();
+            _writeToFile = $"\nSpeed:{log.Speed},Status:{log.Status},Delay:{log.Delay}";
         }
 
         //Check and Send Alert
@@ -161,9 +179,7 @@ namespace pro_web_a.Controllers
             //get route rid
             var route = _dbContext.Trains.Single(t => t.TID == trainId).RID;
 
-            //get pin locations in the route
-            ActiveTrainDetails.ActiveTrainDictionary.TryGetValue(trainId, out var pinIds);
-            var pinLocationList = _dbContext.PinLocation.Where(p => (p.RouteId == route) && (!pinIds.Contains(p.PinId)))
+            var pinLocationList = _dbContext.PinLocation.Where(p => (p.RouteId == route) && (!_activeTrain.PinLocations.Contains(p.PinId)))
                 .ToList();
             if (pinLocationList.Count == 0)
                 return;
@@ -181,21 +197,17 @@ namespace pro_web_a.Controllers
                 double l;
 
                 //Send Message
-                if ((l = currentLocation.GetDistanceTo(pinGeoCoordinate)) <= 750)
+                if (_defaultPinLocationGap > (l = currentLocation.GetDistanceTo(pinGeoCoordinate)))
                 {
-                    ActiveTrainDetails.ActiveTrainDictionary[trainId].Add(pinLocation.PinId);
-                    var sendPushNotification = NotificationHubHelper.SendPushNotification($"Type {pinLocation.Type} is ahead with in 750 M Description : {pinLocation.Description}");
-                    WriteToFile("Sending Alert : " + l);
+                    ActiveTrainDetails.ActiveTrainDictionary[trainId].PinLocations.Add(pinLocation.PinId);
+                    //var sendPushNotification = NotificationHubHelper.SendPushNotification(
+                    //    $"Type {pinLocation.Type} is ahead with in 750 M Description : {pinLocation.Description}");
+                    _writeToFile += $",Alert Sent : {pinLocation.PinId}";
                     break;
                 }
             }
-        }
-
-        private static void WriteToFile(string p0)
-        {
-            const string dd = @"D:\MIT\L3S1\log.txt";
-            p0 += "\n";
-            File.AppendAllText(dd, p0);
+            FileHandler.WriteToFile(_writeToFile);
+            FileHandler.WriteToFile(_activeTrain.file, _writeToFile);
         }
     }
 }
